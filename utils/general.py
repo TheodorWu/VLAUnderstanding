@@ -4,6 +4,7 @@ import random
 import numpy as np
 import torch
 from torch.manual_seed import set_seed
+from torch.nn.parameter import is_lazy
 
 class DotDict(dict):
     """Dictionary with dot notation access to attributes."""

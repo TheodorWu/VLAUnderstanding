@@ -1,3 +1,5 @@
+from semantic_perturbations import SemanticScaler, SynonymReplacer
+
 class PerturbedPromptOutput:
     """
     Docstring for PerturbedPromptOutput
@@ -17,6 +19,8 @@ class PromptPerturbator:
     """
     def __init__(self, config):
         self.config = config
+        self.semantic_scaler = SemanticScaler()
+        self.synonym_replacer = SynonymReplacer()
 
     def directional_perturbation(self, prompt):
         if "left" in prompt:
