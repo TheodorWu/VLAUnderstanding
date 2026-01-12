@@ -1,2 +1,5 @@
+defaults:
+ - perturbator: dev
+
 stage: dev
 seed: 42
