@@ -1,7 +1,9 @@
-class MyDataLoader:
-    def __init__(self, data_path):
-        self.data_path = data_path
+from torch.utils.data import DataLoader
 
-    def load_data(self):
-        # Logic to load data from the specified path
-        print(f"Loading data from {self.data_path}")
+def get_dataloader(dataset_name, batch_size, shuffle=True):
+    if dataset_name == "libero":
+        from data.libero import get_libero_dataset
+        dataset = get_libero_dataset()
+    else:
+        raise ValueError(f"Dataset {dataset_name} not recognized.")
+    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)

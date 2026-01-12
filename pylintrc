@@ -1,4 +1,5 @@
 [MESSAGES CONTROL]
 disable=missing-class-docstring,
         missing-module-docstring,
-        missing-function-docstring
+        missing-function-docstring,
+        import-outside-toplevel
