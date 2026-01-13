@@ -1,4 +1,4 @@
-from semantic_perturbations import SemanticScaler, SynonymReplacer
+from method.prompts.semantic_perturbations import SemanticScaler, SynonymReplacer
 
 class PerturbedPromptOutput:
     """
@@ -33,6 +33,18 @@ class PromptPerturbator:
             perturbed_prompt = prompt.replace("down", "up")
         else:
             perturbed_prompt = prompt
+        return PerturbedPromptOutput(prompt, perturbed_prompt)
+
+    def synonym_perturbation(self, prompt, target_word):
+        # Placeholder for semantic perturbation logic
+        synonym  = self.synonym_replacer(target_word)
+        perturbed_prompt = prompt.replace(target_word, synonym)
+        return PerturbedPromptOutput(prompt, perturbed_prompt)
+
+    def semantic_scaling_perturbation(self, prompt, target_word):
+        # Placeholder for semantic scaling logic
+        scaled_word  = self.semantic_scaler(target_word)
+        perturbed_prompt = prompt.replace(target_word, scaled_word)
         return PerturbedPromptOutput(prompt, perturbed_prompt)
 
     def perturb(self, data):

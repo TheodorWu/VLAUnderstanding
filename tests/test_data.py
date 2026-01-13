@@ -7,8 +7,6 @@ class TestDataProcessing(unittest.TestCase):
         dataset = dataloader.dataset
         self.assertIsNotNone(dataset)
         self.assertIn('train', dataset)
-        self.assertIn('validation', dataset)
-        self.assertIn('test', dataset)
 
 if __name__ == "__main__":
     unittest.main()

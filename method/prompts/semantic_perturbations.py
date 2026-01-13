@@ -25,7 +25,9 @@ class SynonymReplacer:
         if not synonyms:
             return word  # No synonyms found, return the original word
         # Get the first synonym's lemma name as a simple replacement example
-        synonym = synonyms[0].lemmas()[0].name().replace('_', ' ')
-        if synonym.lower() != word.lower():
-            return synonym
+        for syn in synonyms:
+            for lemma in syn.lemmas():
+                possible_synonym = lemma.name().replace('_', ' ')
+                if possible_synonym.lower() != word.lower() and word.lower() not in possible_synonym.lower():
+                    return possible_synonym
         return word

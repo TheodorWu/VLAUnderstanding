@@ -37,16 +37,14 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
 
     ### Test Cases for Semantic Perturbation ###
     def test_semantic_perturbation_scaling(self):
-        # TODO: Implement test for semantic scaling perturbation
-        prompt = "Increase the brightness of the image."
-        result = self.perturbator.semantic_scaler.scale(prompt, factor=1.5)
-        self.assertIn("brighter", result)
+        prompt = "put the bowl on the stove"
+        result = self.perturbator.semantic_scaling_perturbation(prompt, "bowl")
+        self.assertNotIn("bowl", result.perturbed_prompt)
 
     def test_semantic_perturbation_synonym_replacement(self):
-        # TODO: Implement test for semantic synonym replacement perturbation
-        prompt = "The quick brown fox jumps over the lazy dog."
-        result = self.perturbator.semantic_synonym_replacer.replace(prompt)
-        self.assertNotEqual(result, prompt)
+        prompt = "put the bowl on the stove"
+        result = self.perturbator.synonym_perturbation(prompt, "put")
+        self.assertNotEqual(result.perturbed_prompt, prompt)
 
 
 

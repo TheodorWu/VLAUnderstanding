@@ -11,6 +11,23 @@
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Python: Test Perturbations",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_perturbations",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python: Test Data",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_data",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
         }
+
     ]
 }
