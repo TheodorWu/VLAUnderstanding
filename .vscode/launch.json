@@ -27,6 +27,14 @@
             "module": "tests.test_data",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Python: Test Model",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_model",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
         }
 
     ]

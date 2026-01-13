@@ -3,7 +3,6 @@ import random
 
 import numpy as np
 import torch
-from torch.manual_seed import set_seed
 from torch.nn.parameter import is_lazy
 
 class DotDict(dict):
@@ -31,7 +30,6 @@ def seed_all(seed):
         torch.backends.cudnn.deterministic = True
     np.random.seed(seed)
     random.seed(seed)
-    set_seed(seed)
 
 def test_gpu_availability(cfg=None):
     print(f"Using torch {torch.__version__}", file=sys.stdout)
