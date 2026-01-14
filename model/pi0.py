@@ -1,12 +1,13 @@
 import torch
 import torch.nn as nn
-from utils.general import printable_params
+from utils.general import printable_params, rprint_architecture
 
 from lerobot.cameras.opencv.configuration_opencv import OpenCVCameraConfig
 from lerobot.policies.pi0.modeling_pi0 import PI0Policy
 from lerobot.policies.factory import make_pre_post_processors
 
 @printable_params
+@rprint_architecture
 class PI0Wrapper(nn.Module):
     def __init__(self, config, device=torch.device("cpu")):
         super(PI0Wrapper, self).__init__()

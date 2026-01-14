@@ -14,4 +14,7 @@ class TestModels(unittest.TestCase):
         self.assertEqual(model.config, config["model"])
 
 if __name__ == "__main__":
-    unittest.main()
+    suite = unittest.TestSuite()
+    suite.addTest(TestModels('test_pi0_initialization'))
+    unittest.TextTestRunner().run(suite)
+    # unittest.main()

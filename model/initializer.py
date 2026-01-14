@@ -1,4 +1,5 @@
 from model.pi0 import PI0Wrapper
+from pathlib import Path
 
 class ModelInitializer:
     def __init__(self, config):
@@ -18,6 +19,12 @@ class ModelInitializer:
         else:
             raise ValueError(f"Model type {model_type} not recognized.")
 
-        model.print_trainable_parameters() # pylint: disable=no-member
+        if hasattr(model, "print_trainable_parameters"):
+            model.print_trainable_parameters() # pylint: disable=no-member
+        if hasattr(model, "print_architecture"):
+            project_root = Path(__file__).parent.parent
+            output_dir = project_root / "output" / "model_architectures"
+            output_dir.mkdir(parents=True, exist_ok=True)
+            model.print_architecture(output_dir) # pylint: disable=no-member
         return model
 

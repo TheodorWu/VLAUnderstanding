@@ -1,0 +1,2469 @@
+model:
+  type: PI0Pytorch
+  children:
+    paligemma_with_expert:
+      type: PaliGemmaWithExpertModel
+      children:
+        paligemma:
+          type: PaliGemmaForConditionalGeneration
+          children:
+            model:
+              type: PaliGemmaModel
+              children:
+                vision_tower:
+                  type: SiglipVisionModel
+                  children:
+                    vision_model:
+                      type: SiglipVisionTransformer
+                      children:
+                        embeddings:
+                          type: SiglipVisionEmbeddings
+                          children:
+                            patch_embedding:
+                              type: Conv2d
+                              children: {}
+                            position_embedding:
+                              type: Embedding
+                              children: {}
+                        encoder:
+                          type: SiglipEncoder
+                          children:
+                            layers:
+                              type: ModuleList
+                              children:
+                                '0':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '1':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '2':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '3':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '4':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '5':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '6':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '7':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '8':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '9':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '10':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '11':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '12':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '13':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '14':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '15':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '16':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '17':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '18':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '19':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '20':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '21':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '22':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '23':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '24':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '25':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                                '26':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1:
+                                      type: LayerNorm
+                                      children: {}
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj:
+                                          type: Linear
+                                          children: {}
+                                        v_proj:
+                                          type: Linear
+                                          children: {}
+                                        q_proj:
+                                          type: Linear
+                                          children: {}
+                                        out_proj:
+                                          type: Linear
+                                          children: {}
+                                    layer_norm2:
+                                      type: LayerNorm
+                                      children: {}
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn:
+                                          type: PytorchGELUTanh
+                                          children: {}
+                                        fc1:
+                                          type: Linear
+                                          children: {}
+                                        fc2:
+                                          type: Linear
+                                          children: {}
+                        post_layernorm:
+                          type: LayerNorm
+                          children: {}
+                multi_modal_projector:
+                  type: PaliGemmaMultiModalProjector
+                  children:
+                    linear:
+                      type: Linear
+                      children: {}
+                language_model:
+                  type: GemmaModel
+                  children:
+                    embed_tokens:
+                      type: Embedding
+                      children: {}
+                    layers:
+                      type: ModuleList
+                      children:
+                        '0':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '1':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '2':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '3':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '4':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '5':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '6':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '7':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '8':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '9':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '10':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '11':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '12':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '13':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '14':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '15':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '16':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                        '17':
+                          type: GemmaDecoderLayer
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj:
+                                  type: Linear
+                                  children: {}
+                                k_proj:
+                                  type: Linear
+                                  children: {}
+                                v_proj:
+                                  type: Linear
+                                  children: {}
+                                o_proj:
+                                  type: Linear
+                                  children: {}
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj:
+                                  type: Linear
+                                  children: {}
+                                up_proj:
+                                  type: Linear
+                                  children: {}
+                                down_proj:
+                                  type: Linear
+                                  children: {}
+                                act_fn:
+                                  type: PytorchGELUTanh
+                                  children: {}
+                            input_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                            post_attention_layernorm:
+                              type: GemmaRMSNorm
+                              children: {}
+                    norm:
+                      type: GemmaRMSNorm
+                      children: {}
+                    rotary_emb:
+                      type: GemmaRotaryEmbedding
+                      children: {}
+            lm_head:
+              type: Linear
+              children: {}
+        gemma_expert:
+          type: GemmaForCausalLM
+          children:
+            model:
+              type: GemmaModel
+              children:
+                layers:
+                  type: ModuleList
+                  children:
+                    '0':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '1':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '2':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '3':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '4':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '5':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '6':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '7':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '8':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '9':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '10':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '11':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '12':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '13':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '14':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '15':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '16':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                    '17':
+                      type: GemmaDecoderLayer
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj:
+                              type: Linear
+                              children: {}
+                            k_proj:
+                              type: Linear
+                              children: {}
+                            v_proj:
+                              type: Linear
+                              children: {}
+                            o_proj:
+                              type: Linear
+                              children: {}
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj:
+                              type: Linear
+                              children: {}
+                            up_proj:
+                              type: Linear
+                              children: {}
+                            down_proj:
+                              type: Linear
+                              children: {}
+                            act_fn:
+                              type: PytorchGELUTanh
+                              children: {}
+                        input_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                        post_attention_layernorm:
+                          type: GemmaRMSNorm
+                          children: {}
+                norm:
+                  type: GemmaRMSNorm
+                  children: {}
+                rotary_emb:
+                  type: GemmaRotaryEmbedding
+                  children: {}
+            lm_head:
+              type: Linear
+              children: {}
+    action_in_proj:
+      type: Linear
+      children: {}
+    action_out_proj:
+      type: Linear
+      children: {}
+    state_proj:
+      type: Linear
+      children: {}
+    action_time_mlp_in:
+      type: Linear
+      children: {}
+    action_time_mlp_out:
+      type: Linear
+      children: {}

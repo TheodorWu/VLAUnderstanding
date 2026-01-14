@@ -1,9 +1,11 @@
 import sys
 import random
-
+from rich.tree import Tree
+from rich.console import Console
 import numpy as np
 import torch
 from torch.nn.parameter import is_lazy
+import yaml
 
 class DotDict(dict):
     """Dictionary with dot notation access to attributes."""
@@ -50,10 +52,47 @@ def test_gpu_availability(cfg=None):
 
     return device
 
+
+### decorators ###
 def printable_params(cls):
     def print_trainable_parameters(self):
         trainable = sum(p.numel() for p in self.parameters() if p.requires_grad and not is_lazy(p))
         total = sum(p.numel() for p in self.parameters() if not is_lazy(p))
         print(f"trainable: {trainable:,} || all params: {total:,} || trainable%: {trainable/(total+1e-8)*100:.4f}")
     cls.print_trainable_parameters = print_trainable_parameters
+    return cls
+
+def rprint_architecture(cls):
+    def print_architecture(self, output_dir):
+        console = Console(record=True)
+        tree = Tree(f"[bold blue]{self.__class__.__name__} Architecture[/bold blue]")
+
+        # Also build dict for YAML
+        def add_module_tree(parent_node, module, parent_dict=None):
+            result = {} if parent_dict is None else parent_dict
+
+            for name, child_module in module.named_children():
+                child_node = parent_node.add(f"[cyan]{name}[/cyan]: {child_module.__class__.__name__}")
+                result[name] = {
+                    "type": child_module.__class__.__name__,
+                        "children": {}
+                    }
+                add_module_tree(child_node, child_module, result[name]["children"])
+
+            return result
+
+        architecture_dict = add_module_tree(tree, self.model)
+
+        # Print and save visual
+        console.print(tree)
+        filename = f"{self.__class__.__name__}_architecture"
+        svg_path = output_dir / f"{filename}.svg"
+        yaml_path = output_dir / f"{filename}.yaml"
+        console.save_svg(svg_path)
+
+        # Save YAML
+        with open(yaml_path, 'w', encoding='utf-8') as f:
+            yaml.dump(architecture_dict, f, default_flow_style=False, sort_keys=False)
+
+    cls.print_architecture = print_architecture
     return cls
