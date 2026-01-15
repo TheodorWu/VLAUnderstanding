@@ -73,11 +73,20 @@ def rprint_architecture(cls):
 
             for name, child_module in module.named_children():
                 child_node = parent_node.add(f"[cyan]{name}[/cyan]: {child_module.__class__.__name__}")
-                result[name] = {
-                    "type": child_module.__class__.__name__,
-                        "children": {}
+
+                # Get children first to check if there are any
+                children = {}
+                add_module_tree(child_node, child_module, children)
+
+                # Only add children key if there are actual children
+                if children:
+                    result[name] = {
+                        "type": child_module.__class__.__name__,
+                        "children": children
                     }
-                add_module_tree(child_node, child_module, result[name]["children"])
+                else:
+                    # For leaf nodes, just store the type as a string
+                    result[name] = child_module.__class__.__name__
 
             return result
 
