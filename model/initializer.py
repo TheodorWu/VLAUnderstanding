@@ -1,5 +1,6 @@
 from model.pi0 import PI0Wrapper
 from pathlib import Path
+from nnsight import NNsight
 
 class ModelInitializer:
     def __init__(self, config):
@@ -30,7 +31,9 @@ class ModelInitializer:
         except Exception as e:
             print(f"Error while printing model details: {e}")
 
+        model = self.wrap_nnsight(model)
         return model
 
-
-
+    def wrap_nnsight(self, model):
+        print("Wrapping model with NNsight for tracing.")
+        return NNsight(model)
