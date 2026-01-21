@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=setup
+#SBATCH --output=setup_%j.out
+#SBATCH --error=setup_%j.err
+#SBATCH --time=01:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=4G
+
+# Print job information
+echo "Job started at: $(date)"
+echo "Running on node: $(hostname)"
+echo "Job ID: $SLURM_JOB_ID"
+
+# Run the setup script
+bash setup.sh
+
+# Print completion message
+echo "Job finished at: $(date)"
