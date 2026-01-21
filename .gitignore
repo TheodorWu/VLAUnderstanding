@@ -211,3 +211,6 @@ data/*
 
 # But keep .py files
 !data/*.py
+
+# HF Cache
+.hfcache/
