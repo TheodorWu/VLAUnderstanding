@@ -1,4 +1,3 @@
-from model.pi0 import PI0Wrapper
 from pathlib import Path
 from nnsight import NNsight
 
@@ -16,6 +15,7 @@ class ModelInitializer:
         model_type = model_config.get("type", "pi0")
         print(f"Model Type: {model_type}")
         if model_type == "pi0":
+            from model.pi0 import PI0Wrapper
             model = PI0Wrapper(model_config)
         else:
             raise ValueError(f"Model type {model_type} not recognized.")
