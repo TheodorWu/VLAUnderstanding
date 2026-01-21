@@ -99,6 +99,12 @@ def rprint_architecture(cls):
         yaml_path = output_dir / f"{filename}.yaml"
         console.save_svg(svg_path)
 
+        # Capture and save PyTorch's standard print output
+        pytorch_console = Console(record=True, width=120)
+        pytorch_console.print(self.model)
+        pytorch_svg_path = output_dir / f"{filename}_pytorch.svg"
+        pytorch_console.save_svg(pytorch_svg_path)
+
         # Save YAML
         with open(yaml_path, 'w', encoding='utf-8') as f:
             yaml.dump(architecture_dict, f, default_flow_style=False, sort_keys=False)
