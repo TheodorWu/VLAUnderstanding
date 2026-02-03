@@ -16,6 +16,8 @@ class PI0Wrapper(nn.Module):
         print(f"Loading PI0 model from {model_id}")
         self.model = PI0Policy.from_pretrained(model_id)
 
+        self.tracing_layers = [f"transformer.h.{i}" for i in range(self.model.config.n_layer)]
+
         # TODO: implement processing
         preprocess, postprocess = make_pre_post_processors(
             self.model.config,
