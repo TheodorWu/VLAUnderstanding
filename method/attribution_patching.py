@@ -1,4 +1,5 @@
 import einops
+from eval.activation_writer import ActivationWriter
 from eval.logger import Logger
 
 class AttributionPatching():
@@ -13,6 +14,7 @@ class AttributionPatching():
         self.metric = metric
         self.device = device
         self.logger = Logger()
+        self.writer = ActivationWriter(config)
 
         self.reset_patching_results()
         self.reset_collections()
@@ -20,6 +22,7 @@ class AttributionPatching():
     def reset_patching_results(self):
         # todo: might want to save this to disk instead of keeping in memory
         self.patching_results = []
+        self.writer.reset_patching_results()
 
     def reset_collections(self):
         self.clean_out = []
@@ -41,7 +44,6 @@ class AttributionPatching():
             self.attribution_patching_analysis()
             if unit_test:
                 break
-        return self.patching_results
 
     def activation_tracing(self, batch):
         self.reset_collections()
@@ -98,6 +100,6 @@ class AttributionPatching():
                 dim = 64,
             )
 
-            self.patching_results.append(
+            self.writer.add_patching_result(
                 residual_attr.detach().cpu().numpy()
             )
