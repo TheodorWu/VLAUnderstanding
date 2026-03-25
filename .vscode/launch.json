@@ -34,6 +34,15 @@
             "request": "launch",
             "module": "tests.test_model",
             "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
+            "name": "Python: Test Method",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_method",
+            "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
         }
 

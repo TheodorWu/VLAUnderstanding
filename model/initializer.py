@@ -1,9 +1,12 @@
 from pathlib import Path
 from nnsight import NNsight
+import torch
 
 class ModelInitializer:
-    def __init__(self, config):
+    def __init__(self, config, dataset_stats=None, device=torch.device("cpu")):
         self.config = config
+        self.dataset_stats = dataset_stats
+        self.device = device
 
     def initialize(self):
         # Initialization logic based on the configuration
@@ -12,11 +15,11 @@ class ModelInitializer:
 
     def _initialize_model(self):
         model_config = self.config.get("model", {})
-        model_type = model_config.get("type", "pi0")
+        model_type = model_config.get("type", "pi05")
         print(f"Model Type: {model_type}")
-        if model_type == "pi0":
-            from model.pi0 import PI0Wrapper
-            model = PI0Wrapper(model_config)
+        if model_type == "pi05":
+            from model.pi05 import PI05Wrapper
+            model = PI05Wrapper(model_config, self.dataset_stats, self.device)
         else:
             raise ValueError(f"Model type {model_type} not recognized.")
 

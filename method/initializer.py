@@ -1,4 +1,5 @@
 from method.attribution_patching import AttributionPatching
+from method.prompts.perturbator import PromptPerturbator
 
 class MethodInitializer:
     def __init__(self, config):
@@ -7,7 +8,13 @@ class MethodInitializer:
     def initialize(self, model, tokenizer, dataset, metric, device='cuda'):
         # Initialization logic based on the configuration
         print(f"Initializing with config: {self.config}")
-        method =  AttributionPatching(self.config, model, tokenizer, dataset, metric, device=device)
+        perturbator = self.initialize_perturbator()
+        method =  AttributionPatching(self.config, model, tokenizer, perturbator, dataset, metric, device=device)
         return method
+
+    def initialize_perturbator(self):
+        print(f"Initializing perturbator with config: {self.config.get('perturbator', {})}")
+        perturbator = PromptPerturbator(self.config.get('perturbator', {}))
+        return perturbator
 
 
