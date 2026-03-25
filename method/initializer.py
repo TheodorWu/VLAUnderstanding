@@ -16,5 +16,3 @@ class MethodInitializer:
         print(f"Initializing perturbator with config: {self.config.get('perturbator', {})}")
         perturbator = PromptPerturbator(self.config.get('perturbator', {}))
         return perturbator
-
-

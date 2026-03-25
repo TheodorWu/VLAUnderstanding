@@ -10,6 +10,15 @@ class PerturbedPromptOutput:
         self.original_prompt = original_prompt
         self.perturbed_prompt = perturbed_prompt
 
+class BatchPerturbedPromptOutput:
+    """
+    Docstring for BatchPerturbedPromptOutput
+
+    Class to handle the output of perturbed prompts for a batch of data.
+    """
+    def __init__(self, original_prompts, perturbed_prompts):
+        self.original_prompts = original_prompts
+        self.perturbed_prompts = perturbed_prompts
 
 class PromptPerturbator:
     """
@@ -47,6 +56,24 @@ class PromptPerturbator:
         perturbed_prompt = prompt.replace(target_word, scaled_word)
         return PerturbedPromptOutput(prompt, perturbed_prompt)
 
+
+    def perturb_single(self, prompt):
+        if self.config.get("method") == "directional":
+            return self.directional_perturbation(prompt)
+        elif self.config.get("method") == "synonym":
+            return self.synonym_perturbation(prompt, target_word="put")  # Example target word
+        elif self.config.get("method") == "semantic_scaling":
+            return self.semantic_scaling_perturbation(prompt, target_word="bowl")  # Example target word
+        else:
+            raise ValueError(f"Unknown perturbation method: {self.config.get('method')}")
+
     def perturb(self, data):
-        # TODO: Implement perturbation logic based on config
-        pass
+        prompt = data["prompt"]
+        if isinstance(prompt, list):
+            perturbed_prompts = []
+            for p in prompt:
+                perturbed_output = self.perturb_single(p)
+                perturbed_prompts.append(perturbed_output.perturbed_prompt)
+            return BatchPerturbedPromptOutput(prompt, perturbed_prompts)
+        else:
+            return self.perturb_single(prompt)

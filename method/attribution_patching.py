@@ -18,6 +18,7 @@ class AttributionPatching():
         self.reset_collections()
 
     def reset_patching_results(self):
+        # todo: might want to save this to disk instead of keeping in memory
         self.patching_results = []
 
     def reset_collections(self):
@@ -26,11 +27,13 @@ class AttributionPatching():
         self.corrupted_grads = []
 
     def get_attribution_patching_data(self, batch):
-        # TODO: not implemented, try first with single item
-        # batch = self.dataset[0]  # Get the first (or only) item in the dataset
-        # batch = next(self.data_iterator)  # Get the next batch from the dataloader
+        clean_batch = batch
+        prompts = clean_batch["prompts"] # todo: will not work, have to check the key
+        perturbed = clean_batch.copy()
+        perturbed_prompts = self.perturbator.perturb(prompts).perturbed_prompts
+        perturbed["prompts"] = perturbed_prompts
 
-        return ["test"], ["corrupted test"]
+        return clean_batch, perturbed
 
     def main(self, unit_test=False):
         for batch in self.dataset:
@@ -42,14 +45,14 @@ class AttributionPatching():
 
     def activation_tracing(self, batch):
         self.reset_collections()
-        clean_tokens, corrupted_tokens = self.get_attribution_patching_data(batch) # TODO: might change and be wrapped in loop later
+        clean_batch, corrupted_batch = self.get_attribution_patching_data(batch)
 
         with self.model.trace() as tracer:
         # Using nnsight's tracer.invoke context, we can batch the clean and the
         # corrupted runs into the same tracing context, allowing us to access
         # information generated within each of these runs within one forward pass
 
-            with tracer.invoke(clean_tokens) as invoker_clean:
+            with tracer.invoke(clean_batch) as invoker_clean:
                 # Gather each layer's attention
                 for layer_name in self.model.tracing_layers:
                     layer = getattr(self.model, layer_name)
@@ -58,7 +61,7 @@ class AttributionPatching():
                     attn_out = layer.attn.c_proj.input
                     self.clean_out.append(attn_out.save())
 
-            with tracer.invoke(corrupted_tokens) as invoker_corrupted:
+            with tracer.invoke(corrupted_batch) as invoker_corrupted:
                 # Gather each layer's attention and gradients
                 for layer_name in self.model.tracing_layers:
                     layer = getattr(self.model, layer_name)
@@ -71,7 +74,7 @@ class AttributionPatching():
 
                 # Let's get the logits for the model's output
                 # for the corrupted run
-                logits = self.model.lm_head.output.save()
+                logits = self.model.lm_head.output.save() # TODO: will not work, we are dealing with different model architectures
 
                 # Our metric uses tensors saved on cpu, so we
                 # need to move the logits to cpu.
