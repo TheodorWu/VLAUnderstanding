@@ -17,6 +17,7 @@ class PI0Wrapper(nn.Module):
         self.model = PI0Policy.from_pretrained(model_id)
 
         self.tracing_layers = [f"transformer.h.{i}" for i in range(self.model.config.n_layer)]
+        self.logits_layer = "lm_head"
 
         # TODO: implement processing
         preprocess, postprocess = make_pre_post_processors(

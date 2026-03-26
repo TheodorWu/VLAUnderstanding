@@ -34,7 +34,11 @@ class PI05Wrapper(nn.Module):
 
         self._init_tracing_layers()
 
+    def get_tokenizer(self):
+        return self.preprocessor
+
     def _init_tracing_layers(self):
         all_model_layers = [name for name, _ in self.model.named_modules() if "self_attn" in name]
 
         self.tracing_layers = [layer for layer in all_model_layers if "gemma_expert" in layer]
+        self.logits_layer = "lm_head"

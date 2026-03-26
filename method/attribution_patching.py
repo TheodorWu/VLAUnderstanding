@@ -76,7 +76,8 @@ class AttributionPatching():
 
                 # Let's get the logits for the model's output
                 # for the corrupted run
-                logits = self.model.lm_head.output.save() # TODO: will not work, we are dealing with different model architectures
+                logits_layer = getattr(self.model, self.model.logits_layer)
+                logits = logits_layer.output.save()
 
                 # Our metric uses tensors saved on cpu, so we
                 # need to move the logits to cpu.

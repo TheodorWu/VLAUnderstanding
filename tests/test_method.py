@@ -20,9 +20,7 @@ class TestMethod(unittest.TestCase):
         methodInitializer = MethodInitializer(config)
         method = methodInitializer.initialize(
             model=model,
-            tokenizer=None,  # Replace with actual tokenizer
             dataset=ds,    # Replace with actual dataset
-            metric=None,     # Replace with actual metric
             device='cuda'
         )
         method.main()
