@@ -6,14 +6,14 @@
     "configurations": [
 
         {
-            "name": "Python Debugger: Current File",
+            "name": "Current File",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "console": "integratedTerminal"
         },
         {
-            "name": "Python: Test Perturbations",
+            "name": "Test Perturbations",
             "type": "debugpy",
             "request": "launch",
             "module": "tests.test_perturbations",
@@ -21,7 +21,7 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "Python: Test Data",
+            "name": "Test Data",
             "type": "debugpy",
             "request": "launch",
             "module": "tests.test_data",
@@ -29,7 +29,7 @@
             "cwd": "${workspaceFolder}"
         },
         {
-            "name": "Python: Test Model",
+            "name": "Test Model",
             "type": "debugpy",
             "request": "launch",
             "module": "tests.test_model",
@@ -38,10 +38,18 @@
             "justMyCode": false
         },
         {
-            "name": "Python: Test Method",
+            "name": "Test Method",
             "type": "debugpy",
             "request": "launch",
             "module": "tests.test_method",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Test Activation Writer",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_activation_writer",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
         }

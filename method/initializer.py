@@ -1,9 +1,18 @@
+import wandb
+from coolname import generate_slug
+
 from method.attribution_patching import AttributionPatching
 from method.prompts.perturbator import PromptPerturbator
 
 class MethodInitializer:
     def __init__(self, config):
         self.config = config
+        self._init_wandb()
+
+    def _init_wandb(self):
+        wandb.init(project=self.config.get("wandb_project", "default_vla_understanding"),
+                    name=f"Attribution-Patching-{generate_slug(2)}",
+                    config=self.config)
 
     def initialize(self, model, dataset, device='cuda'):
         # Initialization logic based on the configuration

@@ -1,5 +1,7 @@
 defaults:
  - perturbator: dev
+ - wandb: default
+ - activation_writer: dev
 
 stage: dev
 seed: 42

@@ -1,5 +1,5 @@
 import einops
-from eval.activation_writer import ActivationWriter
+from data.activation_writer import ActivationWriter
 from eval.logger import Logger
 
 class AttributionPatching():
@@ -16,13 +16,7 @@ class AttributionPatching():
         self.logger = Logger()
         self.writer = ActivationWriter(config)
 
-        self.reset_patching_results()
         self.reset_collections()
-
-    def reset_patching_results(self):
-        # todo: might want to save this to disk instead of keeping in memory
-        self.patching_results = []
-        self.writer.reset_patching_results()
 
     def reset_collections(self):
         self.clean_out = []
@@ -48,6 +42,8 @@ class AttributionPatching():
     def activation_tracing(self, batch):
         self.reset_collections()
         clean_batch, corrupted_batch = self.get_attribution_patching_data(batch)
+
+        # todo: write batch to disk using activation writer
 
         with self.model.trace() as tracer:
         # Using nnsight's tracer.invoke context, we can batch the clean and the
@@ -101,6 +97,6 @@ class AttributionPatching():
                 dim = 64,
             )
 
-            self.writer.add_patching_result(
+            self.writer.add_data(
                 residual_attr.detach().cpu().numpy()
             )
