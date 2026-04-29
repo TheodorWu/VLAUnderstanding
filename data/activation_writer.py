@@ -8,10 +8,18 @@ import webdataset as wds
 class ActivationDataBatch:
     # might be useful for grouping activations/gradients from multiple samples together before writing to disk in attribution patching loop
     def __init__(self, layer, sample_ids, activations=None, gradients=None):
-        data_points = []
-        for sample_id in sample_ids:
-            data_points.append(ActivationDataPoint(layer, sample_id, activations, gradients))
-        self.data_points = data_points
+        self.data_points = [
+            ActivationDataPoint(
+                layer=layer,
+                sample_id=sid,
+                activations=activations[i] if activations is not None else None,
+                gradients=gradients[i] if gradients is not None else None,
+            )
+            for i, sid in enumerate(sample_ids)
+        ]
+
+    def __iter__(self):
+        yield from self.data_points
 
 class ActivationDataPoint:
     def __init__(self, layer, sample_id, activations=None, gradients=None):
@@ -19,6 +27,9 @@ class ActivationDataPoint:
         self.sample_id = sample_id
         self.activations = activations
         self.gradients = gradients
+
+    def __iter__(self):
+        yield self
 
 class ActivationWriter():
     def __init__(self, config):
@@ -70,17 +81,18 @@ class ActivationWriter():
         torch.save(tensor.detach().cpu(), buf)
         return buf.getvalue()
 
-    def add_data(self, activation_data_point: ActivationDataPoint):
-        layer = activation_data_point.layer
-        sample_id = activation_data_point.sample_id
-        activations = activation_data_point.activations
-        gradients = activation_data_point.gradients
+    def add_data(self, data: ActivationDataPoint|ActivationDataBatch):
+        for activation_data_point in data:
+            layer = activation_data_point.layer
+            sample_id = activation_data_point.sample_id
+            activations = activation_data_point.activations
+            gradients = activation_data_point.gradients
 
-        for data_type, tensor in [("activations", activations), ("gradients", gradients)]:
-            if tensor is None:
-                continue
-            sink = self._get_sink(layer, data_type)
-            sink.write({
-                "__key__": str(sample_id),
-                "tensor.pth": self._tensor_to_bytes(tensor),
-            })
+            for data_type, tensor in [("activations", activations), ("gradients", gradients)]:
+                if tensor is None:
+                    continue
+                sink = self._get_sink(layer, data_type)
+                sink.write({
+                    "__key__": str(sample_id),
+                    "tensor.pth": self._tensor_to_bytes(tensor),
+                })

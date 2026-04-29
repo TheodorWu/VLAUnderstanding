@@ -38,7 +38,24 @@ class PI05Wrapper(nn.Module):
         return self.preprocessor
 
     def _init_tracing_layers(self):
-        all_model_layers = [name for name, _ in self.model.named_modules() if "self_attn" in name]
+        all_model_layers = [(name, layer) for name, layer in self.model.named_modules() if "self_attn" in name]
 
-        self.tracing_layers = [layer for layer in all_model_layers if "gemma_expert" in layer]
+        self.tracing_layers = [(name, layer) for name, layer in all_model_layers if "gemma_expert" in name]
         self.logits_layer = "lm_head"
+
+    def get_tracing_target(self):
+        # which activation within a layer
+        pass
+
+    def get_output_proxy(self):
+        # which output to save for the layer
+        pass
+
+    def metric(self):
+        # scalar value for backward()
+        pass
+
+'''
+backbone uses paligemma with expert to get sth called past_key_values which is passed to the action expert for flow matched denoising.
+
+'''
