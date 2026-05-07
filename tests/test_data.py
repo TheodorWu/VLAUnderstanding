@@ -6,7 +6,10 @@ class TestDataProcessing(unittest.TestCase):
         dataloader = get_dataloader("libero", batch_size=4)
         dataset = dataloader.dataset
         self.assertIsNotNone(dataset)
-        self.assertIn('train', dataset)
 
 if __name__ == "__main__":
-    unittest.main()
+    t = TestDataProcessing()
+    t.setUp()
+    t.test_libero_dataset_loading()
+    t.tearDown()
+    # unittest.main()

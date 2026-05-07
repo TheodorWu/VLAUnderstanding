@@ -1,8 +1,11 @@
-datasets==4.1.1
-lerobot==0.4.3
+coolname==4.1.0
+einops==0.8.2
+lerobot==0.5.1
 nltk==3.9.2
-nnsight==0.5.15
+nnsight==0.7.0
 numpy==2.2.6
 PyYAML==6.0.3
-rich==14.2.0
+rich==15.0.0
 torch==2.7.1
+wandb==0.24.2
+webdataset==1.0.2

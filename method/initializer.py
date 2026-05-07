@@ -18,20 +18,11 @@ class MethodInitializer:
         # Initialization logic based on the configuration
         print(f"Initializing with config: {self.config}")
         perturbator = self.initialize_perturbator()
-        metric = self.initialize_metric()
         tokenizer = model.get_tokenizer()  # Assuming the model has a method to get the tokenizer
-        method =  AttributionPatching(self.config, model, tokenizer, perturbator, dataset, metric, device=device)
+        method =  AttributionPatching(self.config, model, tokenizer, perturbator, dataset, device=device)
         return method
 
     def initialize_perturbator(self):
         print(f"Initializing perturbator with config: {self.config.get('perturbator', {})}")
         perturbator = PromptPerturbator(self.config.get('perturbator', {}))
         return perturbator
-
-    def initialize_metric(self):
-        # Placeholder for metric initialization logic
-        if self.config.get('metric') == 'logit_diff':
-            from method.losses.logit_diff import LogitDifference
-            return LogitDifference()
-        else:
-            raise NotImplementedError(f"Metric {self.config.get('metric')} not implemented.")

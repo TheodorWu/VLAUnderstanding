@@ -1,0 +1,1341 @@
+model:
+  type: PI05Pytorch
+  children:
+    paligemma_with_expert:
+      type: PaliGemmaWithExpertModel
+      children:
+        paligemma:
+          type: PaliGemmaForConditionalGenerationWithPiGemma
+          children:
+            model:
+              type: PaliGemmaModelWithPiGemma
+              children:
+                vision_tower:
+                  type: SiglipVisionModel
+                  children:
+                    vision_model:
+                      type: SiglipVisionTransformer
+                      children:
+                        embeddings:
+                          type: SiglipVisionEmbeddings
+                          children:
+                            patch_embedding: Conv2d
+                            position_embedding: Embedding
+                        encoder:
+                          type: SiglipEncoder
+                          children:
+                            layers:
+                              type: ModuleList
+                              children:
+                                '0':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '1':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '2':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '3':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '4':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '5':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '6':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '7':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '8':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '9':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '10':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '11':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '12':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '13':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '14':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '15':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '16':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '17':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '18':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '19':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '20':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '21':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '22':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '23':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '24':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '25':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                                '26':
+                                  type: SiglipEncoderLayer
+                                  children:
+                                    layer_norm1: LayerNorm
+                                    self_attn:
+                                      type: SiglipAttention
+                                      children:
+                                        k_proj: Linear
+                                        v_proj: Linear
+                                        q_proj: Linear
+                                        out_proj: Linear
+                                    layer_norm2: LayerNorm
+                                    mlp:
+                                      type: SiglipMLP
+                                      children:
+                                        activation_fn: GELUTanh
+                                        fc1: Linear
+                                        fc2: Linear
+                        post_layernorm: LayerNorm
+                multi_modal_projector:
+                  type: PaliGemmaMultiModalProjector
+                  children:
+                    linear: Linear
+                language_model:
+                  type: PiGemmaModel
+                  children:
+                    embed_tokens: Embedding
+                    layers:
+                      type: ModuleList
+                      children:
+                        '0':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '1':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '2':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '3':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '4':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '5':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '6':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '7':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '8':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '9':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '10':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '11':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '12':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '13':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '14':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '15':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '16':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                        '17':
+                          type: _PiGemmaDecoderLayerBase
+                          children:
+                            self_attn:
+                              type: GemmaAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                            mlp:
+                              type: GemmaMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: GELUTanh
+                            input_layernorm: PiGemmaRMSNorm
+                            post_attention_layernorm: PiGemmaRMSNorm
+                    norm: PiGemmaRMSNorm
+                    rotary_emb: GemmaRotaryEmbedding
+            lm_head: Linear
+        gemma_expert:
+          type: PiGemmaForCausalLM
+          children:
+            model:
+              type: PiGemmaModel
+              children:
+                layers:
+                  type: ModuleList
+                  children:
+                    '0':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '1':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '2':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '3':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '4':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '5':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '6':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '7':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '8':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '9':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '10':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '11':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '12':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '13':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '14':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '15':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '16':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                    '17':
+                      type: _PiGemmaDecoderLayerBase
+                      children:
+                        self_attn:
+                          type: GemmaAttention
+                          children:
+                            q_proj: Linear
+                            k_proj: Linear
+                            v_proj: Linear
+                            o_proj: Linear
+                        mlp:
+                          type: GemmaMLP
+                          children:
+                            gate_proj: Linear
+                            up_proj: Linear
+                            down_proj: Linear
+                            act_fn: GELUTanh
+                        input_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                        post_attention_layernorm:
+                          type: PiGemmaRMSNorm
+                          children:
+                            dense: Linear
+                norm:
+                  type: PiGemmaRMSNorm
+                  children:
+                    dense: Linear
+                rotary_emb: GemmaRotaryEmbedding
+            lm_head: Linear
+    action_in_proj: Linear
+    action_out_proj: Linear
+    time_mlp_in: Linear
+    time_mlp_out: Linear

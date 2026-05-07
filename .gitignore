@@ -214,3 +214,10 @@ data/*
 
 # HF Cache
 .hfcache/
+
+# wandb logs
+wandb/
+
+# results
+results/
+

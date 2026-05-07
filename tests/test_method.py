@@ -8,9 +8,13 @@ class TestMethod(unittest.TestCase):
 
         config = {
             "model": {
-                "type": "pi0"
+                "type": "pi05",
+                "model_id": None # Use None to load the model without pretrained weights for testing purposes
+            },
+            "perturbator": {
+                "method": "directional"
             }
-        }
+            }
         modelInitializer = ModelInitializer(config)
         model = modelInitializer.initialize()
 
@@ -27,4 +31,9 @@ class TestMethod(unittest.TestCase):
         # self.assertEqual(model.config, config["model"])
 
 if __name__ == "__main__":
-    unittest.main()
+
+    t = TestMethod()
+    t.setUp()
+    t.test_attribution_patching()
+    t.tearDown()
+    # unittest.main()
