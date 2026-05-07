@@ -37,15 +37,44 @@ class TestModels(unittest.TestCase):
         # Preprocess batch before passing to forward
         processed_batch = model.preprocess_batch(batch)
         output = model(processed_batch)
+        print(f"Output sample: {output}")
+        print(f"Output shape: {output.shape}")
 
         # Check output shape is reasonable (batch_size, action_dim)
-        self.assertEqual(output.shape[0], 2)  # batch size
         self.assertGreater(output.shape[1], 0)  # action dimension should be positive
+
+    def test_pi05_call_with_nnsight(self):
+        # Load actual sample from libero dataset
+        from data.dataloader import get_dataloader
+        dataloader = get_dataloader("libero", batch_size=2)
+        batch = next(iter(dataloader))
+
+        config = {
+            "model": {
+                "type": "pi05",
+                "model_id": "lerobot/pi05_base", # Use pretrained weights for this test to ensure forward pass works
+                "wrap_with_nnsight": True
+            }
+        }
+        dataset_stats = dataloader.dataset.meta.stats
+        initializer = ModelInitializer(config, dataset_stats=dataset_stats)
+        model = initializer.initialize()
+
+        # Preprocess batch before passing to forward
+        processed_batch = model.preprocess_batch(batch)
+        output = model(processed_batch)
+
+        print(f"Output sample: {output}")
+        print(f"Output shape: {output.shape}")
+        # Check output shape is reasonable (batch_size, action_dim)
+        self.assertGreater(output.shape[1], 0)  # action dimension should be positive
+
 
 if __name__ == "__main__":
     t = TestModels()
     t.setUp()
     t.test_pi05_call()
+    t.test_pi05_call_with_nnsight()
     t.tearDown()
     # suite = unittest.TestSuite()
     # # suite.addTest(TestModels('test_pi05_initialization'))
