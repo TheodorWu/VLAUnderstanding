@@ -1,0 +1,31 @@
+#!/bin/bash --login
+#SBATCH -p gpuA
+#SBATCH -G 1
+#SBATCH -c 4
+#SBATCH -t 0-2
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=theodor.wulff@manchester.ac.uk
+
+echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK # reduce overloading GPU node
+export HF_HOME="$PWD/.hfcache"
+
+module purge
+module load libs/cuda
+
+# Print job information
+echo "Job started at: $(date)"
+echo "Running on node: $(hostname)"
+echo "Job ID: $SLURM_JOB_ID"
+
+# Run the setup script
+source "$PWD/.venv/bin/activate"
+
+# python -m tests.test_data
+python -m data.augment_dataset_with_quantile_stats --repo-id lerobot/libero_10_image --root ./data/libero --overwrite
+
+deactivate
+
+# Print completion message
+echo "Job finished at: $(date)"

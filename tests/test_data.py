@@ -8,8 +8,8 @@ class TestDataProcessing(unittest.TestCase):
         self.assertIsNotNone(dataset)
 
 if __name__ == "__main__":
-    t = TestDataProcessing()
-    t.setUp()
-    t.test_libero_dataset_loading()
-    t.tearDown()
-    # unittest.main()
+    # t = TestDataProcessing()
+    # t.setUp()
+    # t.test_libero_dataset_loading()
+    # t.tearDown()
+    unittest.main()

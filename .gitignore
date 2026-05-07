@@ -220,4 +220,4 @@ wandb/
 
 # results
 results/
-
+*.out
