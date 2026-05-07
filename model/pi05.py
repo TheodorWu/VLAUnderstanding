@@ -109,9 +109,9 @@ class PI05Wrapper(nn.Module):
 
         print(f"Registered {len(registered)} image feature(s) from dataset_stats: {registered}")
 
-    def forward(self, batch):
+    def forward(self, processed_batch):
         # batch should already be preprocessed before calling forward
-        return self.model(batch)
+        return self.model(processed_batch)
 
     def preprocess_batch(self, batch):
         """Preprocess a raw batch for model input.
@@ -124,18 +124,9 @@ class PI05Wrapper(nn.Module):
         """
         return self.preprocessor(batch)
 
-    def postprocess_output(self, output):
-        """Postprocess model output.
-
-        Args:
-            output: Raw model output (possibly a tuple)
-
-        Returns:
-            Postprocessed output
-        """
-        if isinstance(output, tuple):
-            return output[0]
-        return output
+    def postprocess_output(self, raw_output):
+        output = raw_output[0] if isinstance(raw_output, tuple) else raw_output
+        return self.postprocessor(output)
 
     def get_tokenizer(self):
         return self.preprocessor
@@ -146,6 +137,11 @@ class PI05Wrapper(nn.Module):
         # paligemma_with_expert need the extra `model.` prefix before that branch.
         self.tracing_layers = [f"model.{name}" for name in all_layer_names if "gemma_expert" in name]
         self.logits_layer = "lm_head"
+        if not self.tracing_layers:
+            raise ValueError(
+                f"No tracing layers found matching 'gemma_expert'. "
+                f"Available attention layers: {all_layer_names[:5]}..."
+            )
 
     def get_tracing_layers(self):
         return self.tracing_layers
@@ -155,7 +151,6 @@ class PI05Wrapper(nn.Module):
         return self.model.output
 
     def metric(self, output):
-        # scalar value for backward()
-        # L2 Norm for velocity from flow matching expert
-        # Logit difference for VL backbone tokens
-        return output.sum()
+        # Example: L2 norm over action chunk
+        actions = output.actions  # or however PolicyAction exposes it
+        return actions.norm(dim=-1).mean()
