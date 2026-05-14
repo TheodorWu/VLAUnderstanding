@@ -2,11 +2,15 @@ from pathlib import Path
 from nnsight import NNsight
 import torch
 
+from utils.general import set_hf_cache_dir
+
 class ModelInitializer:
     def __init__(self, config, dataset_stats=None, device=torch.device("cpu")):
         self.config = config
         self.dataset_stats = dataset_stats
         self.device = device
+
+        set_hf_cache_dir()
 
     def initialize(self):
         # Initialization logic based on the configuration

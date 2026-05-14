@@ -19,7 +19,7 @@ class TestMethod(unittest.TestCase):
         model = modelInitializer.initialize()
 
         from data.dataloader import get_dataloader
-        ds = get_dataloader("libero", batch_size=4)
+        ds = get_dataloader("libero", batch_size=2, fps=10, chunk_size=50)
 
         methodInitializer = MethodInitializer(config)
         method = methodInitializer.initialize(

@@ -1,3 +1,4 @@
+import os
 import sys
 import random
 from rich.tree import Tree
@@ -6,6 +7,17 @@ import numpy as np
 import torch
 from torch.nn.parameter import is_lazy
 import yaml
+from pathlib import Path
+
+HF_CACHE_DEFAULT = str(Path(__file__).parent.parent / ".hfcache")
+
+def set_hf_cache_dir():
+    if not os.environ.get("HF_HOME"):
+        os.environ["HF_HOME"] = HF_CACHE_DEFAULT
+        print(f"HF_HOME not set, using default: {HF_CACHE_DEFAULT}")
+    else:
+        print(f"HF_HOME already set to: {os.environ['HF_HOME']}, keeping.")
+
 
 class DotDict(dict):
     """Dictionary with dot notation access to attributes."""

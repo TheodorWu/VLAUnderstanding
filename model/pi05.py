@@ -11,18 +11,6 @@ from utils.general import printable_params, rprint_architecture
 DUMMY_ACTION_DIM = 32
 DUMMY_STATE_DIM = 32
 
-def _patch_policy_init_for_meta(original_init):
-    """Wraps PI05Policy.__init__ to disable .to() calls during meta device init,
-    preventing meta tensor materialization errors."""
-    def patched_init(self_model, config, **kwargs):
-        original_to = torch.nn.Module.to
-        torch.nn.Module.to = lambda self, *args, **kwargs: self  # no-op
-        try:
-            original_init(self_model, config, **kwargs)
-        finally:
-            torch.nn.Module.to = original_to  # always restore, even on exception
-    return patched_init
-
 
 @printable_params
 @rprint_architecture
@@ -37,13 +25,10 @@ class PI05Wrapper(nn.Module):
             pi_config = PI05Config(
                 max_action_dim=DUMMY_ACTION_DIM,
                 max_state_dim=DUMMY_STATE_DIM,
-                dtype="bfloat16"
+                dtype="bfloat16",
+                image_resolution=(224, 224)
             )
-            pi_module.PI05Policy.__init__ = _patch_policy_init_for_meta(
-                pi_module.PI05Policy.__init__
-            )
-            with torch.device("meta"):
-                self.model = PI05Policy(pi_config)
+            self.model = PI05Policy(pi_config)
             self.device = torch.device("meta")  # Model starts on CPU since it's uninitialized
         else:
             print(f"Loading PI05 model from {model_id}")
@@ -54,6 +39,8 @@ class PI05Wrapper(nn.Module):
         self._patch_rmsnorm_layers()
 
         self._register_image_features(dataset_stats)
+
+        # todo: check if I also have to register other features like state and action too.
 
         self.preprocessor, self.postprocessor = make_pi05_pre_post_processors(
             config=self.model.config, dataset_stats=dataset_stats

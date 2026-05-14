@@ -7,6 +7,7 @@ model:
         paligemma:
           type: PaliGemmaForConditionalGenerationWithPiGemma
           children:
+            lm_head: Linear
             model:
               type: PaliGemmaModelWithPiGemma
               children:
@@ -522,6 +523,7 @@ model:
                   type: PiGemmaModel
                   children:
                     embed_tokens: Embedding
+                    rotary_emb: GemmaRotaryEmbedding
                     layers:
                       type: ModuleList
                       children:
@@ -868,14 +870,14 @@ model:
                             input_layernorm: PiGemmaRMSNorm
                             post_attention_layernorm: PiGemmaRMSNorm
                     norm: PiGemmaRMSNorm
-                    rotary_emb: GemmaRotaryEmbedding
-            lm_head: Linear
         gemma_expert:
           type: PiGemmaForCausalLM
           children:
+            lm_head: Linear
             model:
               type: PiGemmaModel
               children:
+                rotary_emb: GemmaRotaryEmbedding
                 layers:
                   type: ModuleList
                   children:
@@ -1333,8 +1335,6 @@ model:
                   type: PiGemmaRMSNorm
                   children:
                     dense: Linear
-                rotary_emb: GemmaRotaryEmbedding
-            lm_head: Linear
     action_in_proj: Linear
     action_out_proj: Linear
     time_mlp_in: Linear
