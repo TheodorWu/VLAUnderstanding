@@ -89,19 +89,7 @@ class AttributionPatching():
             value = self.model.metric(output)
             value.backward()
 
-            # # Let's get the logits for the model's output
-            # # for the corrupted run
-            # logits_layer = getattr(self.model, self.model.logits_layer)
-            # logits = logits_layer.output.save()
-
-            # # Our metric uses tensors saved on cpu, so we
-            # # need to move the logits to cpu.
-            # value = self.metric(logits.cpu())
-
-            # # We also need to run a backwards pass to
-            # # update gradient values
-            # value.backward()
-        # --- proxies are materialised here ---
+        # Log activations and gradients for each layer
         for name in self.clean_out.keys():
             self.writer.add_data(ActivationDataBatch(
                 layer=name,

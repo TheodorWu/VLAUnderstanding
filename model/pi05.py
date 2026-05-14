@@ -2,7 +2,6 @@ import torch
 import torch.nn as nn
 
 from lerobot.policies.pi05.modeling_pi05 import PI05Config, PI05Policy
-import lerobot.policies.pi05.modeling_pi05 as pi_module
 from lerobot.policies.pi05.processor_pi05 import make_pi05_pre_post_processors
 from lerobot.configs.policies import PolicyFeature, FeatureType
 
@@ -98,7 +97,8 @@ class PI05Wrapper(nn.Module):
 
     def forward(self, processed_batch):
         # batch should already be preprocessed before calling forward
-        return self.model(processed_batch)
+        loss, _ = self.model(processed_batch)
+        return loss
 
     def preprocess_batch(self, batch):
         """Preprocess a raw batch for model input.
