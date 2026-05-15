@@ -49,23 +49,31 @@ class AttributionPatching():
         return clean_batch, perturbed
 
     def main(self, unit_test=False):
+        print("Starting attribution patching...")
         for batch in self.dataset:
+            print("Processing next batch...")
             self.activation_tracing(batch)
+            print("Running attribution patching analysis...")
             self.attribution_patching_analysis()
             if unit_test:
+                print("Unit test mode enabled; stopping after one batch.")
                 break
 
     def activation_tracing(self, batch):
+        print("Resetting stored activations and gradients...")
         self.reset_collections()
+        print("Preparing clean and corrupted batches...")
         clean_batch, corrupted_batch = self.get_attribution_patching_data(batch)
         sample_ids = [ f"e{batch['episode_index'][i]}_i{batch['index'][i]}" for i in range(len(batch['episode_index']))]
 
         # todo: write batch to disk using activation writer
 
         # Preprocess batches outside trace blocks - keeps tracing focused on model execution
+        print("Preprocessing batches...")
         clean_batch_processed = self.model.preprocess_batch(clean_batch)
         corrupted_batch_processed = self.model.preprocess_batch(corrupted_batch)
 
+        print("Tracing clean batch activations...")
         with self.model.trace() as tracer:
             with tracer.invoke(clean_batch_processed):
                 for name in self.tracing_layers:
@@ -73,6 +81,7 @@ class AttributionPatching():
                     target = self.get_tracing_target(name)
                     self.clean_out[name] = target.input[0].save()
 
+        print("Tracing corrupted batch activations and gradients...")
         with self.model.trace() as tracer:
             with tracer.invoke(corrupted_batch_processed):
                 for name in self.tracing_layers:
@@ -89,6 +98,7 @@ class AttributionPatching():
                         self.corrupted_grads[name] = target.input[0].grad.save()
 
         # Log activations and gradients for each layer
+        print("Writing traced data to the activation writer...")
         for name in self.clean_out.keys():
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
@@ -101,6 +111,7 @@ class AttributionPatching():
                 activations=self.corrupted_out[name].value,
                 gradients=self.corrupted_grads[name].value,
             ))
+            print("Tracing complete.")
 
     def attribution_patching_analysis(self):
         for layer in self.clean_out.keys():
