@@ -19,7 +19,6 @@ class AttributionPatching():
         self.reset_collections()
 
     def get_tracing_target(self, name):
-        # First, try direct lookup with model prefix (common case)
         paths_to_try = []
         if not name.startswith("model."):
             paths_to_try.append(f"model.{name}")
@@ -27,16 +26,12 @@ class AttributionPatching():
 
         for path in paths_to_try:
             try:
-                proxy = self.model.get(path)
+                return self.model.get(path)
             except AttributeError:
-                pass
+                continue
 
-            return proxy.o_proj
-
-        # If both fail, raise a clear error
         raise AttributeError(
-            f"Could not resolve tracing target '{name}' or its variants. "
-            f"Available model: {self.model}"
+            f"Could not resolve tracing target '{name}' or its variants."
         )
 
     def reset_collections(self):
@@ -83,11 +78,15 @@ class AttributionPatching():
                 for name in self.tracing_layers:
                     target = self.get_tracing_target(name)
                     self.corrupted_out[name] = target.input[0].save()
-                    self.corrupted_grads[name] = target.input[0].grad.save()
+                    target.input[0].retain_grad()
 
-            output = self.model.get_output_proxy()
-            value = self.model.metric(output)
-            value.backward()
+                loss = self.model.output
+                loss.backward()
+
+                with tracer.invoke():  # empty invoke to avoid execution-order conflicts
+                    for name in self.tracing_layers:
+                        target = self.get_tracing_target(name)
+                        self.corrupted_grads[name] = target.input[0].grad.save()
 
         # Log activations and gradients for each layer
         for name in self.clean_out.keys():

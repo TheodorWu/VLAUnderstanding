@@ -5,6 +5,8 @@ from model.initializer import ModelInitializer
 
 class TestMethod(unittest.TestCase):
     def test_attribution_patching(self):
+        from data.dataloader import get_dataloader
+        dataloader = get_dataloader("libero", batch_size=2, fps=10, chunk_size=50, single_batch=True)
 
         config = {
             "model": {
@@ -15,16 +17,16 @@ class TestMethod(unittest.TestCase):
                 "method": "directional"
             }
             }
-        modelInitializer = ModelInitializer(config)
+
+        dataset_stats = dataloader.dataset.meta.stats
+        modelInitializer = ModelInitializer(config, dataset_stats=dataset_stats)
         model = modelInitializer.initialize()
 
-        from data.dataloader import get_dataloader
-        ds = get_dataloader("libero", batch_size=2, fps=10, chunk_size=50)
 
         methodInitializer = MethodInitializer(config)
         method = methodInitializer.initialize(
             model=model,
-            dataset=ds,    # Replace with actual dataset
+            dataset=dataloader,    # Replace with actual dataset
             device='cuda'
         )
         method.main()

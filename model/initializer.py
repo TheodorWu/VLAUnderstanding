@@ -14,7 +14,7 @@ class ModelInitializer:
 
     def initialize(self):
         # Initialization logic based on the configuration
-        print(f"Initializing with config: {self.config}")
+        print(f"Initializing model with config: {self.config}")
         return self._initialize_model()
 
     def _initialize_model(self):

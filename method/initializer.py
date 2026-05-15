@@ -10,13 +10,14 @@ class MethodInitializer:
         self._init_wandb()
 
     def _init_wandb(self):
-        wandb.init(project=self.config.get("wandb_project", "default_vla_understanding"),
+        wandb_config = self.config.get("wandb", {})
+        wandb.init(project=wandb_config.get("wandb_project", "default_vla_understanding"),
                     name=f"Attribution-Patching-{generate_slug(2)}",
                     config=self.config)
 
     def initialize(self, model, dataset, device='cuda'):
         # Initialization logic based on the configuration
-        print(f"Initializing with config: {self.config}")
+        print(f"Initializing Method with config: {self.config}")
         perturbator = self.initialize_perturbator()
         tokenizer = model.get_tokenizer()  # Assuming the model has a method to get the tokenizer
         method =  AttributionPatching(self.config, model, tokenizer, perturbator, dataset, device=device)

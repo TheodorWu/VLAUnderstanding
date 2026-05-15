@@ -2,6 +2,9 @@ defaults:
  - perturbator: dev
  - wandb: default
  - activation_writer: dev
+ - dataset: libero
+ - model: dev
+ - method: dev
 
 stage: dev
 seed: 42

@@ -8,6 +8,7 @@ def get_dataloader(dataset_name, batch_size, shuffle=True, **kwargs):
         raise ValueError(f"Dataset {dataset_name} not recognized.")
 
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
+
     if kwargs.get("single_batch", False):
         return SingleBatchDataloader(dataloader)
     return dataloader
@@ -17,6 +18,7 @@ class SingleBatchDataloader:
 
     def __init__(self, dataloader):
         self._batch = next(iter(dataloader))
+        self.dataset = dataloader.dataset
 
     def __iter__(self):
         yield self._batch

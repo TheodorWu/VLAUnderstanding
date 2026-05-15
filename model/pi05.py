@@ -18,6 +18,7 @@ class PI05Wrapper(nn.Module):
         super(PI05Wrapper, self).__init__()
         self.config = config
         model_id = config.get("model_id", "lerobot/pi05_base")
+        self.device = device
 
         if model_id is None:
             print("model_id set to None explicitly, loading without weights.")
@@ -28,12 +29,10 @@ class PI05Wrapper(nn.Module):
                 image_resolution=(224, 224)
             )
             self.model = PI05Policy(pi_config)
-            self.device = torch.device("meta")  # Model starts on CPU since it's uninitialized
+            self.model.to(device)
         else:
             print(f"Loading PI05 model from {model_id}")
             self.model = PI05Policy.from_pretrained(model_id, device_map=device)
-
-        # self.model.to(device)
 
         self._patch_rmsnorm_layers()
 
@@ -122,7 +121,7 @@ class PI05Wrapper(nn.Module):
         all_layer_names = [name for name, _ in self.model.named_modules() if "self_attn" in name]
         # NNsight wraps PI05Wrapper -> model (PI05Policy) -> model (PI05Pytorch), so paths that reach
         # paligemma_with_expert need the extra `model.` prefix before that branch.
-        self.tracing_layers = [f"model.{name}" for name in all_layer_names if "gemma_expert" in name]
+        self.tracing_layers = [f"model.{name}" for name in all_layer_names if "gemma_expert" in name and "o_proj" in name]
         self.logits_layer = "lm_head"
         if not self.tracing_layers:
             raise ValueError(
@@ -132,12 +131,3 @@ class PI05Wrapper(nn.Module):
 
     def get_tracing_layers(self):
         return self.tracing_layers
-
-    def get_output_proxy(self):
-        # The traced wrapper exposes the forward return value as model.output.
-        return self.model.output
-
-    def metric(self, output):
-        # Example: L2 norm over action chunk
-        actions = output.actions  # or however PolicyAction exposes it
-        return actions.norm(dim=-1).mean()
