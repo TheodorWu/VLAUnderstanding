@@ -92,10 +92,10 @@ class AttributionPatching():
                 loss = self.model.output
                 loss.backward()
 
-                with tracer.invoke():  # empty invoke to avoid execution-order conflicts
-                    for name in self.tracing_layers:
-                        target = self.get_tracing_target(name)
-                        self.corrupted_grads[name] = target.input[0].grad.save()
+            with tracer.invoke():  # empty invoke to avoid execution-order conflicts
+                for name in self.tracing_layers:
+                    target = self.get_tracing_target(name)
+                    self.corrupted_grads[name] = target.input[0].grad.save()
 
         # Log activations and gradients for each layer
         print("Writing traced data to the activation writer...")
@@ -103,15 +103,15 @@ class AttributionPatching():
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,
-                activations=self.clean_out[name].value,   # clean acts, no grads needed
+                activations=self.clean_out[name],   # clean acts, no grads needed
             ))
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,
-                activations=self.corrupted_out[name].value,
-                gradients=self.corrupted_grads[name].value,
+                activations=self.corrupted_out[name],
+                gradients=self.corrupted_grads[name],
             ))
-            print("Tracing complete.")
+        print("Tracing complete.")
 
     def attribution_patching_analysis(self):
         for layer in self.clean_out.keys():
