@@ -45,7 +45,7 @@ def seed_all(seed):
     np.random.seed(seed)
     random.seed(seed)
 
-def test_gpu_availability(cfg=None):
+def test_gpu_availability():
     print(f"Using torch {torch.__version__}", file=sys.stdout)
     print(f"Cuda available: {torch.cuda.is_available()}", file=sys.stdout)
     print('__CUDNN VERSION:', torch.backends.cudnn.version(), file=sys.stdout)
@@ -53,7 +53,7 @@ def test_gpu_availability(cfg=None):
     print('Current cuda device ', torch.cuda.current_device(), file=sys.stdout)
     print(f"Device name: {torch.cuda.get_device_name(torch.cuda.current_device())}")
 
-    if cfg and cfg.training.device == "gpu" and torch.cuda.is_available():
+    if  torch.cuda.is_available():
         print("Using GPU", file=sys.stdout)
         device = torch.device("cuda")
         torch.backends.cuda.matmul.allow_tf32 = True

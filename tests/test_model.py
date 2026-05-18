@@ -4,6 +4,7 @@ from lerobot.policies import PI05Config
 import torch
 
 from model.initializer import ModelInitializer
+from utils.general import test_gpu_availability
 
 class TestModels(unittest.TestCase):
     def test_pi05_initialization(self):
@@ -32,7 +33,8 @@ class TestModels(unittest.TestCase):
             }
         }
         dataset_stats = dataloader.dataset.meta.stats
-        initializer = ModelInitializer(config, dataset_stats=dataset_stats)
+        device = test_gpu_availability()
+        initializer = ModelInitializer(config, dataset_stats=dataset_stats, device=device)
         model = initializer.initialize()
 
         # Preprocess batch before passing to forward
@@ -57,8 +59,9 @@ class TestModels(unittest.TestCase):
                 "wrap_with_nnsight": True
             }
         }
+        device = test_gpu_availability()
         dataset_stats = dataloader.dataset.meta.stats
-        initializer = ModelInitializer(config, dataset_stats=dataset_stats)
+        initializer = ModelInitializer(config, dataset_stats=dataset_stats, device=device)
         model = initializer.initialize()
 
         # Preprocess batch before passing to forward

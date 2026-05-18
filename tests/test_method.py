@@ -2,6 +2,7 @@ import unittest
 
 from method.initializer import MethodInitializer
 from model.initializer import ModelInitializer
+from utils.general import test_gpu_availability
 
 class TestMethod(unittest.TestCase):
     def test_attribution_patching(self):
@@ -19,7 +20,8 @@ class TestMethod(unittest.TestCase):
             }
 
         dataset_stats = dataloader.dataset.meta.stats
-        modelInitializer = ModelInitializer(config, dataset_stats=dataset_stats)
+        device = test_gpu_availability()
+        modelInitializer = ModelInitializer(config, dataset_stats=dataset_stats, device=device)
         model = modelInitializer.initialize()
 
 
@@ -27,7 +29,7 @@ class TestMethod(unittest.TestCase):
         method = methodInitializer.initialize(
             model=model,
             dataset=dataloader,    # Replace with actual dataset
-            device='cuda'
+            device=device
         )
         method.main()
         # self.assertEqual(model.config, config["model"])

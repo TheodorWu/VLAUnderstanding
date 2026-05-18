@@ -22,7 +22,7 @@ echo "Job ID: $SLURM_JOB_ID"
 # Run the setup script
 source "$PWD/.venv/bin/activate"
 
-python -m tests.test_model
+python -m tests.test_method
 
 deactivate
 

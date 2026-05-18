@@ -96,6 +96,8 @@ class PI05Wrapper(nn.Module):
         print(f"Registered {len(registered)} image feature(s) from dataset_stats: {registered}")
 
     def forward(self, processed_batch):
+        model_device = next(self.model.parameters()).device
+        print(f"Model device: {model_device}")
         # batch should already be preprocessed before calling forward
         # Wrapper forward replaces model forward for attribution patching to work and get rid of unnecessary statements that crash nnsights tracing
         # Prepare inputs
@@ -106,7 +108,14 @@ class PI05Wrapper(nn.Module):
 
         noise = self.model.model.sample_noise(actions.shape, actions.device)
         time = self.model.model.sample_time(actions.shape[0], actions.device)
-
+        for i, (img, mask) in enumerate(zip(images, img_masks)):
+            print(f"  images[{i}]: {img.device} {img.dtype}")
+            print(f"  img_masks[{i}]: {mask.device} {mask.dtype}")
+        print(f"  tokens: {tokens.device} {tokens.dtype}")
+        print(f"  masks: {masks.device} {masks.dtype}")
+        print(f"  actions: {actions.device} {actions.dtype}")
+        print(f"  noise: {noise.device} {noise.dtype}")
+        print(f"  time: {time.device} {time.dtype}")
         # Compute loss (no separate state needed for PI05)
         losses = self.model.model.forward(images, img_masks, tokens, masks, actions, noise, time)
 
