@@ -4,6 +4,7 @@ import torch.nn as nn
 from lerobot.policies.pi05.modeling_pi05 import PI05Config, PI05Policy
 from lerobot.policies.pi05.processor_pi05 import make_pi05_pre_post_processors
 from lerobot.configs.policies import PolicyFeature, FeatureType
+from lerobot.utils.constants import ACTION, OBS_LANGUAGE_ATTENTION_MASK, OBS_LANGUAGE_TOKENS
 
 from utils.general import printable_params, rprint_architecture
 
@@ -96,7 +97,25 @@ class PI05Wrapper(nn.Module):
 
     def forward(self, processed_batch):
         # batch should already be preprocessed before calling forward
-        loss, _ = self.model(processed_batch)
+        # Wrapper forward replaces model forward for attribution patching to work and get rid of unnecessary statements that crash nnsights tracing
+        # Prepare inputs
+        images, img_masks = self.model._preprocess_images(processed_batch)
+        tokens, masks = processed_batch[f"{OBS_LANGUAGE_TOKENS}"], processed_batch[f"{OBS_LANGUAGE_ATTENTION_MASK}"]
+
+        actions = self.model.prepare_action(processed_batch)
+
+        noise = self.model.model.sample_noise(actions.shape, actions.device)
+        time = self.model.model.sample_time(actions.shape[0], actions.device)
+
+        # Compute loss (no separate state needed for PI05)
+        losses = self.model.model.forward(images, img_masks, tokens, masks, actions, noise, time)
+
+        # Truncate losses to actual action dimensions
+        original_action_dim = self.model.config.output_features[ACTION].shape[0]
+        losses = losses[:, :, :original_action_dim]
+
+        # Default: return scalar mean loss
+        loss = losses.mean()
         return loss
 
     def preprocess_batch(self, batch):
