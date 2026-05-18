@@ -49,15 +49,15 @@ class AttributionPatching():
         return clean_batch, perturbed
 
     def main(self, unit_test=False):
-        print("Starting attribution patching...")
+        print("Starting attribution patching. Collecting activations and gradients for each batch in the dataset...")
         for batch in self.dataset:
             print("Processing next batch...")
             self.activation_tracing(batch)
-            print("Running attribution patching analysis...")
-            self.attribution_patching_analysis()
             if unit_test:
                 print("Unit test mode enabled; stopping after one batch.")
                 break
+        print("Attribution patching complete. All activations and gradients collected.")
+
 
     def activation_tracing(self, batch):
         print("Resetting stored activations and gradients...")
@@ -112,21 +112,3 @@ class AttributionPatching():
                 gradients=self.corrupted_grads[name],
             ))
         print("Tracing complete.")
-
-    def attribution_patching_analysis(self):
-        for layer in self.clean_out.keys():
-            corrupted_grad = self.corrupted_grads[layer]
-            corrupted = self.corrupted_out[layer]
-            clean = self.clean_out[layer]
-
-            residual_attr = einops.reduce(
-                corrupted_grad.value[:,-1,:] * (clean.value[:,-1,:] - corrupted.value[:,-1,:]),
-                "batch (head dim) -> head",
-                "sum",
-                head = 12,
-                dim = 64,
-            )
-
-            self.writer.add_data(
-                residual_attr.detach().cpu().numpy()
-            )
