@@ -5,14 +5,17 @@ import torch
 import wandb
 import webdataset as wds
 
+from utils.perturbator import build_perturbation_type_key
+
 class ActivationDataBatch:
     # might be useful for grouping activations/gradients from multiple samples together before writing to disk in attribution patching loop
-    def __init__(self, layer, sample_ids, activations=None, gradients=None):
+    def __init__(self, layer, sample_ids, clean=None, corrupt=None, gradients=None):
         self.data_points = [
             ActivationDataPoint(
                 layer=layer,
                 sample_id=sid,
-                activations=activations[i] if activations is not None else None,
+                clean=clean[i] if clean is not None else None,
+                corrupt=corrupt[i] if corrupt is not None else None,
                 gradients=gradients[i] if gradients is not None else None,
             )
             for i, sid in enumerate(sample_ids)
@@ -22,10 +25,11 @@ class ActivationDataBatch:
         yield from self.data_points
 
 class ActivationDataPoint:
-    def __init__(self, layer, sample_id, activations=None, gradients=None):
+    def __init__(self, layer, sample_id, clean=None, corrupt=None, gradients=None):
         self.layer = layer
         self.sample_id = sample_id
-        self.activations = activations
+        self.clean = clean
+        self.corrupt = corrupt
         self.gradients = gradients
 
     def __iter__(self):
@@ -42,7 +46,8 @@ class ActivationWriter():
         self.metadata = {
             "chunk_size": self.chunk_size,
             "max_shard_size": self.max_shard_size,
-            "run_name": self.run_name
+            "run_name": self.run_name,
+            "perturbation_type": build_perturbation_type_key(config.get("perturbator", {})),
         }
 
         self._init_directory()
@@ -61,12 +66,11 @@ class ActivationWriter():
         for sink in self.sinks.values():
             sink.close()
 
-    def _get_sink(self, layer, data_type):
-        """Lazily create a ShardWriter for a given (layer, data_type) pair."""
-        assert data_type in ["activations", "gradients"], "data_type must be 'activations' or 'gradients'"
-        key = f"{layer}_{data_type}"
+    def _get_sink(self, layer):
+        """Lazily create a ShardWriter for a given layer."""
+        key = f"{layer}"
         if key not in self.sinks:
-            shard_dir = self.data_root / str(layer) / data_type
+            shard_dir = self.data_root / str(layer)
             shard_dir.mkdir(parents=True, exist_ok=True)
             pattern = str(shard_dir) + "/%06d.tar"
             self.sinks[key] = wds.ShardWriter(
@@ -81,18 +85,21 @@ class ActivationWriter():
         torch.save(tensor.detach().cpu(), buf)
         return buf.getvalue()
 
-    def add_data(self, data: ActivationDataPoint|ActivationDataBatch):
+    def add_data(self, data: ActivationDataPoint | ActivationDataBatch):
         for activation_data_point in data:
             layer = activation_data_point.layer
             sample_id = activation_data_point.sample_id
-            activations = activation_data_point.activations
+            clean = activation_data_point.clean
+            corrupt = activation_data_point.corrupt
             gradients = activation_data_point.gradients
 
-            for data_type, tensor in [("activations", activations), ("gradients", gradients)]:
-                if tensor is None:
-                    continue
-                sink = self._get_sink(layer, data_type)
-                sink.write({
-                    "__key__": str(sample_id),
-                    "tensor.pth": self._tensor_to_bytes(tensor),
-                })
+            sample = {"__key__": str(sample_id)}
+            if clean is not None:
+                sample["clean.pth"] = self._tensor_to_bytes(clean)
+            if corrupt is not None:
+                sample["corrupt.pth"] = self._tensor_to_bytes(corrupt)
+            if gradients is not None:
+                sample["gradients.pth"] = self._tensor_to_bytes(gradients)
+
+            if len(sample) > 1:  # more than just __key__
+                self._get_sink(layer).write(sample)

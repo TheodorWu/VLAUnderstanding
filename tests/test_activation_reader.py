@@ -29,16 +29,19 @@ class TestActivationReader(unittest.TestCase):
         }
 
     def test_round_trip_reads_back_written_tensors(self):
+        # resource allocation warning triggered only within test context.
         config = self._make_config()
         writer = ActivationWriter(config)
 
         activation_tensor = torch.randn(4, 8)
+        corrupt_tensor = torch.randn(4, 8)
         gradient_tensor = torch.randn(4, 8)
         writer.add_data(
             ActivationDataPoint(
                 "layer_0",
                 "sample_1",
-                activations=activation_tensor,
+                clean=activation_tensor,
+                corrupt=corrupt_tensor,
                 gradients=gradient_tensor,
             )
         )
@@ -46,16 +49,17 @@ class TestActivationReader(unittest.TestCase):
 
         reader = ActivationReader(config)
 
-        activation_points = reader.read_layer("layer_0", data_type="activations")
-        gradient_points = reader.read_layer("layer_0", data_type="gradients")
+        datapoints = reader.read_layer("layer_0")
 
-        self.assertEqual(len(activation_points), 1)
-        self.assertEqual(len(gradient_points), 1)
-        self.assertTrue(torch.equal(activation_points[0].activations, activation_tensor))
-        self.assertTrue(torch.equal(gradient_points[0].gradients, gradient_tensor))
-        self.assertTrue(torch.equal(reader.get_tensor("layer_0", "sample_1", "activations"), activation_tensor))
-        self.assertTrue(torch.equal(reader.get_tensor("layer_0", "sample_1", "gradients"), gradient_tensor))
+        self.assertEqual(len(datapoints), 1)
+        self.assertTrue(torch.equal(datapoints[0].clean, activation_tensor))
+        self.assertTrue(torch.equal(datapoints[0].corrupt, corrupt_tensor))
+        self.assertTrue(torch.equal(datapoints[0].gradients, gradient_tensor))
 
 
 if __name__ == "__main__":
+    # test = TestActivationReader()
+    # test.setUp()
+    # test.test_round_trip_reads_back_written_tensors()
+    # test.tearDown()
     unittest.main()

@@ -21,94 +21,62 @@ class ActivationReader:
         self.metadata = self._load_metadata()
 
     def _load_metadata(self):
+        metadata = {}
         if not self.metadata_path.exists():
-            return {}
+            return metadata
         with open(self.metadata_path, "r", encoding="utf-8") as file:
-            return json.load(file)
+            metadata = json.load(file)
+        metadata["layer_names"] = [str(d) for d in self.data_root.glob("*") if d.is_dir()]
+        return metadata
 
     def _get_shard_dir(self, layer, data_type):
-        if data_type not in ["activations", "gradients"]:
-            raise ValueError("data_type must be 'activations' or 'gradients'")
-        return self.data_root / str(layer) / data_type
+        if data_type not in ["clean", "gradients", "corrupt"]:
+            raise ValueError("data_type must be 'clean', 'gradients', or 'corrupt'")
+        return self.data_root / str(layer)
 
-    def _iter_shard_paths(self, layer=None, data_type=None):
-        if layer is not None and data_type is not None:
-            yield from sorted(self._get_shard_dir(layer, data_type).glob("*.tar"))
-            return
-
+    def _iter_shard_paths(self, layer=None):
         if layer is not None:
-            for shard_dir in sorted((self.data_root / str(layer)).glob("*")):
-                if shard_dir.is_dir():
-                    yield from sorted(shard_dir.glob("*.tar"))
+            yield from sorted((self.data_root / str(layer)).glob("*.tar"))
             return
-
-        for shard_dir in sorted(self.data_root.glob("*/*")):
-            if shard_dir.is_dir():
-                yield from sorted(shard_dir.glob("*.tar"))
-
-    def _iter_samples(self, layer=None, data_type=None):
-        shard_paths = [str(path) for path in self._iter_shard_paths(layer=layer, data_type=data_type)]
-        if not shard_paths:
-            return
-
-        dataset = wds.WebDataset(shard_paths, shardshuffle=False)
-        try:
-            for sample in dataset:
-                yield sample
-        finally:
-            dataset.close()
+        for layer_dir in sorted(self.data_root.glob("*")):
+            if layer_dir.is_dir():
+                yield from sorted(layer_dir.glob("*.tar"))
 
     def _tensor_from_bytes(self, tensor_bytes):
         buffer = io.BytesIO(tensor_bytes)
         return torch.load(buffer, map_location="cpu")
 
-    def iter_data(self, layer=None, data_type=None):
-        if layer is None and data_type is None:
-            for layer_dir in sorted(self.data_root.glob("*")):
-                if not layer_dir.is_dir():
-                    continue
-                for dtype_dir in sorted(layer_dir.glob("*")):
-                    if dtype_dir.is_dir():
-                        yield from self.iter_data(layer_dir.name, dtype_dir.name)
+    def iter_data(self, layer=None):
+        shard_paths = [str(p) for p in self._iter_shard_paths(layer=layer)]
+        if not shard_paths:
             return
 
-        resolved_layer = layer
-        resolved_data_type = data_type
-        for sample in self._iter_samples(layer=layer, data_type=data_type):
-            if resolved_layer is None or resolved_data_type is None:
-                source_path = Path(sample["__url__"])
-                resolved_data_type = source_path.parent.name
-                resolved_layer = source_path.parent.parent.name
+        dataset =  wds.WebDataset(shard_paths, shardshuffle=False)
+        try:
+            for sample in dataset:
+                source_layer = layer or Path(sample["__url__"]).parent.name
+                yield ActivationDataPoint(
+                    layer=source_layer,
+                    sample_id=sample["__key__"],
+                    clean=self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
+                    corrupt=self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
+                    gradients=self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
+                )
+        except Exception as e:
+            print(f"Error reading shards: {e}")
+        finally:
+            dataset.__exit__()
+            del dataset
 
-            sample_id = sample["__key__"]
-            tensor = self._tensor_from_bytes(sample["tensor.pth"])
-            if resolved_data_type == "activations":
-                yield ActivationDataPoint(resolved_layer, sample_id, activations=tensor)
-            else:
-                yield ActivationDataPoint(resolved_layer, sample_id, gradients=tensor)
-
-    def read_layer(self, layer, data_type="activations"):
-        return list(self.iter_data(layer=layer, data_type=data_type))
+    def read_layer(self, layer):
+        return list(self.iter_data(layer=layer))
 
     def read_all(self):
         return list(self.iter_data())
 
-    def get_tensor(self, layer, sample_id, data_type="activations"):
-        for activation_data_point in self.iter_data(layer=layer, data_type=data_type):
-            if activation_data_point.sample_id == sample_id:
-                if data_type == "activations":
-                    return activation_data_point.activations
-                return activation_data_point.gradients
-        return None
-
     def get_metadata(self):
         return self.metadata
 
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        return False
 
 
 __all__ = ["ActivationReader", "ActivationDataPoint", "ActivationDataBatch"]

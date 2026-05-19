@@ -103,12 +103,8 @@ class AttributionPatching():
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,
-                activations=self.clean_out[name],   # clean acts, no grads needed
-            ))
-            self.writer.add_data(ActivationDataBatch(
-                layer=name,
-                sample_ids=sample_ids,
-                activations=self.corrupted_out[name],
-                gradients=self.corrupted_grads[name],
+                clean=self.clean_out[name],
+                corrupted=self.corrupted_out[name],
+                gradients=self.corrupted_grads[name]
             ))
         print("Tracing complete.")

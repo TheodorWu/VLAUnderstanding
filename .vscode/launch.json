@@ -52,6 +52,22 @@
             "module": "tests.test_activation_writer",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Test Activation Reader",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_activation_reader",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Test Evaluation",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_evaluation",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
         }
 
     ]

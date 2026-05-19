@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import shutil
 from pathlib import Path
 import torch
@@ -32,67 +32,40 @@ class TestActivationWriter(unittest.TestCase):
     # --- directory initialisation ---
 
     def test_init_directory_creates_data_root(self):
-        self._make_writer()
+        writer = self._make_writer()
         self.assertTrue(self.test_dir.exists())
         self.assertTrue(self.test_data_dir.exists())
+        writer.__exit__(None, None, None)
 
     # --- sink creation ---
 
     def test_get_sink_creates_directory(self):
         writer = self._make_writer()
-        writer._get_sink("layer_0", "activations")
-        self.assertTrue((self.test_data_dir / "layer_0" / "activations").exists())
+        writer._get_sink("layer_0")
+        self.assertTrue((self.test_data_dir / "layer_0").exists())
         writer.__exit__(None, None, None)
 
     def test_get_sink_reuses_existing_sink(self):
         writer = self._make_writer()
-        sink_a = writer._get_sink("layer_0", "activations")
-        sink_b = writer._get_sink("layer_0", "activations")
+        sink_a = writer._get_sink("layer_0")
+        sink_b = writer._get_sink("layer_0")
         self.assertIs(sink_a, sink_b)
-        writer.__exit__(None, None, None)
-
-    def test_separate_sinks_for_activations_and_gradients(self):
-        writer = self._make_writer()
-        act_sink = writer._get_sink("layer_0", "activations")
-        grad_sink = writer._get_sink("layer_0", "gradients")
-        self.assertIsNot(act_sink, grad_sink)
         writer.__exit__(None, None, None)
 
     def test_separate_sinks_per_layer(self):
         writer = self._make_writer()
-        sink_l0 = writer._get_sink("layer_0", "activations")
-        sink_l1 = writer._get_sink("layer_1", "activations")
+        sink_l0 = writer._get_sink("layer_0")
+        sink_l1 = writer._get_sink("layer_1")
         self.assertIsNot(sink_l0, sink_l1)
         writer.__exit__(None, None, None)
 
     # --- add_data ---
 
-    def test_add_activations_only_creates_activation_sink(self):
+    def test_add_activations_creates_activation_sink(self):
         writer = self._make_writer()
-        point = ActivationDataPoint("layer_0", "s1", activations=torch.randn(4, 8))
+        point = ActivationDataPoint("layer_0", "s1", clean=torch.randn(4, 8))
         writer.add_data(point)
-        self.assertIn("layer_0_activations", writer.sinks)
-        self.assertNotIn("layer_0_gradients", writer.sinks)
-        writer.__exit__(None, None, None)
-
-    def test_add_gradients_only_creates_gradient_sink(self):
-        writer = self._make_writer()
-        point = ActivationDataPoint("layer_0", "s1", gradients=torch.randn(4, 8))
-        writer.add_data(point)
-        self.assertIn("layer_0_gradients", writer.sinks)
-        self.assertNotIn("layer_0_activations", writer.sinks)
-        writer.__exit__(None, None, None)
-
-    def test_add_both_creates_both_sinks(self):
-        writer = self._make_writer()
-        point = ActivationDataPoint(
-            "layer_0", "s1",
-            activations=torch.randn(4, 8),
-            gradients=torch.randn(4, 8),
-        )
-        writer.add_data(point)
-        self.assertIn("layer_0_activations", writer.sinks)
-        self.assertIn("layer_0_gradients", writer.sinks)
+        self.assertIn("layer_0", writer.sinks)
         writer.__exit__(None, None, None)
 
     def test_add_none_fields_creates_no_sinks(self):
@@ -100,31 +73,32 @@ class TestActivationWriter(unittest.TestCase):
         point = ActivationDataPoint("layer_0", "s1")
         writer.add_data(point)
         self.assertEqual(len(writer.sinks), 0)
+        writer.__exit__(None, None, None)
 
     def test_data_written_to_correct_layer_dir(self):
         writer = self._make_writer()
-        point = ActivationDataPoint("layer_2", "s1", activations=torch.randn(4, 8))
+        point = ActivationDataPoint("layer_2", "s1", clean=torch.randn(4, 8))
         writer.add_data(point)
         writer.__exit__(None, None, None)
-        tar_files = list((self.test_data_dir / "layer_2" / "activations").glob("*.tar"))
+        tar_files = list((self.test_data_dir / "layer_2").glob("*.tar"))
         self.assertGreater(len(tar_files), 0)
 
     def test_multiple_layers_write_to_separate_dirs(self):
         writer = self._make_writer()
-        writer.add_data(ActivationDataPoint("layer_0", "s1", activations=torch.randn(4, 8)))
-        writer.add_data(ActivationDataPoint("layer_1", "s1", activations=torch.randn(4, 8)))
+        writer.add_data(ActivationDataPoint("layer_0", "s1", clean=torch.randn(4, 8)))
+        writer.add_data(ActivationDataPoint("layer_1", "s1", clean=torch.randn(4, 8)))
         writer.__exit__(None, None, None)
-        self.assertTrue((self.test_data_dir / "layer_0" / "activations").exists())
-        self.assertTrue((self.test_data_dir / "layer_1" / "activations").exists())
+        self.assertTrue((self.test_data_dir / "layer_0").exists())
+        self.assertTrue((self.test_data_dir / "layer_1").exists())
 
     # --- exit ---
 
-    def test_exit_closes_all_sinks(self):
+    @patch("data.activation_writer.wds.ShardWriter")
+    def test_exit_closes_all_sinks(self, mock_shard_writer_cls):
+        mock_shard_writer_cls.side_effect = lambda *args, **kwargs: MagicMock()
         writer = self._make_writer()
-        writer._get_sink("layer_0", "activations")
-        writer._get_sink("layer_1", "gradients")
-        for sink in writer.sinks.values():
-            sink.close = MagicMock()
+        writer._get_sink("layer_0")
+        writer._get_sink("layer_1")
         writer.__exit__(None, None, None)
         for sink in writer.sinks.values():
             sink.close.assert_called_once()
