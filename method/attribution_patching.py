@@ -41,12 +41,20 @@ class AttributionPatching():
 
     def get_attribution_patching_data(self, batch):
         clean_batch = batch
-        prompts = clean_batch["task"] # todo: will not work, have to check the key
-        perturbed = clean_batch.copy()
+        prompts = clean_batch["task"]
         perturbed_prompts = self.perturbator.perturb({"prompt": prompts}).perturbed_prompts
+
+        changed_indices = [i for i, (c, p) in enumerate(zip(prompts, perturbed_prompts)) if c != p]
+        if not changed_indices:
+            return None, None
+
+        perturbed = clean_batch.copy()
         perturbed["task"] = perturbed_prompts
 
-        return clean_batch, perturbed
+        clean_filtered = {k: [v[i] for i in changed_indices] for k, v in clean_batch.items()}
+        perturbed_filtered = {k: [v[i] for i in changed_indices] for k, v in perturbed.items()}
+
+        return clean_filtered, perturbed_filtered
 
     def main(self, unit_test=False):
         print("Starting attribution patching. Collecting activations and gradients for each batch in the dataset...")
@@ -64,9 +72,11 @@ class AttributionPatching():
         self.reset_collections()
         print("Preparing clean and corrupted batches...")
         clean_batch, corrupted_batch = self.get_attribution_patching_data(batch)
-        sample_ids = [ f"e{batch['episode_index'][i]}_i{batch['index'][i]}" for i in range(len(batch['episode_index']))]
 
-        # todo: write batch to disk using activation writer
+        if clean_batch is None:
+            return
+
+        sample_ids = [ f"e{batch['episode_index'][i]}_i{batch['index'][i]}" for i in range(len(batch['episode_index']))]
 
         # Preprocess batches outside trace blocks - keeps tracing focused on model execution
         print("Preprocessing batches...")
@@ -99,12 +109,12 @@ class AttributionPatching():
 
         # Log activations and gradients for each layer
         print("Writing traced data to the activation writer...")
-        for name in self.clean_out.keys():
+        for name, clean in self.clean_out.items():
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,
-                clean=self.clean_out[name],
-                corrupted=self.corrupted_out[name],
+                clean=clean,
+                corrupt=self.corrupted_out[name],
                 gradients=self.corrupted_grads[name]
             ))
         print("Tracing complete.")
