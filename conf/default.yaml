@@ -8,3 +8,4 @@ defaults:
 
 stage: dev
 seed: 42
+device: cuda

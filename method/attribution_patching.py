@@ -4,13 +4,12 @@ from data.activation_writer import ActivationDataBatch, ActivationWriter
 from eval.logger import Logger
 
 class AttributionPatching():
-    def __init__(self, config, model, tokenizer, perturbator, dataset, device='cuda'):
+    def __init__(self, config, model, perturbator, dataset, device='cuda'):
         self.config = config
         self.model = model
         assert hasattr(self.model, "tracing_layers"), "Model must have attribute 'tracing_layers'."
         self.tracing_layers = self.model.get_tracing_layers()
 
-        self.tokenizer = tokenizer # TODO: might move this to model later
         self.perturbator = perturbator
         self.dataset = dataset
         self.device = device

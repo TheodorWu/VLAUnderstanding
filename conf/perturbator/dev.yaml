@@ -1,2 +1,3 @@
 directional: true
-# activate more perturbations here
+synonym: false
+semantic_scaling: false

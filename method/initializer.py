@@ -19,8 +19,7 @@ class MethodInitializer:
         # Initialization logic based on the configuration
         print(f"Initializing Method with config: {self.config}")
         perturbator = self.initialize_perturbator()
-        tokenizer = model.get_tokenizer()  # Assuming the model has a method to get the tokenizer
-        method =  AttributionPatching(self.config, model, tokenizer, perturbator, dataset, device=device)
+        method =  AttributionPatching(self.config, model, perturbator, dataset, device=device)
         return method
 
     def initialize_perturbator(self):

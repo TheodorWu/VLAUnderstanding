@@ -58,11 +58,12 @@ class PromptPerturbator:
 
 
     def perturb_single(self, prompt):
-        if self.config.get("method") == "directional":
+        # TODO: Allow combination of perturbation types
+        if self.config.get("directional"):
             return self.directional_perturbation(prompt)
-        elif self.config.get("method") == "synonym":
+        elif self.config.get("synonym"):
             return self.synonym_perturbation(prompt, target_word="put")  # Example target word
-        elif self.config.get("method") == "semantic_scaling":
+        elif self.config.get("semantic_scaling"):
             return self.semantic_scaling_perturbation(prompt, target_word="bowl")  # Example target word
         else:
             raise ValueError(f"Unknown perturbation method: {self.config.get('method')}")

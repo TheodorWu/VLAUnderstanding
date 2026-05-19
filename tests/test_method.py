@@ -15,9 +15,9 @@ class TestMethod(unittest.TestCase):
                 "model_id": None # Use None to load the model without pretrained weights for testing purposes
             },
             "perturbator": {
-                "method": "directional"
+                "directional": True
             }
-            }
+        }
 
         dataset_stats = dataloader.dataset.meta.stats
         device = test_gpu_availability()
