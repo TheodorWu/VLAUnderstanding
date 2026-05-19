@@ -1,4 +1,5 @@
 import einops
+import torch
 from data.activation_writer import ActivationDataBatch, ActivationWriter
 from eval.logger import Logger
 
@@ -50,9 +51,9 @@ class AttributionPatching():
 
         perturbed = clean_batch.copy()
         perturbed["task"] = perturbed_prompts
-
-        clean_filtered = {k: [v[i] for i in changed_indices] for k, v in clean_batch.items()}
-        perturbed_filtered = {k: [v[i] for i in changed_indices] for k, v in perturbed.items()}
+        idx = torch.tensor(changed_indices)
+        clean_filtered = {k: v[idx] if isinstance(v, torch.Tensor) else [v[i] for i in changed_indices] for k, v in clean_batch.items()}
+        perturbed_filtered = {k: v[idx] if isinstance(v, torch.Tensor) else [v[i] for i in changed_indices] for k, v in perturbed.items()}
 
         return clean_filtered, perturbed_filtered
 
