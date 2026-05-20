@@ -9,3 +9,6 @@ defaults:
 stage: dev
 seed: 42
 device: cuda
+mode: full
+hydra:
+  output_subdir: null

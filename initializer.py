@@ -16,15 +16,17 @@ class Initializer:
         else:
             self.device = torch.device(device)
 
-        self.method_initializer = MethodInitializer(config)
-        self.model_initializer = ModelInitializer(config.get("model"), device=self.device)
 
     def method(self):
         # Initialization logic based on the configuration
         seed_all(self.config.get("seed", 42))
         print(f"Initializing with config: {self.config}")
-        model = self.model_initializer.initialize()
         dataset = get_dataloader(**self.config.get("dataset", {}))
+        dataset_stats = dataset.dataset.meta.stats
+        self.model_initializer = ModelInitializer(self.config.get("model"), dataset_stats=dataset_stats, device=self.device)
+        model = self.model_initializer.initialize()
+
+        self.method_initializer = MethodInitializer(self.config)
         method = self.method_initializer.initialize(model=model, dataset=dataset, device=self.device)
         return method
 

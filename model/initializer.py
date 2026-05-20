@@ -30,7 +30,7 @@ class ModelInitializer:
         try:
             if hasattr(model, "print_trainable_parameters"):
                 model.print_trainable_parameters() # pylint: disable=no-member
-            if hasattr(model, "print_architecture"):
+            if hasattr(model, "print_architecture") and model_config.get("print_architecture", False):
                 project_root = Path(__file__).parent.parent
                 output_dir = project_root / "output" / "model_architectures"
                 output_dir.mkdir(parents=True, exist_ok=True)

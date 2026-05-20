@@ -73,9 +73,6 @@ class PI05Wrapper(nn.Module):
         from_pretrained sometimes strips input_features during JSON round-tripping,
         and the manual-construction path never sets them at all.
         """
-        if self.model.config.image_features:
-            return  # Already populated — nothing to do
-
         h, w = self.model.config.image_resolution
         registered = []
 

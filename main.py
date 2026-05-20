@@ -2,7 +2,7 @@ from initializer import Initializer
 import hydra
 from omegaconf import DictConfig, OmegaConf
 
-@hydra.main(version_base=None, config_path="conf", config_name="config")
+@hydra.main(version_base=None, config_path="conf", config_name="default")
 def main(cfg: DictConfig):
     config = OmegaConf.to_container(cfg, resolve=True)
     initializer = Initializer(config)
