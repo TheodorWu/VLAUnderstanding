@@ -21,6 +21,8 @@ class PI05Wrapper(nn.Module):
         model_id = config.get("model_id", "lerobot/pi05_base")
         self.device = device
 
+        assert dataset_stats is not None, "dataset_stats must be provided to PI05Wrapper for image feature registration."
+
         if model_id is None:
             print("model_id set to None explicitly, loading without weights.")
             pi_config = PI05Config(

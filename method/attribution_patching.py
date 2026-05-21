@@ -1,7 +1,7 @@
-import einops
 import torch
 from data.activation_writer import ActivationDataBatch, ActivationWriter
 from eval.logger import Logger
+from tqdm import tqdm
 
 class AttributionPatching():
     def __init__(self, config, model, perturbator, dataset, device='cuda'):
@@ -58,7 +58,7 @@ class AttributionPatching():
 
     def main(self, unit_test=False):
         print("Starting attribution patching. Collecting activations and gradients for each batch in the dataset...")
-        for batch in self.dataset:
+        for batch in tqdm(self.dataset, desc="Attribution patching", unit="batch"):
             print("Processing next batch...")
             self.activation_tracing(batch)
             if unit_test:
