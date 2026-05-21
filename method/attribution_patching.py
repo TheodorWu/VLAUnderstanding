@@ -98,11 +98,12 @@ class AttributionPatching():
                     target = self.get_tracing_target(name)
                     self.corrupted_out[name] = target.input[0].save()
                     target.input[0].retain_grad()
+                    target = self.get_tracing_target(name)
+                    self.corrupted_grads[name] = target.input[0].grad.save()
 
                 loss = self.model.output
                 loss.backward()
 
-            with tracer.invoke():  # empty invoke to avoid execution-order conflicts
                 for name in self.tracing_layers:
                     target = self.get_tracing_target(name)
                     self.corrupted_grads[name] = target.input[0].grad.save()
