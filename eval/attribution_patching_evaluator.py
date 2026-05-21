@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import einops
 import matplotlib.pyplot as plt
 import seaborn as sns
+import wandb
 
 @dataclass
 class AttributionResult:
@@ -54,6 +55,7 @@ class AttributionPatchingEvaluator():
         result: AttributionResult,
         save_path: str = None,
         show: bool = False,
+        save_to_wandb: bool = False
     ):
         fig, ax = plt.subplots(figsize=(14, 8))
         sns.heatmap(
@@ -71,8 +73,11 @@ class AttributionPatchingEvaluator():
         ax.set_ylabel("Layer")
         plt.tight_layout()
 
+        if save_to_wandb:
+            wandb.log({f"attribution_heatmap_{result.perturbation_type}": wandb.Image(fig)})
         if save_path:
             plt.savefig(save_path, dpi=150, bbox_inches="tight")
         if show:
             plt.show()
+        plt.close(fig)
         return fig
