@@ -1,4 +1,4 @@
 dataset_name: libero
-batch_size: 20
+batch_size: 2
 fps: 10
 chunk_size: 50

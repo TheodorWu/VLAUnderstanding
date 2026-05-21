@@ -94,19 +94,19 @@ class AttributionPatching():
         print("Tracing corrupted batch activations and gradients...")
         with self.model.trace() as tracer:
             with tracer.invoke(corrupted_batch_processed):
+                inputs = {}
                 for name in self.tracing_layers:
                     target = self.get_tracing_target(name)
-                    self.corrupted_out[name] = target.input[0].save()
-                    target.input[0].retain_grad()
-                    target = self.get_tracing_target(name)
-                    self.corrupted_grads[name] = target.input[0].grad.save()
+                    inp = target.input[0]      # capture once
+                    inputs[name] = inp  # store the proxy
+                    self.corrupted_out[name] = inp.save()
+                    inp.retain_grad()
 
                 loss = self.model.output
                 loss.backward()
 
                 for name in self.tracing_layers:
-                    target = self.get_tracing_target(name)
-                    self.corrupted_grads[name] = target.input[0].grad.save()
+                    self.corrupted_grads[name] = inputs[name].grad.save()
 
         # Log activations and gradients for each layer
         print("Writing traced data to the activation writer...")
