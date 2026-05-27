@@ -1,4 +1,5 @@
 from method.prompts.semantic_perturbations import SemanticScaler, SynonymReplacer
+import re
 
 class PerturbedPromptOutput:
     """
@@ -31,18 +32,29 @@ class PromptPerturbator:
         self.semantic_scaler = SemanticScaler()
         self.synonym_replacer = SynonymReplacer()
 
+        self.BLOCKLIST = {"pick up", "up to", "up for"}
+
     def directional_perturbation(self, prompt):
-        if "left" in prompt:
-            perturbed_prompt = prompt.replace("left", "right")
-        elif "right" in prompt:
-            perturbed_prompt = prompt.replace("right", "left")
-        elif "up" in prompt:
-            perturbed_prompt = prompt.replace("up", "down")
-        elif "down" in prompt:
-            perturbed_prompt = prompt.replace("down", "up")
-        else:
-            perturbed_prompt = prompt
-        return PerturbedPromptOutput(prompt, perturbed_prompt)
+        replacements = {"left": "right", "right": "left", "up": "down", "down": "up"}
+
+        # 1. Mask blocklisted phrases
+        masked = prompt
+        placeholders = {}
+        for i, phrase in enumerate(self.BLOCKLIST):
+            placeholder = f"__BLOCKED_{i}__"
+            if phrase in masked.lower():
+                placeholders[placeholder] = phrase
+                masked = re.sub(re.escape(phrase), placeholder, masked, flags=re.IGNORECASE)
+
+        # 2. Replace directions in one pass
+        pattern = re.compile(r'\b(' + '|'.join(replacements.keys()) + r')\b', flags=re.IGNORECASE)
+        replaced = pattern.sub(lambda m: replacements[m.group().lower()], masked)
+
+        # 3. Restore masked phrases
+        for placeholder, original in placeholders.items():
+            replaced = replaced.replace(placeholder, original)
+
+        return PerturbedPromptOutput(prompt, replaced)
 
     def synonym_perturbation(self, prompt, target_word):
         # Placeholder for semantic perturbation logic

@@ -35,6 +35,65 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
         result = self.perturbator.directional_perturbation(prompt)
         self.assertEqual(result.perturbed_prompt, prompt)
 
+    # Word boundary tests (should NOT replace substrings)
+    def test_directional_perturbation_no_replace_uppercase(self):
+        prompt = "Move the object to the Left."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Move the object to the Right.")
+
+    def test_directional_perturbation_no_replace_in_update(self):
+        prompt = "Update the configuration."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Update the configuration.")
+
+    def test_directional_perturbation_no_replace_in_upper(self):
+        prompt = "Move to the upper shelf."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Move to the upper shelf.")
+
+    def test_directional_perturbation_no_replace_in_downtown(self):
+        prompt = "Go to the downtown area."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Go to the downtown area.")
+
+    def test_directional_perturbation_no_replace_in_leftover(self):
+        prompt = "Store the leftover items."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Store the leftover items.")
+
+    # Blocklist tests (phrasal verbs should NOT be replaced)
+    def test_directional_perturbation_no_replace_pick_up(self):
+        prompt = "Pick up the object."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Pick up the object.")
+
+    def test_directional_perturbation_no_replace_up_to(self):
+        prompt = "It is up to you."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "It is up to you.")
+
+    # Blocklist + direction in same prompt
+    def test_directional_perturbation_pick_up_with_direction(self):
+        prompt = "Pick up the object and move left."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Pick up the object and move right.")
+
+    def test_directional_perturbation_up_to_with_direction(self):
+        prompt = "It is up to you to move the box down."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "It is up to you to move the box up.")
+
+    # Single-pass replacement (no double replacement)
+    def test_directional_perturbation_no_double_replace_up_down(self):
+        prompt = "Move up then down."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "Move down then up.")
+
+    def test_directional_perturbation_no_double_replace_left_right(self):
+        prompt = "First go left then right."
+        result = self.perturbator.directional_perturbation(prompt)
+        self.assertEqual(result.perturbed_prompt, "First go right then left.")
+
     ### Test Cases for Semantic Perturbation ###
     def test_semantic_perturbation_scaling(self):
         prompt = "put the bowl on the stove"
