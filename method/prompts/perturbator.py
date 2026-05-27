@@ -76,19 +76,12 @@ class PromptPerturbator:
         perturbed_prompt = text.replace(target_word, scaled_word)
         return PerturbedPromptOutput(original_prompt, perturbed_prompt)
 
-    def get_target_words(self, prompt):
-        if isinstance(prompt, PerturbedPromptOutput):
-            prompt = prompt.perturbed_prompt
-        # Placeholder for logic to extract target words for perturbation
-        return ["example_target_word"]  # Example target word list
-
     def perturb_single_prompt(self, prompt: str):
         if self.config.get("directional"):
             prompt = self.directional_perturbation(prompt)
 
         if self.config.get("synonym") or self.config.get("semantic_scaling"):
-            target_words = self.get_target_words(prompt)
-            for target_word in target_words:
+            for target_word in self.config.get("target_words", []):
                 if self.config.get("synonym"):
                     prompt = self.synonym_perturbation(prompt, target_word=target_word)
                 if self.config.get("semantic_scaling"):

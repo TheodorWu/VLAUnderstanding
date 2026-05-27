@@ -5,7 +5,7 @@ from method.prompts.perturbator import PromptPerturbator, PerturbedPromptOutput
 
 class TestDirectionalPromptPerturbator(unittest.TestCase):
     def setUp(self):
-        self.config = {"method": "directional"}
+        self.config = {"method": "directional", "blocklist": ["pick up"], "target_pos": "noun", "num_targets": 1}
         self.perturbator = PromptPerturbator(self.config)
 
 
@@ -94,7 +94,6 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
         prompt = "put the bowl on the stove"
         result = self.perturbator.synonym_perturbation(prompt, "put")
         self.assertNotEqual(result.perturbed_prompt, prompt)
-
 
 
 if __name__ == '__main__':

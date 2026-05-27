@@ -3,3 +3,5 @@ synonym: false
 semantic_scaling: false
 blocklist:
   - pick up
+target_pos: noun
+num_targets: 1
