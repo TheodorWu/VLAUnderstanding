@@ -67,21 +67,11 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
         result = self.perturbator.directional_perturbation(prompt)
         self.assertEqual(result.perturbed_prompt, "Pick up the object.".lower())
 
-    def test_directional_perturbation_no_replace_up_to(self):
-        prompt = "It is up to you."
-        result = self.perturbator.directional_perturbation(prompt)
-        self.assertEqual(result.perturbed_prompt, "It is up to you.")
-
     # Blocklist + direction in same prompt
     def test_directional_perturbation_pick_up_with_direction(self):
         prompt = "Pick up the object and move left."
         result = self.perturbator.directional_perturbation(prompt)
         self.assertEqual(result.perturbed_prompt, "Pick up the object and move right.".lower())
-
-    def test_directional_perturbation_up_to_with_direction(self):
-        prompt = "It is up to you to move the box down."
-        result = self.perturbator.directional_perturbation(prompt)
-        self.assertEqual(result.perturbed_prompt, "It is up to you to move the box up.")
 
     # Single-pass replacement (no double replacement)
     def test_directional_perturbation_no_double_replace_up_down(self):

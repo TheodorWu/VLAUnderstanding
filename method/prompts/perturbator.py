@@ -56,29 +56,43 @@ class PromptPerturbator:
 
         return PerturbedPromptOutput(prompt, replaced)
 
+    def _handle_str_or_output(self, prompt):
+        if isinstance(prompt, PerturbedPromptOutput):
+            return prompt.original_prompt, prompt.perturbed_prompt
+        else:
+            return prompt, prompt
+
     def synonym_perturbation(self, prompt, target_word):
-        # Placeholder for semantic perturbation logic
+        original_prompt, text = self._handle_str_or_output(prompt)
+
         synonym  = self.synonym_replacer(target_word)
-        perturbed_prompt = prompt.replace(target_word, synonym)
-        return PerturbedPromptOutput(prompt, perturbed_prompt)
+        perturbed_prompt = text.replace(target_word, synonym)
+        return PerturbedPromptOutput(original_prompt, perturbed_prompt)
 
     def semantic_scaling_perturbation(self, prompt, target_word):
-        # Placeholder for semantic scaling logic
+
+        original_prompt, text = self._handle_str_or_output(prompt)
         scaled_word  = self.semantic_scaler(target_word)
-        perturbed_prompt = prompt.replace(target_word, scaled_word)
-        return PerturbedPromptOutput(prompt, perturbed_prompt)
+        perturbed_prompt = text.replace(target_word, scaled_word)
+        return PerturbedPromptOutput(original_prompt, perturbed_prompt)
 
+    def get_target_words(self, prompt):
+        if isinstance(prompt, PerturbedPromptOutput):
+            prompt = prompt.perturbed_prompt
+        # Placeholder for logic to extract target words for perturbation
+        return ["example_target_word"]  # Example target word list
 
-    def perturb_single(self, prompt):
-
+    def perturb_single_prompt(self, prompt: str):
         if self.config.get("directional"):
             prompt = self.directional_perturbation(prompt)
 
-        if self.config.get("synonym"):
-            prompt = self.synonym_perturbation(prompt, target_word="put")  # Example target word
-
-        if self.config.get("semantic_scaling"):
-            prompt = self.semantic_scaling_perturbation(prompt, target_word="bowl")  # Example target word
+        if self.config.get("synonym") or self.config.get("semantic_scaling"):
+            target_words = self.get_target_words(prompt)
+            for target_word in target_words:
+                if self.config.get("synonym"):
+                    prompt = self.synonym_perturbation(prompt, target_word=target_word)
+                if self.config.get("semantic_scaling"):
+                    prompt = self.semantic_scaling_perturbation(prompt, target_word=target_word)
 
         return prompt
 
@@ -87,8 +101,8 @@ class PromptPerturbator:
         if isinstance(prompt, list):
             perturbed_prompts = []
             for p in prompt:
-                perturbed_output = self.perturb_single(p)
+                perturbed_output = self.perturb_single_prompt(p)
                 perturbed_prompts.append(perturbed_output.perturbed_prompt)
             return BatchPerturbedPromptOutput(prompt, perturbed_prompts)
         else:
-            return self.perturb_single(prompt)
+            return self.perturb_single_prompt(prompt)
