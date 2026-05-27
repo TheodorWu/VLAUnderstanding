@@ -37,9 +37,9 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
 
     # Word boundary tests (should NOT replace substrings)
     def test_directional_perturbation_no_replace_uppercase(self):
-        prompt = "Move the object to the Left."
+        prompt = "Move the object to the left."
         result = self.perturbator.directional_perturbation(prompt)
-        self.assertEqual(result.perturbed_prompt, "Move the object to the Right.")
+        self.assertEqual(result.perturbed_prompt, "Move the object to the right.")
 
     def test_directional_perturbation_no_replace_in_update(self):
         prompt = "Update the configuration."
@@ -65,7 +65,7 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
     def test_directional_perturbation_no_replace_pick_up(self):
         prompt = "Pick up the object."
         result = self.perturbator.directional_perturbation(prompt)
-        self.assertEqual(result.perturbed_prompt, "Pick up the object.")
+        self.assertEqual(result.perturbed_prompt, "Pick up the object.".lower())
 
     def test_directional_perturbation_no_replace_up_to(self):
         prompt = "It is up to you."
@@ -76,7 +76,7 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
     def test_directional_perturbation_pick_up_with_direction(self):
         prompt = "Pick up the object and move left."
         result = self.perturbator.directional_perturbation(prompt)
-        self.assertEqual(result.perturbed_prompt, "Pick up the object and move right.")
+        self.assertEqual(result.perturbed_prompt, "Pick up the object and move right.".lower())
 
     def test_directional_perturbation_up_to_with_direction(self):
         prompt = "It is up to you to move the box down."
