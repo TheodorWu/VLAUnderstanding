@@ -2,6 +2,7 @@ defaults:
  - perturbator: dev
  - wandb: default
  - activation_writer: dev
+ - activation_reader: dev
  - dataset: libero
  - model: dev
  - method: dev
@@ -9,6 +10,6 @@ defaults:
 stage: dev
 seed: 42
 device: cuda
-mode: full
+mode: evaluate
 hydra:
   output_subdir: null

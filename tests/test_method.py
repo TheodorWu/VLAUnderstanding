@@ -31,7 +31,7 @@ class TestMethod(unittest.TestCase):
             dataset=dataloader,    # Replace with actual dataset
             device=device
         )
-        method.main()
+        method.main(unit_test=True)  # Run in unit test mode to process only one batch and avoid early exit due to no perturbations
         # self.assertEqual(model.config, config["model"])
 
 if __name__ == "__main__":

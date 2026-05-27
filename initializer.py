@@ -1,3 +1,6 @@
+import wandb
+from coolname import generate_slug
+
 import torch
 
 from method.initializer import MethodInitializer
@@ -15,7 +18,14 @@ class Initializer:
             self.device = test_gpu_availability()
         else:
             self.device = torch.device(device)
+        self._init_wandb()
 
+    def _init_wandb(self):
+        wandb_config = self.config.get("wandb", {})
+        self.run_name = f"Attribution-Patching-{generate_slug(2)}"
+        wandb.init(project=wandb_config.get("wandb_project", "default_vla_understanding"),
+                    name=self.run_name,
+                    config=self.config)
 
     def method(self):
         # Initialization logic based on the configuration
@@ -28,6 +38,10 @@ class Initializer:
 
         self.method_initializer = MethodInitializer(self.config)
         method = self.method_initializer.initialize(model=model, dataset=dataset, device=self.device)
+
+        self.config["activation_reader"] = self.config.get("activation_reader", {})
+        self.config["activation_reader"]["run_name"] = self.run_name
+
         return method
 
     def evaluate(self):

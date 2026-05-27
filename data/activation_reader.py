@@ -52,7 +52,7 @@ class ActivationReader:
             return
 
         dataset =  wds.WebDataset(shard_paths, shardshuffle=False)
-        print(f"Number of samples for perturbation type '{self.metadata.get('perturbation_type', 'unknown')}' and layer '{layer if layer else 'all'}': {len(dataset)}")
+        print(f"Number of samples for perturbation type '{self.metadata.get('perturbation_type', 'unknown')}' and layer '{layer if layer else 'all'}': {self.metadata.get('num_samples', 'unknown')}")
         try:
             for sample in dataset:
                 source_layer = layer or Path(sample["__url__"]).parent.name

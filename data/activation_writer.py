@@ -48,6 +48,7 @@ class ActivationWriter():
             "max_shard_size": self.max_shard_size,
             "run_name": self.run_name,
             "perturbation_type": build_perturbation_type_key(config.get("perturbator", {})),
+            "num_samples": {}
         }
 
         self._init_directory()
@@ -57,12 +58,16 @@ class ActivationWriter():
         project_root = Path(__file__).parent.parent
         self.data_root = Path(f"{project_root}/{self.config.get('output_dir', 'results')}/{self.run_name}/data")
         self.data_root.mkdir(parents=True, exist_ok=True)
+        self._write_metadata()
 
+    def _write_metadata(self):
         self.metadata_path = self.data_root / "metadata.json"
         with open(self.metadata_path, "w", encoding="utf-8") as f:
             json.dump(self.metadata, f, indent=2)
 
     def __exit__(self, *args):
+        self._write_metadata()  # update metadata with final sample count
+
         for sink in self.sinks.values():
             sink.close()
 
@@ -103,3 +108,7 @@ class ActivationWriter():
 
             if len(sample) > 1:  # more than just __key__
                 self._get_sink(layer).write(sample)
+                # update metadata count
+                if layer not in self.metadata["num_samples"]:
+                    self.metadata["num_samples"][layer] = 0
+                self.metadata["num_samples"][layer] += 1

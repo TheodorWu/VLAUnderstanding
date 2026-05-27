@@ -1,3 +1,5 @@
+import torch
+
 from eval.logger import Logger
 from data.activation_reader import ActivationReader
 import numpy as np
@@ -19,11 +21,18 @@ class AttributionPatchingEvaluator():
         self.config = config
         self.activation_reader = ActivationReader(config)
 
+    def _add_batch_dim(self, batch):
+        for k in ["clean", "corrupt", "gradients"]:
+            if k in batch and isinstance(batch[k], torch.Tensor) and batch[k].dim() == 2:
+                setattr(batch, k, getattr(batch, k).unsqueeze(0))
+        return batch
+
     def compute_layer_attributions(self) -> AttributionResult:
         running_sum = {}
         sample_count = {}
 
         for batch in self.activation_reader.iter_data():
+            batch = self._add_batch_dim(batch)
             layer = batch.layer
             residual_attr = einops.reduce(
                 batch.gradients * (batch.clean - batch.corrupt),

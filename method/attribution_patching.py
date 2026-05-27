@@ -9,6 +9,10 @@ class AttributionPatching():
         self.model = model
         assert hasattr(self.model, "tracing_layers"), "Model must have attribute 'tracing_layers'."
         self.tracing_layers = self.model.get_tracing_layers()
+        self.model.train()
+
+        self.max_tracing_batches = config.get("method", {}).get("max_tracing_batches", None)
+        self.batch_count = 0
 
         self.perturbator = perturbator
         self.dataset = dataset
@@ -39,44 +43,57 @@ class AttributionPatching():
         self.corrupted_out = {}
         self.corrupted_grads = {}
 
-    def get_attribution_patching_data(self, batch):
+    def get_attribution_patching_data(self, batch, unit_test=False):
         clean_batch = batch
         prompts = clean_batch["task"]
         perturbed_prompts = self.perturbator.perturb({"prompt": prompts}).perturbed_prompts
 
         changed_indices = [i for i, (c, p) in enumerate(zip(prompts, perturbed_prompts)) if c != p]
-        if not changed_indices:
-            return None, None
+        if not changed_indices and not unit_test:
+            return None, None, None
 
         perturbed = clean_batch.copy()
         perturbed["task"] = perturbed_prompts
+        if unit_test:
+            return clean_batch, perturbed, list(range(len(prompts)))  # Use all indices for unit test
+
         idx = torch.tensor(changed_indices)
         clean_filtered = {k: v[idx] if isinstance(v, torch.Tensor) else [v[i] for i in changed_indices] for k, v in clean_batch.items()}
         perturbed_filtered = {k: v[idx] if isinstance(v, torch.Tensor) else [v[i] for i in changed_indices] for k, v in perturbed.items()}
 
-        return clean_filtered, perturbed_filtered
+        return clean_filtered, perturbed_filtered, changed_indices
 
     def main(self, unit_test=False):
         print("Starting attribution patching. Collecting activations and gradients for each batch in the dataset...")
         for batch in tqdm(self.dataset, desc="Attribution patching", unit="batch"):
             print("Processing next batch...")
-            self.activation_tracing(batch)
-            if unit_test:
-                print("Unit test mode enabled; stopping after one batch.")
+            self.activation_tracing(batch, unit_test=unit_test)
+
+            if self._check_tracing_limit(unit_test):
                 break
         print("Attribution patching complete. All activations and gradients collected.")
 
 
-    def activation_tracing(self, batch):
+    def _check_tracing_limit(self, unit_test):
+        if self.max_tracing_batches is not None and self.batch_count >= self.max_tracing_batches:
+            print(f"Reached max tracing batches limit ({self.max_tracing_batches}). Stopping further tracing.")
+            return True
+        if unit_test and self.batch_count >= 1:
+            print("Unit test mode: processed one batch, stopping further tracing.")
+            return True
+        return False
+
+    def activation_tracing(self, batch, unit_test=False):
         print("Resetting stored activations and gradients...")
         self.reset_collections()
         print("Preparing clean and corrupted batches...")
-        clean_batch, corrupted_batch = self.get_attribution_patching_data(batch)
+        clean_batch, corrupted_batch, changed_indices = self.get_attribution_patching_data(batch, unit_test=unit_test)
 
         if clean_batch is None:
             return
+        self.batch_count += 1 # Only increment if we actually processed a batch
 
-        sample_ids = [ f"e{batch['episode_index'][i]}_i{batch['index'][i]}" for i in range(len(batch['episode_index']))]
+        sample_ids = [ f"e{batch['episode_index'][i]}_i{batch['index'][i]}" for i in changed_indices ]
 
         # Preprocess batches outside trace blocks - keeps tracing focused on model execution
         print("Preprocessing batches...")
@@ -89,28 +106,31 @@ class AttributionPatching():
                 for name in self.tracing_layers:
                      # test just one layer first
                     target = self.get_tracing_target(name)
-                    self.clean_out[name] = target.input[0].save()
+                    self.clean_out[name] = target.input.save()
 
         print("Tracing corrupted batch activations and gradients...")
         with self.model.trace() as tracer:
             with tracer.invoke(corrupted_batch_processed):
-                inputs = {}
+                targets = {}
                 for name in self.tracing_layers:
                     target = self.get_tracing_target(name)
-                    inp = target.input[0]      # capture once
-                    inputs[name] = inp  # store the proxy
-                    self.corrupted_out[name] = inp.save()
-                    inp.retain_grad()
+                    targ = target.input      # capture once
+                    targets[name] = targ  # store the proxy
+                    self.corrupted_out[name] = targ.save()
+                    targ.retain_grad()  # ensure gradients are retained for this tensor
 
                 loss = self.model.output
                 loss.backward()
 
-                for name in self.tracing_layers:
-                    self.corrupted_grads[name] = inputs[name].grad.save()
+                # Save grads in the same context, after backward()
+                for name in self.tracing_layers:  # Reverse to get gradients in the same order as activations
+                    self.corrupted_grads[name] = targets[name].grad.save()
 
         # Log activations and gradients for each layer
         print("Writing traced data to the activation writer...")
         for name, clean in self.clean_out.items():
+            # print(name, self.corrupted_grads[name])
+            # print(f"Layer '{name}': clean_out shape {clean.shape}, corrupted_out shape {self.corrupted_out[name].shape}, corrupted_grads shape {self.corrupted_grads[name].shape}")
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,

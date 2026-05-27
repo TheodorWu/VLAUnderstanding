@@ -10,7 +10,8 @@ def main(cfg: DictConfig):
     if cfg.mode == "run" or cfg.mode == "full":
         method = initializer.method()
         method.main()
-    elif cfg.mode == "evaluate" or cfg.mode == "full":
+
+    if cfg.mode == "evaluate" or cfg.mode == "full":
         evaluator = initializer.evaluate()
         result = evaluator.compute_layer_attributions()
         evaluator.plot_heatmap(result, **config["evaluator"]["params"])
