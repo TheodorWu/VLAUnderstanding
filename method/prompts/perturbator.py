@@ -32,7 +32,7 @@ class PromptPerturbator:
         self.semantic_scaler = SemanticScaler()
         self.synonym_replacer = SynonymReplacer()
 
-        self.BLOCKLIST = {"pick up", "up to", "up for"}
+        self.blocklist = set(self.config.get("blocklist", ["pick up"]))  # Default blocklist with "pick up"
 
     def directional_perturbation(self, prompt):
         replacements = {"left": "right", "right": "left", "up": "down", "down": "up"}
@@ -40,7 +40,7 @@ class PromptPerturbator:
         # 1. Mask blocklisted phrases
         masked = prompt
         placeholders = {}
-        for i, phrase in enumerate(self.BLOCKLIST):
+        for i, phrase in enumerate(self.blocklist):
             placeholder = f"__BLOCKED_{i}__"
             if phrase in masked.lower():
                 placeholders[placeholder] = phrase

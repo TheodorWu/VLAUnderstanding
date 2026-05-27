@@ -1,3 +1,5 @@
 directional: true
 synonym: false
 semantic_scaling: false
+blocklist:
+  - pick up
