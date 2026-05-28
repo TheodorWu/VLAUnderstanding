@@ -1,5 +1,7 @@
+from einops import layers
 import torch
 import torch.nn as nn
+import re
 
 from lerobot.policies.pi05.modeling_pi05 import PI05Config, PI05Policy
 from lerobot.policies.pi05.processor_pi05 import make_pi05_pre_post_processors
@@ -172,3 +174,7 @@ class PI05Wrapper(nn.Module):
 
     def get_tracing_layers(self):
         return self.tracing_layers
+
+    @staticmethod
+    def sort_layers(layer_names: list[str]) -> list[str]:
+        return sorted(layer_names, key=lambda name: tuple(int(n) for n in re.findall(r'\d+', name)))

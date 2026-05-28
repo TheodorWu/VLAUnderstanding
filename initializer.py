@@ -48,5 +48,14 @@ class Initializer:
         # Evaluation initialization logic based on the configuration
         seed_all(self.config.get("seed", 42))
         print(f"Initializing evaluation with config: {self.config}")
-        evaluator = AttributionPatchingEvaluator(self.config)
+        evaluator = AttributionPatchingEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn())
         return evaluator
+
+    def get_layer_sort_fn(self):
+        # Example of how to get a layer sorting function based on the model type
+        model_type = self.config.get("model", {}).get("type", "")
+        if model_type == "pi05":
+            from model.pi05 import PI05Wrapper
+            return  PI05Wrapper.sort_layers
+        else:
+            return None

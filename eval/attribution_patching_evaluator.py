@@ -16,11 +16,12 @@ class AttributionResult:
     matrix: np.ndarray                  # shape: (n_layers, n_heads) — already aggregated
 
 class AttributionPatchingEvaluator():
-    def __init__(self, config):
+    def __init__(self, config, layer_sort_fn=None):
         self.logger = Logger()
         self.config = config
         self.evaluator_config = config.get("evaluator", {})
         self.activation_reader = ActivationReader(config)
+        self.layer_sort_fn = layer_sort_fn or (lambda x: x)
 
     def _add_batch_dim(self, batch):
         for k in ["clean", "corrupt", "gradients"]:
@@ -54,6 +55,7 @@ class AttributionPatchingEvaluator():
                 sample_count[layer] += batch_n
 
         layer_names = list(running_sum.keys())
+        layer_names = self.layer_sort_fn(layer_names)
         scores = np.array([running_sum[l] / sample_count[l] for l in layer_names])  # (n_layers,)
 
         return AttributionResult(
