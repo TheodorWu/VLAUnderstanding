@@ -14,7 +14,7 @@ def main(cfg: DictConfig):
     if cfg.mode == "evaluate" or cfg.mode == "full":
         evaluator = initializer.evaluate()
         result = evaluator.compute_layer_attributions()
-        evaluator.plot_heatmap(result, **config["evaluator"]["params"])
+        evaluator.plot_heatmap(result, **config.get("evaluator", {}).get("params", {}))
 
 if __name__ == "__main__":
     main() # pylint: disable=no-value-for-parameter

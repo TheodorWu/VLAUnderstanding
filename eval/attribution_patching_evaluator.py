@@ -23,8 +23,10 @@ class AttributionPatchingEvaluator():
 
     def _add_batch_dim(self, batch):
         for k in ["clean", "corrupt", "gradients"]:
-            if k in batch and isinstance(batch[k], torch.Tensor) and batch[k].dim() == 2:
-                setattr(batch, k, getattr(batch, k).unsqueeze(0))
+            if hasattr(batch, k):
+                tensor = getattr(batch, k)
+                if torch.is_tensor(tensor) and tensor.dim() == 2:
+                    setattr(batch, k, tensor.unsqueeze(0))
         return batch
 
     def compute_layer_attributions(self) -> AttributionResult:

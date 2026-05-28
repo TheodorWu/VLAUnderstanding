@@ -49,6 +49,22 @@ class PI05Wrapper(nn.Module):
 
         self._init_tracing_layers()
 
+        self.fixed_time = self._init_fixed_time()
+        self.fixed_noise = None
+
+    def _get_fixed_noise(self, shape, device):
+        if self.fixed_noise is None:
+            batch_independent_shape = 1, *shape[1:]  # Exclude batch dimension
+            self.fixed_noise = self.model.model.sample_noise(batch_independent_shape, device)
+
+        return self.fixed_noise.expand(shape[0], *self.fixed_noise.shape[1:]).to(device)
+
+    def _init_fixed_time(self):
+        if (value := self.config.get("fixed_time", None)) is not None:
+            assert 0.0 <= value <= 1.0
+            return torch.tensor(value, device=self.device)
+        return None
+
     def _patch_rmsnorm_layers(self):
         for module in self.model.modules():
             if "RMSNorm" in module.__class__.__name__:
@@ -103,8 +119,15 @@ class PI05Wrapper(nn.Module):
 
         actions = self.model.prepare_action(processed_batch)
 
-        noise = self.model.model.sample_noise(actions.shape, actions.device)
-        time = self.model.model.sample_time(actions.shape[0], actions.device)
+        if self.config.get("use_fixed_noise", False):
+            noise = self._get_fixed_noise(actions.shape, actions.device)
+        else:
+            noise = self.model.model.sample_noise(actions.shape, actions.device)
+
+        if self.fixed_time is not None:
+            time = self.fixed_time.expand(actions.shape[0])
+        else:
+            time = self.model.model.sample_time(actions.shape[0], actions.device)
 
         # Compute loss (no separate state needed for PI05)
         losses = self.model.model.forward(images, img_masks, tokens, masks, actions, noise, time)

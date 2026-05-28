@@ -6,10 +6,11 @@ defaults:
  - dataset: libero
  - model: dev
  - method: dev
+ - evaluator: dev
 
 stage: dev
 seed: 42
 device: cuda
-mode: full
+mode: evaluate
 hydra:
   output_subdir: null
