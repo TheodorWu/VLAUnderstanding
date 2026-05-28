@@ -19,6 +19,7 @@ class AttributionPatchingEvaluator():
     def __init__(self, config):
         self.logger = Logger()
         self.config = config
+        self.evaluator_config = config.get("evaluator", {})
         self.activation_reader = ActivationReader(config)
 
     def _add_batch_dim(self, batch):
@@ -64,9 +65,6 @@ class AttributionPatchingEvaluator():
     def plot_heatmap(
         self,
         result: AttributionResult,
-        save_path: str = None,
-        show: bool = False,
-        save_to_wandb: bool = False
     ):
         fig, ax = plt.subplots(figsize=(14, 8))
         sns.heatmap(
@@ -84,11 +82,12 @@ class AttributionPatchingEvaluator():
         ax.set_ylabel("Layer")
         plt.tight_layout()
 
-        if save_to_wandb:
+        if self.evaluator_config.get("save_to_wandb"):
+            print("Logging heatmap to Weights & Biases...")
             wandb.log({f"attribution_heatmap_{result.perturbation_type}": wandb.Image(fig)})
-        if save_path:
-            plt.savefig(save_path, dpi=150, bbox_inches="tight")
-        if show:
+        if self.evaluator_config.get("save_path"):
+            plt.savefig(self.evaluator_config.get("save_path"), dpi=150, bbox_inches="tight")
+        if self.evaluator_config.get("show"):
             plt.show()
         plt.close(fig)
         return fig

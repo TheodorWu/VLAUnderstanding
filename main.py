@@ -8,8 +8,8 @@ def main(cfg: DictConfig):
     initializer = Initializer(config)
 
     if cfg.mode == "run" or cfg.mode == "full":
-        method = initializer.method()
-        method.main()
+        with initializer.method() as method:
+            method.main()
 
     if cfg.mode == "evaluate" or cfg.mode == "full":
         evaluator = initializer.evaluate()
