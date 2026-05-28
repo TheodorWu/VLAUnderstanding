@@ -4,8 +4,17 @@ import json
 import torch
 import wandb
 import webdataset as wds
+from dataclasses import dataclass
+from typing import Optional
 
 from utils.perturbator import build_perturbation_type_key
+
+@dataclass
+class SampleMetadata:
+    sample_id: int
+    instruction: Optional[str] = None
+    corrupt_instruction: Optional[str] = None
+    perturbed_token_idxs: Optional[list[int]] = None
 
 class ActivationDataBatch:
     # might be useful for grouping activations/gradients from multiple samples together before writing to disk in attribution patching loop
@@ -24,13 +33,13 @@ class ActivationDataBatch:
     def __iter__(self):
         yield from self.data_points
 
+@dataclass
 class ActivationDataPoint:
-    def __init__(self, layer, sample_id, clean=None, corrupt=None, gradients=None):
-        self.layer = layer
-        self.sample_id = sample_id
-        self.clean = clean
-        self.corrupt = corrupt
-        self.gradients = gradients
+    layer: str
+    sample_id: int
+    clean: Optional[torch.Tensor] = None
+    corrupt: Optional[torch.Tensor] = None
+    gradients: Optional[torch.Tensor] = None
 
     def __iter__(self):
         yield self
@@ -112,3 +121,25 @@ class ActivationWriter():
                 if layer not in self.metadata["num_samples"]:
                     self.metadata["num_samples"][layer] = 0
                 self.metadata["num_samples"][layer] += 1
+
+    def add_sample_metadata(self, metadata: SampleMetadata):
+        if "sample_metadata" not in self.sinks:
+            shard_dir = self.data_root / "sample_metadata"
+            shard_dir.mkdir(parents=True, exist_ok=True)
+            pattern = str(shard_dir) + "/%06d.tar"
+            self.sinks["sample_metadata"] = wds.ShardWriter(
+                pattern,
+                maxcount=self.chunk_size,
+                maxsize=self.max_shard_size,
+            )
+
+        sample = {
+            "__key__": str(metadata.sample_id),
+            "metadata.json": json.dumps({
+                "instruction": metadata.instruction,
+                "corrupt_instruction": metadata.corrupt_instruction,
+                "perturbed_token_idxs": metadata.perturbed_token_idxs
+            }).encode(),
+        }
+
+        self.sinks["sample_metadata"].write(sample)

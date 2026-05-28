@@ -1,5 +1,5 @@
 import torch
-from data.activation_writer import ActivationDataBatch, ActivationWriter
+from data.activation_writer import ActivationDataBatch, ActivationWriter, SampleMetadata
 from eval.logger import Logger
 from tqdm import tqdm
 
@@ -95,7 +95,6 @@ class AttributionPatching():
 
         sample_ids = [ f"e{batch['episode_index'][i]}_i{batch['index'][i]}" for i in changed_indices ]
 
-        # Preprocess batches outside trace blocks - keeps tracing focused on model execution
         print("Preprocessing batches...")
         clean_batch_processed = self.model.preprocess_batch(clean_batch)
         corrupted_batch_processed = self.model.preprocess_batch(corrupted_batch)
@@ -104,7 +103,6 @@ class AttributionPatching():
         with self.model.trace() as tracer:
             with tracer.invoke(clean_batch_processed):
                 for name in self.tracing_layers:
-                     # test just one layer first
                     target = self.get_tracing_target(name)
                     self.clean_out[name] = target.input.save()
 
@@ -114,23 +112,30 @@ class AttributionPatching():
                 targets = {}
                 for name in self.tracing_layers:
                     target = self.get_tracing_target(name)
-                    targ = target.input      # capture once
-                    targets[name] = targ  # store the proxy
+                    targ = target.input
+                    targets[name] = targ
                     self.corrupted_out[name] = targ.save()
-                    targ.retain_grad()  # ensure gradients are retained for this tensor
+                    targ.retain_grad()
 
                 loss = self.model.output
                 loss.backward()
 
-                # Save grads in the same context, after backward()
-                for name in self.tracing_layers:  # Reverse to get gradients in the same order as activations
+                for name in self.tracing_layers:
                     self.corrupted_grads[name] = targets[name].grad.save()
 
-        # Log activations and gradients for each layer
+        print("Writing sample metadata...")
+        for i, sample_id in enumerate(sample_ids):
+            perturbed_tokens = clean_batch_processed["input_ids"][i] != corrupted_batch_processed["input_ids"][i]
+            perturbed_token_idxs = torch.where(perturbed_tokens)[0].tolist()
+            self.writer.add_sample_metadata(SampleMetadata(
+                sample_id=sample_id,
+                instruction=clean_batch["task"][i],
+                corrupt_instruction=corrupted_batch["task"][i],
+                perturbed_token_idxs=perturbed_token_idxs,
+            ))
+
         print("Writing traced data to the activation writer...")
         for name, clean in self.clean_out.items():
-            # print(name, self.corrupted_grads[name])
-            # print(f"Layer '{name}': clean_out shape {clean.shape}, corrupted_out shape {self.corrupted_out[name].shape}, corrupted_grads shape {self.corrupted_grads[name].shape}")
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,
