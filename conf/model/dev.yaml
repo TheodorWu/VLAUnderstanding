@@ -1,3 +1,3 @@
 type: "pi05"
 # model_id: None # Use None to load the model without pretrained weights for testing purposes
-model_id: "lerobot/pi05_libero"
+model_id: "lerobot/pi05_libero_finetuned_v044"

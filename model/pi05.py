@@ -97,7 +97,7 @@ class PI05Wrapper(nn.Module):
         registered = []
 
         for key in dataset_stats:
-            if key.startswith("observation.images."):
+            if key.startswith("observation.images.") and key not in self.model.config.input_features:
                 self.model.config.input_features[key] = PolicyFeature(
                     type=FeatureType.VISUAL,
                     shape=(3, h, w),
