@@ -29,6 +29,14 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "name": "Test Libero Env",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_env",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
+        },
+        {
             "name": "Test Model",
             "type": "debugpy",
             "request": "launch",
