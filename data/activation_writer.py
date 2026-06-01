@@ -74,6 +74,11 @@ class ActivationWriter():
         with open(self.metadata_path, "w", encoding="utf-8") as f:
             json.dump(self.metadata, f, indent=2)
 
+    def write_config(self, config):
+        config_path = self.data_root / "config.json"
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(config, f, indent=2)
+
     def __exit__(self, *args):
         self._write_metadata()  # update metadata with final sample count
 

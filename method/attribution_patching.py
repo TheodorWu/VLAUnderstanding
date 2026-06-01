@@ -64,6 +64,7 @@ class AttributionPatching():
         return clean_filtered, perturbed_filtered, changed_indices
 
     def main(self, unit_test=False):
+        self.writer.write_config(self.config)
         print("Starting attribution patching. Collecting activations and gradients for each batch in the dataset...")
         for batch in tqdm(self.dataset, desc="Attribution patching", unit="batch"):
             print("Processing next batch...")
