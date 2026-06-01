@@ -22,7 +22,7 @@ echo "Job ID: $SLURM_JOB_ID"
 # Run the setup script
 source "$PWD/.venv/bin/activate"
 
-python main.py python my_app.py --config-name=full_directional
+python main.py --config-name=full_directional
 
 deactivate
 
