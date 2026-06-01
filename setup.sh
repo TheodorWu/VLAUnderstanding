@@ -14,6 +14,13 @@ pip install --upgrade pip
 pip install "lerobot[pi]@git+https://github.com/huggingface/lerobot.git"
 pip install -r requirements.txt
 
+git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git
+touch LIBERO/libero/__init__.py
+cd LIBERO
+pip install -e .
+
+cd ..
+
 # Run all unit tests in test folder
 echo "Running unit tests..."
 python -m unittest discover -s tests -p "test_*.py"

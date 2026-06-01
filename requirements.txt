@@ -1,7 +1,8 @@
 coolname==4.1.0
 einops==0.8.2
 hydra-core==1.3.2
-lerobot==0.5.2
+# lerobot==0.5.2
+git+https://github.com/huggingface/lerobot.git
 matplotlib==3.10.9
 nltk==3.9.2
 nnsight==0.7.0
@@ -13,3 +14,4 @@ seaborn==0.13.2
 torch==2.7.1
 wandb==0.27.0
 webdataset==1.0.2
+robosuite==1.4.1
