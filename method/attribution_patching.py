@@ -2,6 +2,7 @@ import torch
 from data.activation_writer import ActivationDataBatch, ActivationWriter, SampleMetadata
 from eval.logger import Logger
 from tqdm import tqdm
+from lerobot.utils.constants import OBS_LANGUAGE_TOKENS
 
 class AttributionPatching():
     def __init__(self, config, model, perturbator, dataset, device='cuda'):
@@ -132,7 +133,7 @@ class AttributionPatching():
 
         print("Writing sample metadata...")
         for i, sample_id in enumerate(sample_ids):
-            perturbed_tokens = clean_batch_processed["input_ids"][i] != corrupted_batch_processed["input_ids"][i]
+            perturbed_tokens = clean_batch_processed[f"{OBS_LANGUAGE_TOKENS}"][i] != corrupted_batch_processed[f"{OBS_LANGUAGE_TOKENS}"][i]
             perturbed_token_idxs = torch.where(perturbed_tokens)[0].tolist()
             self.writer.add_sample_metadata(SampleMetadata(
                 sample_id=sample_id,
@@ -151,3 +152,9 @@ class AttributionPatching():
                 gradients=self.corrupted_grads[name]
             ))
         print("Tracing complete.")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False

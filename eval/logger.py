@@ -8,6 +8,8 @@ class Logger:
     def _transform_to_numpy(self, value):
         if hasattr(value, "cpu"):
             value = value.cpu()
+        if hasattr(value, "detach"):
+            value = value.detach()
         if hasattr(value, "numpy"):
             value = value.numpy()
         return value
