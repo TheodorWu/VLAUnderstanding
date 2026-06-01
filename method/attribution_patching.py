@@ -5,7 +5,7 @@ from tqdm import tqdm
 from lerobot.utils.constants import OBS_LANGUAGE_TOKENS
 
 class AttributionPatching():
-    def __init__(self, config, model, perturbator, dataset, device='cuda'):
+    def __init__(self, config, model, perturbator, dataset, device='cuda', **kwargs):
         self.config = config
         self.model = model
         assert hasattr(self.model, "tracing_layers"), "Model must have attribute 'tracing_layers'."
