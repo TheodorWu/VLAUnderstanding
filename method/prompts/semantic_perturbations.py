@@ -1,68 +1,45 @@
-import requests
 import json
 from pathlib import Path
 
-class ConceptNetPerturbator:
-    def __init__(self):
-        self.conceptnet_base = "http://api.conceptnet.io"
-        self.cache_file = "conceptnet_cache.json"
-        self.cache = self._init_cache()
 
-    def _init_cache(self):
-        project_root = Path(__file__).parent.parent
-        self.cache_path = project_root / self.cache_file
-        if self.cache_path.exists():
-            with open(self.cache_path, "r", encoding="utf-8") as f:
-                return json.load(f)
-        return {}
+class LexiconPerturbator:
+    """Base class for perturbators backed by a local lexicon file."""
 
-    def query_conceptnet(self, url):
-        if url not in self.cache:
-            self.cache[url] = requests.get(url, timeout=10).json()
-            with open(self.cache_path, "w", encoding="utf-8") as f:
-                json.dump(self.cache, f, indent=2)
-        return self.cache[url]
+    def __init__(self, lexicon_path: str | Path | None = None):
+        if lexicon_path is None:
+            lexicon_path = Path(__file__).parent.parent / "data" / "lexicon.json"
+        self.lexicon = self._load_lexicon(Path(lexicon_path))
 
-class SemanticScaler(ConceptNetPerturbator):
-    def __call__(self, *args, **kwds):
-        return self.scale_up(*args, **kwds)
+    def _load_lexicon(self, path: Path) -> dict:
+        if not path.exists():
+            raise FileNotFoundError(f"Lexicon not found at {path}")
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
 
-    def scale_up(self, word):
-        normalized = word.lower().replace(" ", "_")
-        url = f"{self.conceptnet_base}/query?node=/c/en/{normalized}&rel=/r/IsA&start=/c/en/{normalized}"
-        response = self.query_conceptnet(url)
+    def _lookup(self, word: str) -> dict:
+        """Return the lexicon entry for word, or an empty dict if missing."""
+        return self.lexicon.get(word.lower().strip(), {})
 
-        edges = response.get("edges", [])
-        if not edges:
-            return word
+class SemanticScaler(LexiconPerturbator):
+    """Replaces a word with its hypernym (one level up the IS-A hierarchy)."""
 
-        # Traverse one level up the IsA hierarchy
-        return edges[0]["end"]["label"]
+    def __call__(self, word: str) -> str:
+        return self.scale_up(word)
 
+    def scale_up(self, word: str) -> str:
+        entry = self._lookup(word)
+        return entry.get("hypernym", word)  # fall back to original word
 
-class SynonymReplacer(ConceptNetPerturbator):
-    def __call__(self, *args, **kwds):
-        return self.replace_with_synonym(*args, **kwds)
+class SynonymReplacer(LexiconPerturbator):
+    """Replaces a word with the first synonym that isn't the word itself."""
 
-    def replace_with_synonym(self, word):
-        normalized = word.lower().replace(" ", "_")
-        url = f"{self.conceptnet_base}/query?node=/c/en/{normalized}&rel=/r/Synonym&start=/c/en/{normalized}"
-        response = self.query_conceptnet(url)
+    def __call__(self, word: str) -> str:
+        return self.replace_with_synonym(word)
 
-        edges = response.get("edges", [])
-        for edge in edges:
-            candidate = edge["end"]["label"]
-            if candidate.lower() != word.lower() and word.lower() not in candidate.lower():
+    def replace_with_synonym(self, word: str) -> str:
+        entry = self._lookup(word)
+        synonyms = entry.get("synonyms", [])
+        for candidate in synonyms:
+            if candidate.lower() != word.lower():
                 return candidate
-
-        # Fall back to SimilarTo if no Synonym relation found
-        url = f"{self.conceptnet_base}/query?node=/c/en/{normalized}&rel=/r/SimilarTo&start=/c/en/{normalized}"
-        response = self.query_conceptnet(url)
-
-        edges = response.get("edges", [])
-        for edge in edges:
-            candidate = edge["end"]["label"]
-            if candidate.lower() != word.lower() and word.lower() not in candidate.lower():
-                return candidate
-
-        return word
+        return word  # fall back to original
