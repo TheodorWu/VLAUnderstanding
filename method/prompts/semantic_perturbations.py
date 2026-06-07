@@ -7,7 +7,7 @@ class LexiconPerturbator:
 
     def __init__(self, lexicon_path: str | Path | None = None):
         if lexicon_path is None:
-            lexicon_path = Path(__file__).parent.parent / "data" / "lexicon.json"
+            lexicon_path = Path(__file__).parent.parent.parent / "data" / "lexicon.json"
         self.lexicon = self._load_lexicon(Path(lexicon_path))
 
     def _load_lexicon(self, path: Path) -> dict:
