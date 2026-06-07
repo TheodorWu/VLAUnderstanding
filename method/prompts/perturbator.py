@@ -33,6 +33,17 @@ class PromptPerturbator:
         self.synonym_replacer = SynonymReplacer()
 
         self.blocklist = set(self.config.get("blocklist", ["pick up"]))  # Default blocklist with "pick up"
+        self.target_words = self.config.get("target_words", "noun")
+
+    def _init_target_words(self):
+        target_words_config = self.config.get("target_words")
+        if isinstance(target_words_config, list):
+            self.target_words = target_words_config
+        elif target_words_config in ["noun", "verb"]:
+            lexicon = self.semantic_scaler.lexicon
+            self.target_words = [word for word, entry in lexicon.items() if entry.get("pos") == target_words_config]
+        else:
+            raise ValueError("Invalid target_words configuration. Must be a list or one of 'noun', 'verb'.")
 
     def directional_perturbation(self, prompt):
         replacements = {"left": "right", "right": "left", "up": "down", "down": "up"}
@@ -81,7 +92,7 @@ class PromptPerturbator:
             prompt = self.directional_perturbation(prompt)
 
         if self.config.get("synonym") or self.config.get("semantic_scaling"):
-            for target_word in self.config.get("target_words", []):
+            for target_word in self.target_words:
                 if self.config.get("synonym"):
                     prompt = self.synonym_perturbation(prompt, target_word=target_word)
                 if self.config.get("semantic_scaling"):

@@ -5,10 +5,11 @@ from method.prompts.perturbator import PromptPerturbator, PerturbedPromptOutput
 
 class TestDirectionalPromptPerturbator(unittest.TestCase):
     def setUp(self):
-        self.config = {"method": "directional", "blocklist": ["pick up"], "target_pos": "noun", "num_targets": 1}
+        self.config = {"method": "directional", "blocklist": ["pick up"], "target_words": "noun", "num_targets": 1}
         self.perturbator = PromptPerturbator(self.config)
 
-
+    def test_target_words_not_empty(self):
+        self.assertGreater(len(self.perturbator.target_words), 0)
     ### Test Cases for Directional Perturbation ###
     def test_directional_perturbation_left_to_right(self):
         prompt = "Move the object to the left."

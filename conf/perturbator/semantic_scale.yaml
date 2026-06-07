@@ -3,32 +3,32 @@ synonym: false
 semantic_scaling: true
 blocklist:
   - pick up
-target_words:
-### Nouns
-  - mug
-  - plate
-  - chocolate pudding
-  - microwave
-  - stove
-  - moka pot
-  - alphabet soup
-  - tomato sauce
-  - cream cheese
-  - basket
-  - butter
-  - bowl
-  - drawer
-  - cabinet
-  - book
-  - compartment
-  - caddy
-### Verbs
-  # - put
-  # - turn on
-  # - grab
-  # - hold
-  # - lift
-  # - carry
-  # - push
-  # - pull
-  # - pick up
+target_words: noun
+# ### Nouns
+#   - mug
+#   - plate
+#   - chocolate pudding
+#   - microwave
+#   - stove
+#   - moka pot
+#   - alphabet soup
+#   - tomato sauce
+#   - cream cheese
+#   - basket
+#   - butter
+#   - bowl
+#   - drawer
+#   - cabinet
+#   - book
+#   - compartment
+#   - caddy
+# ### Verbs
+#   # - put
+#   # - turn on
+#   # - grab
+#   # - hold
+#   # - lift
+#   # - carry
+#   # - push
+#   # - pull
+#   # - pick up

@@ -53,6 +53,12 @@ class PI05Wrapper(nn.Module):
         self.fixed_time = self._init_fixed_time()
         self.fixed_noise = None
 
+        self._freeze_non_tracing_parameters()
+
+    def _freeze_non_tracing_parameters(self):
+        # freeze all non gemma_expert parameters
+        self.model.model.paligemma_with_expert.paligemma.requires_grad_(False)
+
     def _get_fixed_noise(self, shape, device):
         if self.fixed_noise is None:
             batch_independent_shape = 1, *shape[1:]  # Exclude batch dimension
