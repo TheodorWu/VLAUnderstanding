@@ -211,6 +211,7 @@ data/*
 
 # But keep .py files
 !data/*.py
+!data/lexicon.json
 
 # HF Cache
 .hfcache/

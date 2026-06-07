@@ -1,0 +1,132 @@
+{
+  "mug": {
+    "pos": "noun",
+    "synonyms": ["cup", "tumbler", "tankard"],
+    "hypernym": "drinkware"
+  },
+  "plate": {
+    "pos": "noun",
+    "synonyms": ["dish", "platter", "saucer"],
+    "hypernym": "tableware"
+  },
+  "chocolate pudding": {
+    "pos": "noun",
+    "synonyms": ["chocolate dessert", "chocolate mousse", "choc pudding"],
+    "hypernym": "dessert"
+  },
+  "microwave": {
+    "pos": "noun",
+    "synonyms": ["microwave oven", "microwave unit"],
+    "hypernym": "kitchen appliance"
+  },
+  "stove": {
+    "pos": "noun",
+    "synonyms": ["cooker", "range", "hob"],
+    "hypernym": "kitchen appliance"
+  },
+  "moka pot": {
+    "pos": "noun",
+    "synonyms": ["stovetop espresso maker", "coffee percolator", "macchinetta"],
+    "hypernym": "coffee maker"
+  },
+  "alphabet soup": {
+    "pos": "noun",
+    "synonyms": ["letter soup", "pasta soup"],
+    "hypernym": "soup"
+  },
+  "tomato sauce": {
+    "pos": "noun",
+    "synonyms": ["marinara", "passata", "tomato paste"],
+    "hypernym": "sauce"
+  },
+  "cream cheese": {
+    "pos": "noun",
+    "synonyms": ["soft cheese", "spreadable cheese", "cheese spread"],
+    "hypernym": "cheese"
+  },
+  "basket": {
+    "pos": "noun",
+    "synonyms": ["hamper", "bin", "crate"],
+    "hypernym": "container"
+  },
+  "butter": {
+    "pos": "noun",
+    "synonyms": ["spread", "dairy spread"],
+    "hypernym": "dairy product"
+  },
+  "bowl": {
+    "pos": "noun",
+    "synonyms": ["dish", "basin", "vessel"],
+    "hypernym": "tableware"
+  },
+  "drawer": {
+    "pos": "noun",
+    "synonyms": ["slide-out shelf", "pull-out tray"],
+    "hypernym": "storage compartment"
+  },
+  "cabinet": {
+    "pos": "noun",
+    "synonyms": ["cupboard", "locker", "unit"],
+    "hypernym": "furniture"
+  },
+  "book": {
+    "pos": "noun",
+    "synonyms": ["volume", "tome", "manual"],
+    "hypernym": "publication"
+  },
+  "compartment": {
+    "pos": "noun",
+    "synonyms": ["section", "partition", "slot"],
+    "hypernym": "storage space"
+  },
+  "caddy": {
+    "pos": "noun",
+    "synonyms": ["canister", "tin", "holder"],
+    "hypernym": "container"
+  },
+  "put": {
+    "pos": "verb",
+    "synonyms": ["place", "set", "lay", "position"],
+    "hypernym": "move"
+  },
+  "turn on": {
+    "pos": "verb",
+    "synonyms": ["switch on", "activate", "power on", "start"],
+    "hypernym": "operate"
+  },
+  "grab": {
+    "pos": "verb",
+    "synonyms": ["grasp", "seize", "snatch", "take"],
+    "hypernym": "take"
+  },
+  "hold": {
+    "pos": "verb",
+    "synonyms": ["grip", "clasp", "grasp", "clutch"],
+    "hypernym": "handle"
+  },
+  "lift": {
+    "pos": "verb",
+    "synonyms": ["raise", "elevate", "hoist", "pick up"],
+    "hypernym": "move"
+  },
+  "carry": {
+    "pos": "verb",
+    "synonyms": ["transport", "tote", "bear", "haul"],
+    "hypernym": "move"
+  },
+  "push": {
+    "pos": "verb",
+    "synonyms": ["shove", "press", "thrust", "nudge"],
+    "hypernym": "move"
+  },
+  "pull": {
+    "pos": "verb",
+    "synonyms": ["tug", "drag", "draw", "haul"],
+    "hypernym": "move"
+  },
+  "pick up": {
+    "pos": "verb",
+    "synonyms": ["lift", "retrieve", "take", "collect"],
+    "hypernym": "grab"
+  }
+}
