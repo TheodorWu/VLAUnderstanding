@@ -55,7 +55,7 @@ class TestModels(unittest.TestCase):
             "model": {
                 "type": "pi05",
                 # "model_id": None,
-                "model_id": "lerobot/pi05_libero", # Use pretrained weights for this test to ensure forward pass works
+                "model_id": "lerobot/pi05_libero_finetuned_v044", # Use pretrained weights for this test to ensure forward pass works
                 "wrap_with_nnsight": False
             }
         }

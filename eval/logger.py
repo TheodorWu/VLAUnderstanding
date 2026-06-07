@@ -17,7 +17,8 @@ class Logger:
     def log_metric(self, name, value, step):
         value = self._transform_to_numpy(value)
         print(f"Step {step}: {name} = {value}")
-        wandb.log({name: value}, step=step)
+        if wandb.run is not None:
+            wandb.log({name: value}, step=step)
         if not name in self.accumulated_metrics:
             self.accumulated_metrics[name] = []
         self.accumulated_metrics[name].append(value)
@@ -27,5 +28,6 @@ class Logger:
         for name, values in self.accumulated_metrics.items():
             mean = np.mean(values)
             std = np.std(values)
-            wandb.log({f"{name}_mean": mean, f"{name}_std": std})
+            if wandb.run is not None:
+                wandb.log({f"{name}_mean": mean, f"{name}_std": std})
             print(f"{name}: mean = {mean}, std = {std}")

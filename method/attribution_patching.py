@@ -10,7 +10,6 @@ class AttributionPatching():
         self.model = model
         assert hasattr(self.model, "tracing_layers"), "Model must have attribute 'tracing_layers'."
         self.tracing_layers = self.model.get_tracing_layers()
-        self.model.train()
 
         self.max_tracing_batches = config.get("method", {}).get("max_tracing_batches", None)
         self.batch_count = 0
@@ -144,6 +143,10 @@ class AttributionPatching():
 
         print("Writing traced data to the activation writer...")
         for name, clean in self.clean_out.items():
+            if unit_test:
+                print(f"Clean shape for {name}: {clean.shape}")
+                print(f"Corrupted shape for {name}: {self.corrupted_out[name].shape}")
+                print(f"Gradients shape for {name}: {self.corrupted_grads[name].shape}")
             self.writer.add_data(ActivationDataBatch(
                 layer=name,
                 sample_ids=sample_ids,
