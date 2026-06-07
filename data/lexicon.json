@@ -1,43 +1,43 @@
 {
   "mug": {
     "pos": "noun",
-    "synonyms": ["cup", "tumbler", "tankard"],
-    "hypernym": "drinkware"
+    "synonyms": ["cup", "jug", "tankard"],
+    "hypernym": "drinking vessel"
   },
   "plate": {
     "pos": "noun",
-    "synonyms": ["dish", "platter", "saucer"],
-    "hypernym": "tableware"
+    "synonyms": ["platter"],
+    "hypernym": "flatware"
   },
   "chocolate pudding": {
     "pos": "noun",
-    "synonyms": ["chocolate dessert", "chocolate mousse", "choc pudding"],
-    "hypernym": "dessert"
+    "synonyms": ["chocolate mousse", "chocolate custard"],
+    "hypernym": "chocolate dessert"
   },
   "microwave": {
     "pos": "noun",
-    "synonyms": ["microwave oven", "microwave unit"],
+    "synonyms": ["microwave"],
     "hypernym": "kitchen appliance"
   },
   "stove": {
     "pos": "noun",
-    "synonyms": ["cooker", "range", "hob"],
+    "synonyms": ["cooker", "boiler", "kiln", "heater"],
     "hypernym": "kitchen appliance"
   },
   "moka pot": {
     "pos": "noun",
-    "synonyms": ["stovetop espresso maker", "coffee percolator", "macchinetta"],
-    "hypernym": "coffee maker"
+    "synonyms": ["stovetop coffee maker"],
+    "hypernym": "kitchen appliance"
   },
   "alphabet soup": {
     "pos": "noun",
     "synonyms": ["letter soup", "pasta soup"],
-    "hypernym": "soup"
+    "hypernym": "dish"
   },
   "tomato sauce": {
     "pos": "noun",
-    "synonyms": ["marinara", "passata", "tomato paste"],
-    "hypernym": "sauce"
+    "synonyms": ["marinara", "passata"],
+    "hypernym": "pasta sauce"
   },
   "cream cheese": {
     "pos": "noun",
@@ -46,87 +46,62 @@
   },
   "basket": {
     "pos": "noun",
-    "synonyms": ["hamper", "bin", "crate"],
+    "synonyms": ["hamper", "crate"],
     "hypernym": "container"
   },
   "butter": {
     "pos": "noun",
-    "synonyms": ["spread", "dairy spread"],
+    "synonyms": ["dairy spread"],
     "hypernym": "dairy product"
   },
   "bowl": {
     "pos": "noun",
-    "synonyms": ["dish", "basin", "vessel"],
-    "hypernym": "tableware"
+    "synonyms": ["dish", "basin"],
+    "hypernym": "vessel"
   },
   "drawer": {
     "pos": "noun",
-    "synonyms": ["slide-out shelf", "pull-out tray"],
-    "hypernym": "storage compartment"
+    "synonyms": ["cabinet", "compartment"],
+    "hypernym": "storage space"
   },
   "cabinet": {
     "pos": "noun",
-    "synonyms": ["cupboard", "locker", "unit"],
+    "synonyms": ["case", "commode"],
     "hypernym": "furniture"
   },
   "book": {
     "pos": "noun",
-    "synonyms": ["volume", "tome", "manual"],
+    "synonyms": ["volume", "tome"],
     "hypernym": "publication"
   },
   "compartment": {
     "pos": "noun",
-    "synonyms": ["section", "partition", "slot"],
-    "hypernym": "storage space"
+    "synonyms": ["cell", "slot"],
+    "hypernym": "space"
   },
   "caddy": {
     "pos": "noun",
-    "synonyms": ["canister", "tin", "holder"],
-    "hypernym": "container"
+    "synonyms": ["canister", "crate"],
+    "hypernym": "can"
   },
   "put": {
     "pos": "verb",
-    "synonyms": ["place", "set", "lay", "position"],
+    "synonyms": ["place", "position"],
     "hypernym": "move"
   },
-  "turn on": {
+  "place": {
     "pos": "verb",
-    "synonyms": ["switch on", "activate", "power on", "start"],
-    "hypernym": "operate"
-  },
-  "grab": {
-    "pos": "verb",
-    "synonyms": ["grasp", "seize", "snatch", "take"],
-    "hypernym": "take"
-  },
-  "hold": {
-    "pos": "verb",
-    "synonyms": ["grip", "clasp", "grasp", "clutch"],
-    "hypernym": "handle"
-  },
-  "lift": {
-    "pos": "verb",
-    "synonyms": ["raise", "elevate", "hoist", "pick up"],
+    "synonyms": ["position","put", "set"],
     "hypernym": "move"
   },
-  "carry": {
+  "close": {
     "pos": "verb",
-    "synonyms": ["transport", "tote", "bear", "haul"],
-    "hypernym": "move"
-  },
-  "push": {
-    "pos": "verb",
-    "synonyms": ["shove", "press", "thrust", "nudge"],
-    "hypernym": "move"
-  },
-  "pull": {
-    "pos": "verb",
-    "synonyms": ["tug", "drag", "draw", "haul"],
-    "hypernym": "move"
+    "synonyms": ["shut"],
+    "hypernym": "secure"
   },
   "pick up": {
     "pos": "verb",
-    "synonyms": ["lift", "retrieve", "take", "collect"],
-    "hypernym": "grab"
+    "synonyms": ["lift up", "gather up"],
+    "hypernym": "elevate"
   }
 }
