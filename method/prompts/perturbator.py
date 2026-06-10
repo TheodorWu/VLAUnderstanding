@@ -33,7 +33,7 @@ class PromptPerturbator:
         self.synonym_replacer = SynonymReplacer()
 
         self.blocklist = set(self.config.get("blocklist", ["pick up"]))  # Default blocklist with "pick up"
-        self.target_words = self.config.get("target_words", "noun")
+        self._init_target_words()
 
     def _init_target_words(self):
         target_words_config = self.config.get("target_words")
@@ -42,6 +42,7 @@ class PromptPerturbator:
         elif target_words_config in ["noun", "verb"]:
             lexicon = self.semantic_scaler.lexicon
             self.target_words = [word for word, entry in lexicon.items() if entry.get("pos") == target_words_config]
+            print(f"Initialized target words for POS '{target_words_config}': {len(self.target_words)} words found.")
         else:
             raise ValueError("Invalid target_words configuration. Must be a list or one of 'noun', 'verb'.")
 

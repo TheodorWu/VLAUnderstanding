@@ -9,7 +9,9 @@ class TestDirectionalPromptPerturbator(unittest.TestCase):
         self.perturbator = PromptPerturbator(self.config)
 
     def test_target_words_not_empty(self):
+        print(f"Target words: {self.perturbator.target_words}")
         self.assertGreater(len(self.perturbator.target_words), 0)
+
     ### Test Cases for Directional Perturbation ###
     def test_directional_perturbation_left_to_right(self):
         prompt = "Move the object to the left."
