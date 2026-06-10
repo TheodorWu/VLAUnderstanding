@@ -64,6 +64,14 @@ def test_gpu_availability():
 
     return device
 
+def pad_to_length(arr, target_len: int):
+    pad_width = target_len - arr.shape[0]
+    if pad_width == 0:
+        return arr
+    if isinstance(arr, np.ndarray):
+        return np.pad(arr, (0, pad_width))
+    else:  # torch.Tensor
+        return torch.nn.functional.pad(arr, (0, pad_width))
 
 ### decorators ###
 def printable_params(cls):
