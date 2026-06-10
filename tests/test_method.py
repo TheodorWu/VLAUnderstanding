@@ -15,7 +15,8 @@ class TestMethod(unittest.TestCase):
                 "model_id": None # Use None to load the model without pretrained weights for testing purposes
             },
             "perturbator": {
-                "directional": True
+                "directional": True,
+                "target_words": "noun"
             }
         }
 
