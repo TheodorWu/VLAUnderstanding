@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+from rich import json
 from rich.tree import Tree
 from rich.console import Console
 import numpy as np
@@ -131,3 +132,22 @@ def rprint_architecture(cls):
 
     cls.print_architecture = print_architecture
     return cls
+
+def config_to_dict(cfg) -> dict:
+    """Convert OmegaConf config or plain dict/object to a serializable dict."""
+    try:
+        from omegaconf import OmegaConf
+        if OmegaConf.is_config(cfg):
+            return OmegaConf.to_container(cfg, resolve=True, throw_on_missing=False)
+    except ImportError:
+        pass
+    if hasattr(cfg, "__dict__"):
+        return vars(cfg)
+    return dict(cfg)
+
+def pretty_print_config(cfg) -> None:
+    """Pretty print a config, with optional logger support."""
+    d = config_to_dict(cfg)
+    formatted = json.dumps(d, indent=2, default=str)
+    msg = f"Initializing with config:\n{formatted}"
+    print(msg)

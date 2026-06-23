@@ -6,7 +6,7 @@ import torch
 from method.initializer import MethodInitializer
 from model.initializer import ModelInitializer
 from eval.attribution_patching_evaluator import AttributionPatchingEvaluator
-from utils.general import seed_all, test_gpu_availability
+from utils.general import seed_all, test_gpu_availability, pretty_print_config
 
 from data.dataloader import get_dataloader
 
@@ -30,7 +30,7 @@ class Initializer:
     def method(self):
         # Initialization logic based on the configuration
         seed_all(self.config.get("seed", 42))
-        print(f"Initializing with config: {self.config}")
+        pretty_print_config(self.config)
         dataset = get_dataloader(**self.config.get("dataset", {}))
         dataset_stats = dataset.dataset.meta.stats
         self.model_initializer = ModelInitializer(self.config.get("model"), dataset_stats=dataset_stats, device=self.device)
@@ -47,7 +47,7 @@ class Initializer:
     def evaluate(self):
         # Evaluation initialization logic based on the configuration
         seed_all(self.config.get("seed", 42))
-        print(f"Initializing evaluation with config: {self.config}")
+        pretty_print_config(self.config)
         evaluator = AttributionPatchingEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn())
         return evaluator
 
