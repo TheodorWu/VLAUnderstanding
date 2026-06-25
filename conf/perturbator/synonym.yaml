@@ -1,8 +1,6 @@
 directional: false
 synonym: true
 semantic_scaling: false
-blocklist:
-  - pick up
 target_words: noun
 # ### Nouns
 #   - mug

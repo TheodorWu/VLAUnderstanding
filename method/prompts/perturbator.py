@@ -32,7 +32,7 @@ class PromptPerturbator:
         self.semantic_scaler = SemanticScaler()
         self.synonym_replacer = SynonymReplacer()
 
-        self.blocklist = set(self.config.get("blocklist", ["pick up"]))  # Default blocklist with "pick up"
+        self.blocklist = set(self.config.get("blocklist", []))
         self._init_target_words()
 
     def _init_target_words(self):

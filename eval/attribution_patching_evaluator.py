@@ -74,15 +74,16 @@ class AttributionPatchingEvaluator():
             batch_sum = residual_attr.sum(axis=0)  # scalar
             batch_n = residual_attr.shape[0]
 
+            token_attr = self._accumulate_token_attr(residual_attr, running_token_attr.get(layer, None))
+            running_token_attr[layer] = token_attr
+
             if layer not in running_sum:
                 running_sum[layer] = batch_sum
                 sample_count[layer] = batch_n
-                running_token_attr[layer] = token_attr
             else:
                 running_sum[layer] += batch_sum
                 sample_count[layer] += batch_n
 
-            token_attr = self._accumulate_token_attr(residual_attr, running_token_attr.get(layer, None))
 
         layer_names = list(running_sum.keys())
         layer_names = self.layer_sort_fn(layer_names)
