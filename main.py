@@ -15,6 +15,10 @@ def main(cfg: DictConfig):
         evaluator = initializer.evaluate()
         result = evaluator.compute_layer_attributions()
         evaluator.plot_heatmap(result)
+        evaluator.plot_heatmap(result, std=True)
+        evaluator.plot_layer_scores(result)
+        evaluator.plot_norm_heatmap(result)
+        evaluator.plot_layer_distributions(result)
 
 if __name__ == "__main__":
     main() # pylint: disable=no-value-for-parameter

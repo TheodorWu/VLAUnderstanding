@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
-from data.activation_writer import ActivationWriter, ActivationDataPoint
+from data.activation_writer import ActivationWriter, ActivationDataPoint, SampleMetadata
 from eval.attribution_patching_evaluator import AttributionPatchingEvaluator, AttributionResult
 
 class TestEvaluation(unittest.TestCase):
@@ -32,18 +32,25 @@ class TestEvaluation(unittest.TestCase):
         }
         writer = ActivationWriter(writer_config)
         # Create dummy activation data for testing
-        clean_tensor = torch.randn(4, 10, 768)  # (batch, seq, d_model)
-        corrupt_tensor = torch.randn(4, 10, 768)
-        gradient_tensor = torch.randn(4, 10, 768)
+        clean_tensor = [torch.randn(4, 10, 768),torch.randn(4, 8, 768)]  # (batch, seq, d_model)
+        corrupt_tensor = [torch.randn(4, 10, 768),torch.randn(4, 8, 768)]
+        gradient_tensor = [torch.randn(4, 10, 768),torch.randn(4, 8, 768)]
         for layer in ["layer_0", "layer_1"]:
             for i in range(10):
                 writer.add_data(
                     ActivationDataPoint(
                         layer=layer,
                         sample_id=f"sample_{i}",
-                        clean=clean_tensor,
-                        corrupt=corrupt_tensor,
-                        gradients=gradient_tensor,
+                        clean=clean_tensor[i%2],
+                        corrupt=corrupt_tensor[i%2],
+                        gradients=gradient_tensor[i%2],
+                    )
+                )
+                writer.add_sample_metadata(SampleMetadata(
+                        sample_id=f"sample_{i}",
+                        instruction=f"Instruction {i}",
+                        corrupt_instruction=f"Corrupt Instruction {i}",
+                        perturbed_token_idxs=[i % 10]
                     )
                 )
         writer.__exit__(None, None, None)
@@ -64,23 +71,44 @@ class TestEvaluation(unittest.TestCase):
         self.assertEqual(result.matrix.shape, (2, 10))
         self.assertEqual(result.layer_names, ["layer_0", "layer_1"])
         self.assertFalse(np.isnan(result.matrix).any())     # no NaNs from bad reduction
+        self.assertEqual(result.perturbation_type, "directional")
 
     def test_plot_heatmap(self):
         evaluator = AttributionPatchingEvaluator(
             config={
-                "activation_reader": self._make_config()
+                "activation_reader": self._make_config(),
+                "evaluator": {
+                    "show": True
+                }
             }
         )
         result = AttributionResult(
             perturbation_type="directional",
             layer_names=["layer_0", "layer_1"],
             matrix=np.random.randn(2, 10),
+            std_matrix=np.random.randn(2, 10)
         )
-        evaluator.plot_heatmap(result, show=True)  # just test that it runs without error
+        evaluator.plot_heatmap(result)
+
+    def test_compute_into_plot(self):
+        evaluator = AttributionPatchingEvaluator(
+            config={
+                "activation_reader": self._make_config(),
+                "evaluator": {
+                    "show": True
+                }
+            }
+        )
+        result = evaluator.compute_layer_attributions()
+        evaluator.plot_heatmap(result)
+        evaluator.plot_heatmap(result, std=True)
+        evaluator.plot_layer_scores(result)
+        evaluator.plot_norm_heatmap(result)
+        evaluator.plot_layer_distributions(result)
 
 if __name__ == "__main__":
     # t = TestEvaluation()
     # t.setUp()
-    # t.test_compute_layer_attributions()
+    # t.test_compute_into_heatmap()
     # t.tearDown()
     unittest.main()

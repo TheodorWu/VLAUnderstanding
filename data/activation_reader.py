@@ -47,7 +47,7 @@ class ActivationReader:
         return torch.load(buffer, map_location="cpu")
 
     def iter_data(self, layer=None):
-        shard_paths = [str(p) for p in self._iter_shard_paths(layer=layer)]
+        shard_paths = [str(p) for p in self._iter_shard_paths(layer=layer) if not "sample_metadata" in str(p)]
         if not shard_paths:
             print(f"No data found for layer '{layer}' in run '{self.run_name}'. Searched paths: {[str(p) for p in self.data_root.glob('*/*.tar')]}")
             return
