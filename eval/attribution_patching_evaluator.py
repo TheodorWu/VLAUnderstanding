@@ -195,11 +195,12 @@ class AttributionPatchingEvaluator():
         ax.set_ylabel("Layer")
         plt.tight_layout()
 
+        name = f"attribution_heatmap_{result.perturbation_type}" if not std else f"attribution_std_heatmap_{result.perturbation_type}"
         if self.evaluator_config.get("save_to_wandb"):
             print("Logging heatmap to Weights & Biases...")
-            wandb.log({f"attribution_heatmap_{result.perturbation_type}": wandb.Image(fig)})
+            wandb.log({name: wandb.Image(fig)})
         if self.save_path:
-            plt.savefig(self.save_path / f"heatmap_{result.perturbation_type}.svg", dpi=150, bbox_inches="tight")
+            plt.savefig(self.save_path / f"{name}.svg", dpi=150, bbox_inches="tight")
         if self.evaluator_config.get("show"):
             plt.show()
         plt.close(fig)
