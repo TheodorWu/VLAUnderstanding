@@ -43,7 +43,7 @@ echo "Evaluation on with run_name=${COLLECTION_RUN_NAMES[$INDEX]}"
 
 # Run the setup script
 source "$PWD/.venv/bin/activate"
-python main.py --config-name=eval activation_reader.run_name=${COLLECTION_RUN_NAMES[$INDEX]}
+python main.py --config-name=eval +activation_reader.run_name=${COLLECTION_RUN_NAMES[$INDEX]}
 
 deactivate
 
