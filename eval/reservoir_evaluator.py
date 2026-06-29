@@ -53,11 +53,11 @@ class ReservoirEvaluator:
             else None
         )
         self.n_pca_components = self.evaluator_config.get("pca_components", 2)
+        self.n_samples = self.evaluator_config.get("n_samples", 1000)
 
     def build_reservoir(
         self,
         layer: str,
-        n_samples: int = 4096,
         fields: list[str] = ["clean", "corrupt"],
         pool_mode: str = "mean",
         seed: int = 42,
@@ -80,24 +80,24 @@ class ReservoirEvaluator:
                 row = {f: pooled[f][b] for f in pooled}
                 sid = batch.sample_id if isinstance(batch.sample_id, str) else batch.sample_id[b]
 
-                if i < n_samples:
+                if i < self.n_samples:
                     for f in row:
                         reservoir[f].append(row[f])
                     sample_ids.append(sid)
                 else:
                     j = int(rng.integers(0, i + 1))
-                    if j < n_samples:
+                    if j < self.n_samples:
                         for f in row:
                             reservoir[f][j] = row[f]
                         sample_ids[j] = sid
                 i += 1
 
-        if i < n_samples:
-            print(f"Warning: only {i} samples available for layer '{layer}', fewer than requested {n_samples}")
+        if i < self.n_samples:
+            print(f"Warning: only {i} samples available for layer '{layer}', fewer than requested {self.n_samples}")
 
         return LayerReservoir(
             layer=layer,
-            n_samples=min(i, n_samples),
+            n_samples=min(i, self.n_samples),
             fields=fields,
             data={f: np.stack(reservoir[f]) for f in reservoir if reservoir[f]},
             sample_ids=sample_ids,
@@ -138,21 +138,19 @@ class ReservoirEvaluator:
     def compute_perturbation_cka(
         self,
         layer: str,
-        n_samples: int = 4096
     ) -> CKAResult:
         """CKA between clean and corrupt activations at the same layer."""
-        reservoir = self.build_reservoir(layer, n_samples=n_samples, fields=["clean", "corrupt"])
+        reservoir = self.build_reservoir(layer, fields=["clean", "corrupt"])
         score = self._linear_cka(reservoir.data["clean"], reservoir.data["corrupt"])
-        return CKAResult(layer_a=f"{layer}/clean", layer_b=f"{layer}/corrupt", score=score, n_samples=n_samples)
+        return CKAResult(layer_a=f"{layer}/clean", layer_b=f"{layer}/corrupt", score=score, n_samples=self.n_samples)
 
     def compute_all_perturbation_cka(
         self,
         layer_names: list[str],
-        n_samples: int = 4096,
     ) -> list[CKAResult]:
         results = []
         for layer in layer_names:
-            result = self.compute_perturbation_cka(layer=layer, n_samples=n_samples)
+            result = self.compute_perturbation_cka(layer=layer)
             print(f"CKA {layer}: {result.score:.3f}")
             results.append(result)
         return results
