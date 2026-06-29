@@ -19,6 +19,7 @@ class ActivationReader:
         self.data_root = Path(f"{project_root}/{self.output_dir}/{self.run_name}/data")
         self.metadata_path = self.data_root / "metadata.json"
         self.metadata = self._load_metadata()
+        self.sample_metadata = {}
 
     def _load_metadata(self):
         metadata = {}
@@ -93,6 +94,38 @@ class ActivationReader:
     def get_metadata(self):
         return self.metadata
 
+    def _load_sample_metadata(self):
+        sample_metadata_shards = [str(p) for p in self.data_root.glob("sample_metadata/*.tar")]
+        dataset =  wds.WebDataset(sample_metadata_shards, shardshuffle=False)
+        iterator = iter(dataset)
+        skipped = 0
+        while True:
+            try:
+                sample = next(iterator)
+            except StopIteration:
+                break
+            except Exception as e:
+                skipped += 1
+                print(f"Skipping corrupted shard entry: {e}")
+                continue
+
+            sample_id = sample.get("__key__")
+
+            try:
+                self.sample_metadata[sample_id] = json.loads(sample["metadata.json"].decode("utf-8"))
+            except Exception as e:
+                skipped += 1
+                print(f"Skipping corrupted sample metadata for '{sample_id}': {e}")
+
+    def get_sample_metadata(self, sample_id):
+        if not getattr(self, "sample_metadata", None):
+            self._load_sample_metadata()
+        return self.sample_metadata.get(sample_id, None)
+
+    def get_all_sample_metadata(self):
+        if not getattr(self, "sample_metadata", None):
+            self._load_sample_metadata()
+        return self.sample_metadata
 
 
 __all__ = ["ActivationReader", "ActivationDataPoint", "ActivationDataBatch"]
