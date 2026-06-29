@@ -6,6 +6,8 @@ import torch
 from method.initializer import MethodInitializer
 from model.initializer import ModelInitializer
 from eval.attribution_patching_evaluator import AttributionPatchingEvaluator
+from eval.reservoir_evaluator import ReservoirEvaluator
+from eval.pipeline import EvaluatorPipeline
 from utils.general import seed_all, test_gpu_availability, pretty_print_config
 
 from data.dataloader import get_dataloader
@@ -48,8 +50,11 @@ class Initializer:
         # Evaluation initialization logic based on the configuration
         seed_all(self.config.get("seed", 42))
         pretty_print_config(self.config)
-        evaluator = AttributionPatchingEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn())
-        return evaluator
+        evaluator_pipeline = EvaluatorPipeline()
+
+        evaluator_pipeline.add_evaluator(AttributionPatchingEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn()))
+        evaluator_pipeline.add_evaluator(ReservoirEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn()))
+        return evaluator_pipeline
 
     def get_layer_sort_fn(self):
         # Example of how to get a layer sorting function based on the model type

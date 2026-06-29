@@ -122,11 +122,12 @@ class TestEvaluation(unittest.TestCase):
         evaluator = ReservoirEvaluator(
             config={
                 "activation_reader": self._make_config(),
-                "evaluator": {"show": True}
+                "evaluator": {"show": True,
+                              "n_samples": 32}
             }
         )
 
-        reservoir = evaluator.build_reservoir(layer="layer_0", n_samples=32, fields=["clean", "corrupt"])
+        reservoir = evaluator.build_reservoir(layer="layer_0", fields=["clean", "corrupt"])
 
         pca_result= evaluator.compute_pca(reservoir)
 
@@ -136,13 +137,13 @@ class TestEvaluation(unittest.TestCase):
         evaluator = ReservoirEvaluator(
             config={
                 "activation_reader": self._make_config(),
-                "evaluator": {"show": True}
+                "evaluator": {"show": True,
+                              "n_samples": 32}
             }
         )
 
         results = evaluator.compute_all_perturbation_cka(
             layer_names=["layer_0", "layer_1"],
-            n_samples=32,
         )
         evaluator.plot_perturbation_cka(results)
 

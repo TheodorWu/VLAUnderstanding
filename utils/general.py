@@ -151,3 +151,11 @@ def pretty_print_config(cfg) -> None:
     formatted = json.dumps(d, indent=2, default=str)
     msg = f"Initializing with config:\n{formatted}"
     print(msg)
+
+def get_result_layer_names(resultdir):
+    """Get layer names from a result directory."""
+    resultdir = Path(resultdir)
+    if not resultdir.exists():
+        raise FileNotFoundError(f"Result directory {resultdir} does not exist.")
+    layer_names = [d.name for d in resultdir.iterdir() if d.is_dir() and not "sample_metadata" in d.name]
+    return sorted(layer_names)
