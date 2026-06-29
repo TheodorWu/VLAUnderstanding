@@ -48,42 +48,49 @@ class ActivationReader:
         return torch.load(buffer, map_location="cpu")
 
     def iter_data(self, layer=None):
-        shard_paths = [str(p) for p in self._iter_shard_paths(layer=layer) if not "sample_metadata" in str(p)]
+        shard_paths = [str(p) for p in self._iter_shard_paths(layer=layer) if "sample_metadata" not in str(p)]
         if not shard_paths:
-            print(f"No data found for layer '{layer}' in run '{self.run_name}'. Searched paths: {[str(p) for p in self.data_root.glob('*/*.tar')]}")
+            print(f"No data found for layer '{layer}'")
             return
 
-        dataset =  wds.WebDataset(shard_paths, shardshuffle=False)
-        print(f"Number of samples for perturbation type '{self.metadata.get('perturbation_type', 'unknown')}' and layer '{layer if layer else 'all'}': {self.metadata.get('num_samples', 'unknown')}")
-        iterator = iter(dataset)
-        skipped = 0
-        while True:
+        skipped_shards = 0
+        skipped_samples = 0
+
+        for shard_path in shard_paths:
             try:
-                sample = next(iterator)
-            except StopIteration:
-                break
+                dataset = wds.WebDataset(shard_path, shardshuffle=False)
+                iterator = iter(dataset)
             except Exception as e:
-                skipped += 1
-                print(f"Skipping corrupted shard entry: {e}")
+                print(f"Skipping unreadable shard {shard_path}: {e}")
+                skipped_shards += 1
                 continue
 
-            try:
-                source_layer = layer or Path(sample["__url__"]).parent.name
-                yield ActivationDataPoint(
-                    layer=source_layer,
-                    sample_id=sample["__key__"],
-                    clean=self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
-                    corrupt=self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
-                    gradients=self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
-                )
-            except Exception as e:
-                skipped += 1
-                print(f"Skipping corrupted sample '{sample.get('__key__', 'unknown')}': {e}")
+            while True:
+                try:
+                    sample = next(iterator)
+                except StopIteration:
+                    break
+                except Exception as e:
+                    print(f"Skipping corrupted entry in {shard_path}: {e}")
+                    skipped_shards += 1
+                    break  # shard is dead, move to next one
 
-        if skipped:
-            print(f"Total skipped samples: {skipped}")
-        dataset.__exit__()
-        del dataset
+                try:
+                    yield ActivationDataPoint(
+                        layer=layer or Path(sample["__url__"]).parent.name,
+                        sample_id=sample["__key__"],
+                        clean=self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
+                        corrupt=self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
+                        gradients=self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
+                    )
+                except Exception as e:
+                    print(f"Skipping bad sample '{sample.get('__key__', 'unknown')}': {e}")
+                    skipped_samples += 1
+
+            dataset.__exit__()
+
+        if skipped_shards or skipped_samples:
+            print(f"Finished with {skipped_shards} skipped shards, {skipped_samples} skipped samples")
 
     def read_layer(self, layer):
         return list(self.iter_data(layer=layer))
