@@ -6,6 +6,7 @@ import torch
 
 from data.activation_writer import ActivationWriter, ActivationDataPoint, SampleMetadata
 from eval.attribution_patching_evaluator import AttributionPatchingEvaluator, AttributionResult
+from eval.reservoir_evaluator import ReservoirEvaluator
 
 class TestEvaluation(unittest.TestCase):
     def setUp(self):
@@ -117,9 +118,38 @@ class TestEvaluation(unittest.TestCase):
         )
         evaluator.plot_sample_metadata_dist()
 
+    def test_pca(self):
+        evaluator = ReservoirEvaluator(
+            config={
+                "activation_reader": self._make_config(),
+                "evaluator": {"show": True}
+            }
+        )
+
+        reservoir = evaluator.build_reservoir(layer="layer_0", n_samples=32, fields=["clean", "corrupt"])
+
+        pca_result= evaluator.compute_pca(reservoir)
+
+        evaluator.plot_pca(pca_result)
+
+    def test_cka(self):
+        evaluator = ReservoirEvaluator(
+            config={
+                "activation_reader": self._make_config(),
+                "evaluator": {"show": True}
+            }
+        )
+
+        results = evaluator.compute_all_perturbation_cka(
+            layer_names=["layer_0", "layer_1"],
+            n_samples=32,
+        )
+        evaluator.plot_perturbation_cka(results)
+
 if __name__ == "__main__":
-    t = TestEvaluation()
-    t.setUp()
-    t.test_plot_sample_metadata_dist()
-    t.tearDown()
-    # unittest.main()
+    # t = TestEvaluation()
+    # t.setUp()
+    # t.test_pca()
+    # t.test_cka()
+    # t.tearDown()
+    unittest.main()
