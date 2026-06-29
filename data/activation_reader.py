@@ -54,8 +54,19 @@ class ActivationReader:
 
         dataset =  wds.WebDataset(shard_paths, shardshuffle=False)
         print(f"Number of samples for perturbation type '{self.metadata.get('perturbation_type', 'unknown')}' and layer '{layer if layer else 'all'}': {self.metadata.get('num_samples', 'unknown')}")
-        try:
-            for sample in dataset:
+        iterator = iter(dataset)
+        skipped = 0
+        while True:
+            try:
+                sample = next(iterator)
+            except StopIteration:
+                break
+            except Exception as e:
+                skipped += 1
+                print(f"Skipping corrupted shard entry: {e}")
+                continue
+
+            try:
                 source_layer = layer or Path(sample["__url__"]).parent.name
                 yield ActivationDataPoint(
                     layer=source_layer,
@@ -64,11 +75,14 @@ class ActivationReader:
                     corrupt=self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
                     gradients=self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
                 )
-        except Exception as e:
-            print(f"Error reading shards: {e}")
-        finally:
-            dataset.__exit__()
-            del dataset
+            except Exception as e:
+                skipped += 1
+                print(f"Skipping corrupted sample '{sample.get('__key__', 'unknown')}': {e}")
+
+        if skipped:
+            print(f"Total skipped samples: {skipped}")
+        dataset.__exit__()
+        del dataset
 
     def read_layer(self, layer):
         return list(self.iter_data(layer=layer))
