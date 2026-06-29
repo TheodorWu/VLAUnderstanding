@@ -196,16 +196,7 @@ class AttributionPatchingEvaluator():
         plt.tight_layout()
 
         name = f"attribution_heatmap_{result.perturbation_type}" if not std else f"attribution_std_heatmap_{result.perturbation_type}"
-        if self.evaluator_config.get("save_to_wandb"):
-            print("Logging heatmap to Weights & Biases...")
-            wandb.log({name: wandb.Image(fig)})
-        if self.save_path:
-            plt.savefig(self.save_path / f"{name}.svg", dpi=150, bbox_inches="tight")
-        if self.evaluator_config.get("show"):
-            plt.show()
-        plt.close(fig)
-
-        return fig
+        self._save_and_show(fig, name)
 
     def plot_layer_scores(
         self,
@@ -223,15 +214,7 @@ class AttributionPatchingEvaluator():
         ax.invert_yaxis()  # layer 0 at top, matches heatmap orientation
         plt.tight_layout()
 
-        if self.evaluator_config.get("save_to_wandb"):
-            wandb.log({f"layer_scores_{result.perturbation_type}": wandb.Image(fig)})
-        if self.save_path:
-            plt.savefig(self.save_path / f"layer_scores_{result.perturbation_type}.svg", dpi=150, bbox_inches="tight")
-        if self.evaluator_config.get("show"):
-            plt.show()
-
-        plt.close(fig)
-        return fig
+        self._save_and_show(fig, f"layer_scores_{result.perturbation_type}")
 
     def plot_norm_heatmap(
         self,
@@ -253,14 +236,7 @@ class AttributionPatchingEvaluator():
         ax.set_ylabel("Layer")
         plt.tight_layout()
 
-        if self.evaluator_config.get("save_to_wandb"):
-            wandb.log({f"norm_heatmap_{result.perturbation_type}": wandb.Image(fig)})
-        if self.save_path:
-            plt.savefig(self.save_path / f"norm_heatmap_{result.perturbation_type}.svg", dpi=150, bbox_inches="tight")
-        if self.evaluator_config.get("show"):
-            plt.show()
-        plt.close(fig)
-        return fig
+        self._save_and_show(fig, f"norm_heatmap_{result.perturbation_type}")
 
     def plot_layer_distributions(
         self,
@@ -287,11 +263,50 @@ class AttributionPatchingEvaluator():
         ax.invert_yaxis()
         plt.tight_layout()
 
+        self._save_and_show(fig, f"layer_distributions_{result.perturbation_type}")
+
+    def plot_sample_metadata_dist(self):
+        sample_metadata = self.activation_reader.get_all_sample_metadata()
+        perturbed_indices = []
+        for i, m in sample_metadata.items():
+            for idx in m.get("perturbed_token_idxs", []):
+                perturbed_indices.append(idx)
+
+        if not perturbed_indices:
+            print("No perturbed indices found in sample metadata.")
+            return
+
+        perturbed_indices = np.array(perturbed_indices)
+
+        fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+        # Histogram
+        axes[0].hist(perturbed_indices, bins=range(perturbed_indices.min(), perturbed_indices.max() + 2),
+                    color="#4575b4", edgecolor="white", linewidth=0.5)
+        axes[0].set_xlabel("Token Position")
+        axes[0].set_ylabel("Count")
+        axes[0].set_title("Distribution of Perturbed Token Indices")
+
+        # CDF — useful for seeing if perturbations are front/back loaded
+        sorted_indices = np.sort(perturbed_indices)
+        cdf = np.arange(1, len(sorted_indices) + 1) / len(sorted_indices)
+        axes[1].plot(sorted_indices, cdf, color="#4575b4")
+        axes[1].set_xlabel("Token Position")
+        axes[1].set_ylabel("Cumulative Fraction")
+        axes[1].set_title("CDF of Perturbed Token Indices")
+        axes[1].grid(True, alpha=0.3)
+
+        fig.suptitle(f"Perturbed Index Distribution — {len(sample_metadata)} samples, "
+                    f"{len(perturbed_indices)} total perturbations", fontsize=11)
+        plt.tight_layout()
+        self._save_and_show(fig, "perturbed_index_dist")
+        return fig
+
+    def _save_and_show(self, fig, name):
         if self.evaluator_config.get("save_to_wandb"):
-            wandb.log({f"layer_distributions_{result.perturbation_type}": wandb.Image(fig)})
+            wandb.log({name: wandb.Image(fig)})
         if self.save_path:
-            plt.savefig(self.save_path / f"layer_dist_{result.perturbation_type}.svg", dpi=150, bbox_inches="tight")
+            plt.savefig(self.save_path / f"{name}.svg", dpi=150, bbox_inches="tight")
         if self.evaluator_config.get("show"):
             plt.show()
         plt.close(fig)
-        return fig

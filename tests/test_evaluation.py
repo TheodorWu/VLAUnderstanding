@@ -50,7 +50,7 @@ class TestEvaluation(unittest.TestCase):
                         sample_id=f"sample_{i}",
                         instruction=f"Instruction {i}",
                         corrupt_instruction=f"Corrupt Instruction {i}",
-                        perturbed_token_idxs=[i % 10]
+                        perturbed_token_idxs=[i % 5]
                     )
                 )
         writer.__exit__(None, None, None)
@@ -106,9 +106,20 @@ class TestEvaluation(unittest.TestCase):
         evaluator.plot_norm_heatmap(result)
         evaluator.plot_layer_distributions(result)
 
+    def test_plot_sample_metadata_dist(self):
+        evaluator = AttributionPatchingEvaluator(
+            config={
+                "activation_reader": self._make_config(),
+                "evaluator": {
+                    "show": True
+                }
+            }
+        )
+        evaluator.plot_sample_metadata_dist()
+
 if __name__ == "__main__":
-    # t = TestEvaluation()
-    # t.setUp()
-    # t.test_compute_into_heatmap()
-    # t.tearDown()
-    unittest.main()
+    t = TestEvaluation()
+    t.setUp()
+    t.test_plot_sample_metadata_dist()
+    t.tearDown()
+    # unittest.main()
