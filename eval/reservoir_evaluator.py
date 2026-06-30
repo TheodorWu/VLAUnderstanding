@@ -5,11 +5,11 @@ from sklearn.random_projection import GaussianRandomProjection
 import numpy as np
 import torch
 import matplotlib.pyplot as plt
-import seaborn as sns
 import wandb
 
 from eval.logger import Logger
 from data.activation_reader import ActivationReader
+from utils.general import add_batch_dim
 
 
 @dataclass
@@ -69,6 +69,7 @@ class ReservoirEvaluator:
         i = 0
 
         for batch in self.activation_reader.iter_data(layer=layer):
+            batch = add_batch_dim(batch)
             pooled = {
                 f: self._pool_sequence(getattr(batch, f), mode=pool_mode)
                 for f in fields

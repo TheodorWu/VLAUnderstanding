@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import wandb
 
-from utils.general import pad_to_length
+from utils.general import pad_to_length, add_batch_dim
 
 @dataclass
 class AttributionResult:
@@ -30,14 +30,6 @@ class AttributionPatchingEvaluator():
         self.activation_reader = ActivationReader(config)
         self.layer_sort_fn = layer_sort_fn or (lambda x: x)
         self.save_path = Path(self.evaluator_config.get("save_path", None)) if self.evaluator_config.get("save_path", None) else None
-
-    def _add_batch_dim(self, batch):
-        for k in ["clean", "corrupt", "gradients"]:
-            if hasattr(batch, k):
-                tensor = getattr(batch, k)
-                if torch.is_tensor(tensor) and tensor.dim() == 2:
-                    setattr(batch, k, tensor.unsqueeze(0))
-        return batch
 
     def _accumulate_token_sq_attr(
         self,
@@ -97,7 +89,7 @@ class AttributionPatchingEvaluator():
         layer_samples = {}  # layer -> list of per-sample scalars
 
         for batch in self.activation_reader.iter_data():
-            batch = self._add_batch_dim(batch)
+            batch = add_batch_dim(batch)
             layer = batch.layer
             residual_attr = einops.reduce(
                 batch.gradients * (batch.clean - batch.corrupt),

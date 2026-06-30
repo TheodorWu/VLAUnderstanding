@@ -145,6 +145,14 @@ def config_to_dict(cfg) -> dict:
         return vars(cfg)
     return dict(cfg)
 
+def add_batch_dim(batch):
+        for k in ["clean", "corrupt", "gradients"]:
+            if hasattr(batch, k):
+                tensor = getattr(batch, k)
+                if torch.is_tensor(tensor) and tensor.dim() == 2:
+                    setattr(batch, k, tensor.unsqueeze(0))
+        return batch
+
 def pretty_print_config(cfg) -> None:
     """Pretty print a config, with optional logger support."""
     d = config_to_dict(cfg)
