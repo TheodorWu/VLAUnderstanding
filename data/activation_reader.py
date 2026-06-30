@@ -1,6 +1,7 @@
 import io
 import json
 from pathlib import Path
+import tarfile
 
 import torch
 import wandb
@@ -20,6 +21,8 @@ class ActivationReader:
         self.metadata_path = self.data_root / "metadata.json"
         self.metadata = self._load_metadata()
         self.sample_metadata = {}
+        self.batch_size = self.config.get("batch_size", 32)
+        self.num_workers = self.config.get("num_workers", 0)
 
     def _load_metadata(self):
         metadata = {}
@@ -53,44 +56,85 @@ class ActivationReader:
             print(f"No data found for layer '{layer}'")
             return
 
-        skipped_shards = 0
-        skipped_samples = 0
+        counts = {"skipped_shards": 0, "skipped_samples": 0}
 
-        for shard_path in shard_paths:
+        def counting_handler(exn):
+            if isinstance(exn, (tarfile.ReadError, OSError, EOFError)):
+                counts["skipped_shards"] += 1
+            else:
+                counts["skipped_samples"] += 1
+            return wds.warn_and_continue(exn)
+
+        def decode_sample(sample):
             try:
-                dataset = wds.WebDataset(shard_path, shardshuffle=False)
-                iterator = iter(dataset)
+                return {
+                    "layer": layer or Path(sample["__url__"]).parent.name,
+                    "sample_id": sample["__key__"],
+                    "clean": self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
+                    "corrupt": self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
+                    "gradients": self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
+                }
             except Exception as e:
-                print(f"Skipping unreadable shard {shard_path}: {e}")
-                skipped_shards += 1
-                continue
+                print(f"Skipping bad sample '{sample.get('__key__', 'unknown')}': {e}")
+                counts["skipped_samples"] += 1
+                return None
 
-            while True:
-                try:
-                    sample = next(iterator)
-                except StopIteration:
-                    break
-                except Exception as e:
-                    print(f"Skipping corrupted entry in {shard_path}: {e}")
-                    skipped_shards += 1
-                    break  # shard is dead, move to next one
+        dataset = (
+            wds.WebDataset(
+                shard_paths,
+                shardshuffle=False,
+                nodesplitter=wds.split_by_worker,
+                handler=counting_handler,
+            )
+            .map(decode_sample, handler=counting_handler)
+            .select(lambda x: x is not None)
+        )
 
-                try:
-                    yield ActivationDataPoint(
-                        layer=layer or Path(sample["__url__"]).parent.name,
-                        sample_id=sample["__key__"],
-                        clean=self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
-                        corrupt=self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
-                        gradients=self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
-                    )
-                except Exception as e:
-                    print(f"Skipping bad sample '{sample.get('__key__', 'unknown')}': {e}")
-                    skipped_samples += 1
+        loader = wds.WebLoader(dataset, num_workers=self.num_workers, batch_size=None, shuffle=False)
 
-            dataset.__exit__()
+        def stack_field(buf, field):
+            vals = [b[field] for b in buf]
+            if any(v is None for v in vals):
+                return None
+            return torch.stack(vals)  # safe now: all entries in a bucket share shape
 
-        if skipped_shards or skipped_samples:
-            print(f"Finished with {skipped_shards} skipped shards, {skipped_samples} skipped samples")
+        def flush_bucket(buf):
+            return ActivationDataPoint(
+                layer=buf[0]["layer"],
+                sample_id=[b["sample_id"] for b in buf],
+                clean=stack_field(buf, "clean"),
+                corrupt=stack_field(buf, "corrupt"),
+                gradients=stack_field(buf, "gradients"),
+            )
+
+        def seq_len_of(sample):
+            for field in ("clean", "corrupt", "gradients"):
+                v = sample.get(field)
+                if v is not None:
+                    return v.shape[0]
+            return None  # all fields None; will be filtered/skipped naturally
+
+        # buckets keyed by (layer, seq_len) so a layer change or length change
+        # starts a fresh bucket; each bucket flushes once it hits batch_size
+        buckets: dict[tuple, list] = {}
+
+        for sample in loader:
+            key = (sample["layer"], seq_len_of(sample))
+            if key[1] is None:
+                continue  # no usable fields, nothing to stack
+            bucket = buckets.setdefault(key, [])
+            bucket.append(sample)
+            if len(bucket) == self.batch_size:
+                yield flush_bucket(bucket)
+                buckets[key] = []
+
+        # flush any partial buckets left over at the end
+        for bucket in buckets.values():
+            if bucket:
+                yield flush_bucket(bucket)
+
+        if counts["skipped_shards"] or counts["skipped_samples"]:
+            print(f"Finished with {counts['skipped_shards']} skipped shards, {counts['skipped_samples']} skipped samples")
 
     def read_layer(self, layer):
         return list(self.iter_data(layer=layer))
