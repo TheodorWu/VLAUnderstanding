@@ -33,9 +33,9 @@ class TestEvaluation(unittest.TestCase):
         }
         writer = ActivationWriter(writer_config)
         # Create dummy activation data for testing
-        clean_tensor = [torch.randn(4, 10, 768),torch.randn(4, 8, 768)]  # (batch, seq, d_model)
-        corrupt_tensor = [torch.randn(4, 10, 768),torch.randn(4, 8, 768)]
-        gradient_tensor = [torch.randn(4, 10, 768),torch.randn(4, 8, 768)]
+        clean_tensor = [torch.randn(10, 768),torch.randn(8, 768)]  # (seq, d_model)
+        corrupt_tensor = [torch.randn(10, 768),torch.randn(8, 768)]
+        gradient_tensor = [torch.randn(10, 768),torch.randn(8, 768)]
         for layer in ["layer_0", "layer_1"]:
             for i in range(10):
                 writer.add_data(
