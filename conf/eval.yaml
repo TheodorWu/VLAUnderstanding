@@ -4,7 +4,7 @@ defaults: # Using mostly empty defaults to avoid unnecessary dependencies
  - activation_writer: default
  - activation_reader: empty
  - dataset: libero
- - model: empty
+ - model: pi05 # required for correct sorting of layers in the evaluation results
  - method: eval
  - evaluator: default
 
