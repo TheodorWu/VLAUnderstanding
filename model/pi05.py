@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import numpy as np
 import re
 
 from lerobot.policies.pi05.modeling_pi05 import PI05Config, PI05Policy
@@ -7,10 +8,11 @@ from lerobot.policies.pi05.processor_pi05 import make_pi05_pre_post_processors
 from lerobot.configs.policies import PolicyFeature, FeatureType
 from lerobot.utils.constants import ACTION, OBS_LANGUAGE_ATTENTION_MASK, OBS_LANGUAGE_TOKENS
 
-from utils.general import printable_params, rprint_architecture
+from utils.general import img_to_tensor, printable_params, rprint_architecture
 
 DUMMY_ACTION_DIM = 32
 DUMMY_STATE_DIM = 32
+IMAGE_SIZE = 224  # PI05 default image size
 
 
 @printable_params
@@ -153,6 +155,9 @@ class PI05Wrapper(nn.Module):
         else:
             return losses
 
+    def select_action(self, processed_batch):
+        return self.model.select_action(processed_batch) # TODO: untested
+
     def preprocess_batch(self, batch):
         """Preprocess a raw batch for model input.
 
@@ -188,3 +193,27 @@ class PI05Wrapper(nn.Module):
     @staticmethod
     def sort_layers(layer_names: list[str]) -> list[str]:
         return sorted(layer_names, key=lambda name: tuple(int(n) for n in re.findall(r'\d+', name)))
+
+    @staticmethod
+    def transform_obs_to_batch(obs, task):
+        """Convert LIBERO obs dict to the flat batch format expected by the preprocessor."""
+        from lerobot.utils.constants import OBS_IMAGES, OBS_STATE
+        from robots.panda import assemble_state, CAMERA_KEYS
+
+        state = torch.from_numpy(assemble_state(obs).astype(np.float32))  # (8,)
+
+        batch: dict = {
+            OBS_STATE: state,
+            "task": [task],
+        }
+
+        for libero_key, pi_key in CAMERA_KEYS.items():
+            if libero_key in obs:
+                batch[f"{OBS_IMAGES}.{pi_key}"] = img_to_tensor(obs[libero_key], IMAGE_SIZE)
+
+        # pi05_libero_finetuned expects a third camera not present in LIBERO
+        # empty_key = f"{OBS_IMAGES}.empty_camera_0"
+        # if empty_key not in batch:
+        #     batch[empty_key] = torch.zeros(3, IMAGE_SIZE, IMAGE_SIZE, dtype=torch.float32)
+
+        return batch

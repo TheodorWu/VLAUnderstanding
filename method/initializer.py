@@ -1,5 +1,6 @@
 from method.activation_patching import ActivationPatching
 from method.attribution_patching import AttributionPatching
+from method.attribution_patching_inference import AttributionPatchingInference
 from method.prompts.perturbator import PromptPerturbator
 
 class MethodInitializer:
@@ -21,3 +22,10 @@ class MethodInitializer:
         print(f"Initializing perturbator with config: {self.config.get('perturbator', {})}")
         perturbator = PromptPerturbator(self.config.get('perturbator', {}))
         return perturbator
+
+    def initialize_inference(self, model, env, device='cuda'):
+        # Initialization logic for inference based on the configuration
+        print(f"Initializing Method for inference with config: {self.config}")
+        perturbator = self.initialize_perturbator()
+        method = AttributionPatchingInference(self.config, model, perturbator, env, device=device)
+        return method

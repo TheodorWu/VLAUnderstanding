@@ -11,6 +11,8 @@ from eval.pipeline import EvaluatorPipeline
 from utils.general import seed_all, test_gpu_availability, pretty_print_config
 
 from data.dataloader import get_dataloader
+from envs.libero import get_libero
+
 
 class Initializer:
     def __init__(self, config):
@@ -40,6 +42,25 @@ class Initializer:
 
         self.method_initializer = MethodInitializer(self.config)
         method = self.method_initializer.initialize(model=model, dataset=dataset, device=self.device)
+
+        self.config["activation_reader"] = self.config.get("activation_reader", {})
+        self.config["activation_reader"]["run_name"] = self.run_name
+
+        return method
+
+    def method_inference(self):
+        # Initialization logic for inference based on the configuration
+        seed_all(self.config.get("seed", 42))
+        pretty_print_config(self.config)
+        dataset = get_dataloader(**self.config.get("dataset", {}))
+        dataset_stats = dataset.dataset.meta.stats
+        self.model_initializer = ModelInitializer(self.config.get("model"), dataset_stats=dataset_stats, device=self.device)
+        model = self.model_initializer.initialize()
+
+        env, task_description = get_libero(task_id=0)
+
+        self.method_initializer = MethodInitializer(self.config)
+        method = self.method_initializer.initialize_inference(model=model, env=env, device=self.device)
 
         self.config["activation_reader"] = self.config.get("activation_reader", {})
         self.config["activation_reader"]["run_name"] = self.run_name
