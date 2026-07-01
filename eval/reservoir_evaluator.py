@@ -136,14 +136,23 @@ class ReservoirEvaluator:
             sample_ids=reservoir.sample_ids,
         )
 
+    def compute_cka_from_reservoir(
+        self,
+        reservoir: LayerReservoir,
+    ) -> CKAResult:
+        layer = reservoir.layer
+        clean = reservoir.data["clean"]
+        corrupt = reservoir.data.get("corrupt", None)
+        score = self._linear_cka(clean, corrupt)
+        return CKAResult(layer_a=f"{layer}/clean", layer_b=f"{layer}/corrupt", score=score, n_samples=self.n_samples)
+
     def compute_perturbation_cka(
         self,
         layer: str,
     ) -> CKAResult:
         """CKA between clean and corrupt activations at the same layer."""
         reservoir = self.build_reservoir(layer, fields=["clean", "corrupt"])
-        score = self._linear_cka(reservoir.data["clean"], reservoir.data["corrupt"])
-        return CKAResult(layer_a=f"{layer}/clean", layer_b=f"{layer}/corrupt", score=score, n_samples=self.n_samples)
+        return self.compute_cka_from_reservoir(reservoir)
 
     def compute_all_perturbation_cka(
         self,
