@@ -1,6 +1,7 @@
 import os
 import sys
 import random
+import cv2
 from rich import json
 from rich.tree import Tree
 from rich.console import Console
@@ -51,8 +52,14 @@ def test_gpu_availability():
     print(f"Cuda available: {torch.cuda.is_available()}", file=sys.stdout)
     print('__CUDNN VERSION:', torch.backends.cudnn.version(), file=sys.stdout)
     print('Available devices ', torch.cuda.device_count(), file=sys.stdout)
-    print('Current cuda device ', torch.cuda.current_device(), file=sys.stdout)
-    print(f"Device name: {torch.cuda.get_device_name(torch.cuda.current_device())}")
+    if torch.cuda.is_available():
+        try:
+            print(torch.cuda.current_device(), file=sys.stdout)
+            print(f"Device name: {torch.cuda.get_device_name(torch.cuda.current_device())}")
+        except RuntimeError as e:
+            print(f"CUDA present but unusable: {e}", file=sys.stdout)
+    else:
+        print("cpu", file=sys.stdout)
 
     if  torch.cuda.is_available():
         print("Using GPU", file=sys.stdout)
@@ -73,6 +80,15 @@ def pad_to_length(arr, target_len: int):
         return np.pad(arr, (0, pad_width))
     else:  # torch.Tensor
         return torch.nn.functional.pad(arr, (0, pad_width))
+
+def img_to_tensor(img: np.ndarray, img_size: int) -> torch.Tensor:
+    """HWC uint8 numpy -> CHW float32 tensor in [0,1], resized to IMAGE_SIZE."""
+    # LeRobot's LIBERO processor flips both H and W for this dataset convention.
+    img = np.flip(img, axis=(0, 1)).copy()
+    if img.shape[0] != img_size or img.shape[1] != img_size:
+        img = cv2.resize(img, (img_size, img_size), interpolation=cv2.INTER_LINEAR) # pylint: disable=no-member
+    t = torch.from_numpy(img).float() / 255.0  # (H, W, C)
+    return t.permute(2, 0, 1).contiguous()     # (C, H, W)
 
 ### decorators ###
 def printable_params(cls):

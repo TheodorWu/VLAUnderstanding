@@ -15,5 +15,9 @@ def main(cfg: DictConfig):
         evaluator = initializer.evaluate()
         evaluator.run_evaluation()
 
+    if cfg.mode == "inference":
+        with initializer.method_inference() as method:
+            method.main()
+
 if __name__ == "__main__":
     main() # pylint: disable=no-value-for-parameter

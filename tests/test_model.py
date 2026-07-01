@@ -112,13 +112,15 @@ class TestModels(unittest.TestCase):
         batch = next(iter(dataloader))
         processed_batch = preprocessor(batch)
 
+        print(processed_batch)
+
 
 if __name__ == "__main__":
     # t = TestModels()
     # t.setUp()
     # # t.test_pi05_call()
     # t.test_pi05_call_with_nnsight()
-    # # t.test_pi05_preprocessor()
+    # t.test_pi05_preprocessor()
     # t.tearDown()
     # suite = unittest.TestSuite()
     # # suite.addTest(TestModels('test_pi05_initialization'))

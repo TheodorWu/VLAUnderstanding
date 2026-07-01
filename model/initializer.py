@@ -24,6 +24,9 @@ class ModelInitializer:
         if model_type == "pi05":
             from model.pi05 import PI05Wrapper
             model = PI05Wrapper(model_config, self.dataset_stats, self.device)
+        elif model_type == "dummy":
+            from model.dummy import DummyVLAWrapper
+            model = DummyVLAWrapper(model_config, self.dataset_stats, self.device)
         else:
             raise ValueError(f"Model type {model_type} not recognized.")
 

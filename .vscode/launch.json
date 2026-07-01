@@ -54,6 +54,15 @@
             "cwd": "${workspaceFolder}"
         },
         {
+            "name": "Test Inference",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_inference",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false
+        },
+        {
             "name": "Test Activation Writer",
             "type": "debugpy",
             "request": "launch",

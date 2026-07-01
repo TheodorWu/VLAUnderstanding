@@ -10,8 +10,8 @@ def get_libero(task_id):
         np.ndarray,
         np.dtype,
     ])
-    from libero.libero import benchmark, get_libero_path
-    from libero.libero.envs import OffScreenRenderEnv
+    from libero.libero import benchmark, get_libero_path # pylint: disable=no-name-in-module
+    from libero.libero.envs import OffScreenRenderEnv # pylint: disable=no-name-in-module,import-error
 
     benchmark_dict = benchmark.get_benchmark_dict()
     task_suite_name = "libero_10" # can also choose libero_spatial, libero_object, etc.
