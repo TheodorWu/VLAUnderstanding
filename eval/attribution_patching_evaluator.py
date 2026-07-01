@@ -91,6 +91,9 @@ class AttributionPatchingEvaluator():
         for batch in self.activation_reader.iter_data():
             batch = add_batch_dim(batch)
             layer = batch.layer
+            if batch.gradients is None:
+                print(f"Skipping layer '{batch.layer}': no gradients available")
+                continue
             residual_attr = einops.reduce(
                 batch.gradients * (batch.clean - batch.corrupt),
                 "batch seq d_model -> batch seq",

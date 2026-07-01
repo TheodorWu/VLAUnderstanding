@@ -2,7 +2,7 @@ defaults: # Using mostly empty defaults to avoid unnecessary dependencies
  - perturbator: empty
  - wandb: default
  - activation_writer: default
- - activation_reader: empty
+ - activation_reader: default
  - dataset: libero
  - model: pi05 # required for correct sorting of layers in the evaluation results
  - method: eval
