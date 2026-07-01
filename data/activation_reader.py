@@ -94,6 +94,9 @@ class ActivationReader:
 
         def stack_field(buf, field):
             vals = [b[field] for b in buf]
+            n_missing = sum(v is None for v in vals)
+            if n_missing:
+                print(f"stack_field: {n_missing}/{len(vals)} samples missing '{field}'")
             if any(v is None for v in vals):
                 return None
             return torch.stack(vals)  # safe now: all entries in a bucket share shape
