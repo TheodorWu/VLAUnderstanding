@@ -12,9 +12,9 @@ class MethodInitializer:
         perturbator = self.initialize_perturbator()
         if self.config.get("method", {}).get("name") == "activation_patching":
             print("Using Activation Patching method.")
-            method = ActivationPatching(self.config, model, dataset, perturbator, device=device)
+            method = ActivationPatching(self.config, model, perturbator, dataset, device=device)
         else:
-            method = AttributionPatching(self.config, model, dataset, perturbator, device=device)
+            method = AttributionPatching(self.config, model, perturbator, dataset, device=device)
         return method
 
     def initialize_perturbator(self):

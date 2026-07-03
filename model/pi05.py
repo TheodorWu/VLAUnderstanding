@@ -117,7 +117,7 @@ class PI05Wrapper(nn.Module):
 
         print(f"Registered {len(registered)} image feature(s) from dataset_stats: {registered}")
 
-    def forward(self, processed_batch):
+    def forward(self, processed_batch, loss_reduction="mean"):
         # batch should already be preprocessed before calling forward
         # Wrapper forward replaces model forward for attribution patching to work and get rid of unnecessary statements that crash nnsights tracing
         # Prepare inputs
@@ -144,8 +144,14 @@ class PI05Wrapper(nn.Module):
         losses = losses[:, :, :original_action_dim]
 
         # Default: return scalar mean loss
-        loss = losses.mean()
-        return loss
+        if loss_reduction == "mean":
+            loss = losses.mean()
+            return loss
+        elif loss_reduction == "sample_mean":
+            loss = losses.mean(dim=tuple(range(1, losses.dim())))
+            return loss
+        else:
+            return losses
 
     def preprocess_batch(self, batch):
         """Preprocess a raw batch for model input.

@@ -51,30 +51,31 @@ class ActivationPatching(AttributionPatching):
             # --- Clean pass: cache activations (same as before) ---
             print("Tracing clean batch activations...")
             with self.model.trace() as tracer:
-                with tracer.invoke(clean_batch_processed):
+                with tracer.invoke(clean_batch_processed, loss_reduction="sample_mean"):
                     for name in self.tracing_layers:
                         target = self.get_tracing_target(name)
                         self.clean_out[name] = target.input.save()
                     clean_loss = self.model.output.save()
-            self.logger.log_metric("clean_loss", clean_loss, step=self.batch_count)
+            self.logger.log_metric("clean_loss", clean_loss.mean(), step=self.batch_count)
 
             # --- Corrupted baseline pass: no patching, no grad ---
             print("Getting corrupted baseline loss...")
             with self.model.trace() as tracer:
-                with tracer.invoke(corrupted_batch_processed):
+                with tracer.invoke(corrupted_batch_processed, loss_reduction="sample_mean"):
                     corrupted_loss = self.model.output.save()
-            self.logger.log_metric("corrupted_loss", corrupted_loss, step=self.batch_count)
+            self.logger.log_metric("corrupted_loss", corrupted_loss.mean(), step=self.batch_count)
 
             # --- Patched passes: one per layer ---
             print("Running patched forward passes...")
             patched_losses = {}
             for name in self.tracing_layers:
                 with self.model.trace() as tracer:
-                    with tracer.invoke(corrupted_batch_processed):
+                    with tracer.invoke(corrupted_batch_processed, loss_reduction="sample_mean"):
                         target = self.get_tracing_target(name)
                         # substitute this layer's input with the CLEAN activation
                         target.input[:] = self.clean_out[name]
                         patched_losses[name] = self.model.output.save()
+                self.logger.log_metric(f"patched_loss_{name}", patched_losses[name].mean(), step=self.batch_count)
 
         print("Writing sample metadata...")
         for i, sample_id in enumerate(sample_ids):
@@ -91,7 +92,12 @@ class ActivationPatching(AttributionPatching):
         for name in self.tracing_layers:
             if unit_test:
                 print(f"Clean shape for {name}: {self.clean_out[name].shape}")
-                print(f"Patched loss for {name}: {patched_losses[name]}")
+                print(f"Corrupted shape for {name}: {corrupted_loss.shape}")
+                print(f"Patched shape for {name}: {patched_losses[name].shape}")
+                print(f"Clean loss for {name}: {self.clean_out[name].mean()}")
+                print(f"Corrupted loss for {name}: {corrupted_loss.mean()}")
+                print(f"Patched loss for {name}: {patched_losses[name].mean()}")
+
 
             normalized_patching_effect = (patched_losses[name] - clean_loss) / (corrupted_loss - clean_loss)
             self.writer.add_data(ActivationDataBatch(
