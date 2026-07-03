@@ -11,6 +11,7 @@ import seaborn as sns
 import wandb
 
 from utils.general import pad_to_length, add_batch_dim
+from utils.display import layer_display_name
 
 @dataclass
 class AttributionResult:
@@ -181,7 +182,7 @@ class AttributionPatchingEvaluator():
             cmap="RdBu_r",
             center=0,
             xticklabels=[f"T{i}" for i in range(result.matrix.shape[1])],
-            yticklabels=result.layer_names,
+            yticklabels=[layer_display_name(l) for l in result.layer_names],
             linewidths=0.3,
             cbar_kws={"label": "Attribution Score" if not std else "Std Dev of Attribution Score"},
         )
@@ -202,7 +203,7 @@ class AttributionPatchingEvaluator():
         scores = result.scalar_scores
         colors = ["#d73027" if s > 0 else "#4575b4" for s in scores]
 
-        ax.barh(result.layer_names, scores, color=colors, edgecolor="white", linewidth=0.5)
+        ax.barh([layer_display_name(l) for l in result.layer_names], scores, color=colors, edgecolor="white", linewidth=0.5)
         ax.axvline(0, color="black", linewidth=0.8, linestyle="--")
         ax.set_xlabel("Attribution Score")
         ax.set_title(f"Per-Layer Attribution — {result.perturbation_type}")
@@ -222,7 +223,7 @@ class AttributionPatchingEvaluator():
             cmap="Reds",
             center=None,
             xticklabels=[f"T{i}" for i in range(result.norm_matrix.shape[1])],
-            yticklabels=result.layer_names,
+            yticklabels=[layer_display_name(l) for l in result.layer_names],
             linewidths=0.3,
             cbar_kws={"label": "Residual Stream Norm"},
         )
@@ -251,7 +252,7 @@ class AttributionPatchingEvaluator():
             ax.boxplot(data, vert=False, patch_artist=True)
 
         ax.set_yticks(range(1, len(result.layer_names) + 1))
-        ax.set_yticklabels(result.layer_names)
+        ax.set_yticklabels([layer_display_name(l) for l in result.layer_names])
         ax.axvline(0, color="black", linewidth=0.8, linestyle="--")
         ax.set_xlabel("Attribution Score")
         ax.set_title(f"Per-Layer Attribution Distribution — {result.perturbation_type}")

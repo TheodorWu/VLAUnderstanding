@@ -10,6 +10,7 @@ import wandb
 from eval.logger import Logger
 from data.activation_reader import ActivationReader
 from utils.general import add_batch_dim
+from utils.display import layer_display_name
 
 
 @dataclass
@@ -159,7 +160,7 @@ class ReservoirEvaluator:
         layer_names: list[str],
     ) -> list[CKAResult]:
         results = []
-        for layer in layer_names:
+        for layer in self.layer_sort_fn(layer_names):
             result = self.compute_perturbation_cka(layer=layer)
             print(f"CKA {layer}: {result.score:.3f}")
             results.append(result)
@@ -192,7 +193,7 @@ class ReservoirEvaluator:
         Score near 1.0 → perturbation had little effect.
         Score near 0.0 → perturbation significantly changed the representation.
         """
-        layer_names = [r.layer_a.replace("/clean", "") for r in results]
+        layer_names = [layer_display_name(r.layer_a.replace("/clean", "")) for r in results]
         scores = [r.score for r in results]
 
         fig, ax = plt.subplots(figsize=(8, len(layer_names) * 0.4 + 1))

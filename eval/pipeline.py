@@ -29,6 +29,7 @@ class EvaluatorPipeline:
     def _reservoir_evaluation(self, evaluator: ReservoirEvaluator):
         data_root = evaluator.activation_reader.data_root
         layer_names = get_result_layer_names(data_root)
+        layer_names = evaluator.layer_sort_fn(layer_names)
         cka_results = []
         for layer in layer_names:
             reservoir = evaluator.build_reservoir(layer=layer, fields=["clean", "corrupt"])
