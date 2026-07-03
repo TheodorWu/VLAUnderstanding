@@ -1,3 +1,4 @@
+from method.activation_patching import ActivationPatching
 from method.attribution_patching import AttributionPatching
 from method.prompts.perturbator import PromptPerturbator
 
@@ -9,7 +10,10 @@ class MethodInitializer:
         # Initialization logic based on the configuration
         print(f"Initializing Method with config: {self.config}")
         perturbator = self.initialize_perturbator()
-        method =  AttributionPatching(self.config, model, perturbator, dataset, device=device)
+        if self.config.get("method", {}).get("name") == "activation_patching":
+            method = ActivationPatching(self.config, model, dataset, perturbator, device=device)
+        else:
+            method = AttributionPatching(self.config, model, dataset, perturbator, device=device)
         return method
 
     def initialize_perturbator(self):

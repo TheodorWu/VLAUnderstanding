@@ -18,7 +18,7 @@ class SampleMetadata:
 
 class ActivationDataBatch:
     # might be useful for grouping activations/gradients from multiple samples together before writing to disk in attribution patching loop
-    def __init__(self, layer, sample_ids, clean=None, corrupt=None, gradients=None):
+    def __init__(self, layer, sample_ids, clean=None, corrupt=None, gradients=None, patching_effect=None):
         self.data_points = [
             ActivationDataPoint(
                 layer=layer,
@@ -26,6 +26,7 @@ class ActivationDataBatch:
                 clean=clean[i] if clean is not None else None,
                 corrupt=corrupt[i] if corrupt is not None else None,
                 gradients=gradients[i] if gradients is not None else None,
+                patching_effect=patching_effect[i] if patching_effect is not None else None,
             )
             for i, sid in enumerate(sample_ids)
         ]
@@ -40,6 +41,7 @@ class ActivationDataPoint:
     clean: Optional[torch.Tensor] = None
     corrupt: Optional[torch.Tensor] = None
     gradients: Optional[torch.Tensor] = None
+    patching_effect: Optional[torch.Tensor] = None
 
     def __iter__(self):
         yield self
@@ -111,6 +113,7 @@ class ActivationWriter():
             clean = activation_data_point.clean
             corrupt = activation_data_point.corrupt
             gradients = activation_data_point.gradients
+            patching_effect = activation_data_point.patching_effect
 
             sample = {"__key__": str(sample_id)}
             if clean is not None:
@@ -119,6 +122,8 @@ class ActivationWriter():
                 sample["corrupt.pth"] = self._tensor_to_bytes(corrupt)
             if gradients is not None:
                 sample["gradients.pth"] = self._tensor_to_bytes(gradients)
+            if patching_effect is not None:
+                sample["patching_effect.pth"] = self._tensor_to_bytes(patching_effect)
 
             if len(sample) > 1:  # more than just __key__
                 self._get_sink(layer).write(sample)

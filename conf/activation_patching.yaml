@@ -1,0 +1,16 @@
+defaults:
+ - perturbator: directional
+ - wandb: default
+ - activation_writer: default
+ - activation_reader: empty
+ - dataset: libero_activation_patching
+ - model: pi05
+ - method: activation_patching
+ - evaluator: default
+
+stage: prod
+seed: 42
+device: cuda
+mode: run
+hydra:
+  output_subdir: null

@@ -1,0 +1,11 @@
+name: activation_patching
+tracing_layers:
+- model.model.paligemma_with_expert.gemma_expert.model.layers.0.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.1.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.2.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.3.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.5.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.14.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.15.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.16.self_attn.o_proj
+- model.model.paligemma_with_expert.gemma_expert.model.layers.17.self_attn.o_proj
