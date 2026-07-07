@@ -1,2 +1,8 @@
 save_to_wandb: true
 n_samples: 10000
+activation_patching_evaluator:
+  enabled: true
+  activation_reader:
+    batch_size: 32
+    num_workers: 8
+    # run_name: Speficy this to use a different run name for activation patching evaluator. This way you can compare activation patching results with attribution patching results.

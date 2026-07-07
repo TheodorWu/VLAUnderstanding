@@ -18,8 +18,8 @@ class ActivationPatchingEvaluator:
     def __init__(self, config, layer_sort_fn=None):
         self.logger = Logger()
         self.config = config
-        self.evaluator_config = config.get("evaluator", {})
-        self.activation_reader = ActivationReader(config)
+        self.evaluator_config = config.get("evaluator", {}).get("activation_patching_evaluator", {})
+        self.activation_reader = ActivationReader(self.evaluator_config or config)
         self.layer_sort_fn = layer_sort_fn or (lambda x: x)
         self.save_path = Path(self.evaluator_config.get("save_path", None)) if self.evaluator_config.get("save_path", None) else None
 
