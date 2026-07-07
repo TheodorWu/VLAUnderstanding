@@ -34,8 +34,8 @@ class ActivationReader:
         return metadata
 
     def _get_shard_dir(self, layer, data_type):
-        if data_type not in ["clean", "gradients", "corrupt"]:
-            raise ValueError("data_type must be 'clean', 'gradients', or 'corrupt'")
+        if data_type not in ["clean", "gradients", "corrupt", "patching_effect"]:
+            raise ValueError("data_type must be 'clean', 'gradients', 'corrupt', or 'patching_effect'")
         return self.data_root / str(layer)
 
     def _iter_shard_paths(self, layer=None):
@@ -73,6 +73,7 @@ class ActivationReader:
                     "clean": self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
                     "corrupt": self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
                     "gradients": self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
+                    "patching_effect": self._tensor_from_bytes(sample["patching_effect.pth"]) if "patching_effect.pth" in sample else None,
                 }
             except Exception as e:
                 print(f"Skipping bad sample '{sample.get('__key__', 'unknown')}': {e}")
@@ -108,12 +109,15 @@ class ActivationReader:
                 clean=stack_field(buf, "clean"),
                 corrupt=stack_field(buf, "corrupt"),
                 gradients=stack_field(buf, "gradients"),
+                patching_effect=stack_field(buf, "patching_effect"),
             )
 
         def seq_len_of(sample):
-            for field in ("clean", "corrupt", "gradients"):
+            for field in ("clean", "corrupt", "gradients", "patching_effect"):
                 v = sample.get(field)
                 if v is not None:
+                    if v.ndim == 0:
+                        return 1  # scalar, treat as length 1
                     return v.shape[0]
             return None  # all fields None; will be filtered/skipped naturally
 

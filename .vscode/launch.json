@@ -68,6 +68,14 @@
             "module": "tests.test_evaluation",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "name": "Test Evaluation Activation Patching",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "tests.test_evaluation_activation_patching",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}"
         }
 
     ]
