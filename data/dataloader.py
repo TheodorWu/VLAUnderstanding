@@ -1,11 +1,16 @@
-from torch.utils.data import DataLoader
+import torch
+from torch.utils.data import DataLoader, Subset
 
-def get_dataloader(dataset_name, batch_size, shuffle=True, **kwargs):
+def get_dataloader(dataset_name, batch_size, shuffle=True, max_samples=None, **kwargs):
     if dataset_name == "libero":
         from data.libero import get_libero_dataset
         dataset = get_libero_dataset(**kwargs)
     else:
         raise ValueError(f"Dataset {dataset_name} not recognized.")
+
+    if max_samples is not None:
+        indices = torch.randperm(len(dataset))[:max_samples]
+        dataset = Subset(dataset, indices)
 
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
