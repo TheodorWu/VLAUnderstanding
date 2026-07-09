@@ -5,7 +5,7 @@
 #SBATCH -t 4-0
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=theodor.wulff@manchester.ac.uk
-#SBATCH --array=0-2
+#SBATCH --array=0-1
 
 echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
 
@@ -22,16 +22,20 @@ echo "Job ID: $SLURM_JOB_ID"
 
 
 PERTURBATIONS=(
-    "directional"
+    # "directional"
     "semantic_scale"
     "synonym"
 )
+# TARGET_WORDS=(
+#     "noun"
+#     "verb"
+# )
 INDEX=${SLURM_ARRAY_TASK_ID}
-echo "Evaluation on with perturbator=${PERTURBATIONS[$INDEX]}"
+echo "Evaluation with perturbator=${PERTURBATIONS[$INDEX]} and target_word=verb"
 
 # Run the setup script
 source "$PWD/.venv/bin/activate"
-python main.py --config-name=activation_patching perturbator=${PERTURBATIONS[$INDEX]}
+python main.py --config-name=activation_patching perturbator=${PERTURBATIONS[$INDEX]} perturbator.target_words="verb"
 
 deactivate
 

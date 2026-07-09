@@ -40,7 +40,9 @@ class TestEvaluationActivationPatching(unittest.TestCase):
                     ActivationDataBatch(
                         layer=layer,
                         sample_ids=[f"sample_{j + i*10}" for j in range(patching_effect_tensor[i % 2].shape[0])],
-                        patching_effect=patching_effect_tensor[i % 2]
+                        patching_effect=patching_effect_tensor[i % 2],
+                        clean_loss=torch.randn(patching_effect_tensor[i % 2].shape[0]),
+                        corrupted_loss=torch.randn(patching_effect_tensor[i % 2].shape[0])
                     )
                 )
                 # writer.add_sample_metadata(SampleMetadata(

@@ -15,6 +15,9 @@ class EvaluatorPipeline:
         self.evaluators.append(evaluator)
 
     def run_evaluation(self):
+        print("Starting evaluation pipeline...")
+        print(f"Evaluators to run: {[e.__class__.__name__ for e in self.evaluators]}")
+
         for evaluator in self.evaluators:
             if isinstance(evaluator, AttributionPatchingEvaluator):
                 self._attribution_patching_evaluation(evaluator)
@@ -24,6 +27,7 @@ class EvaluatorPipeline:
                 self._activation_patching_evaluation(evaluator)
 
     def _attribution_patching_evaluation(self, evaluator: AttributionPatchingEvaluator):
+        print(f"Running attribution patching evaluation for {evaluator.__class__.__name__}...")
         result = evaluator.compute_layer_attributions()
         self.results[evaluator.__class__.__name__] = result
         self._safe_plot(evaluator.plot_heatmap, result)
@@ -34,6 +38,7 @@ class EvaluatorPipeline:
         self._safe_plot(evaluator.plot_sample_metadata_dist)
 
     def _reservoir_evaluation(self, evaluator: ReservoirEvaluator):
+        print(f"Running reservoir evaluation for {evaluator.__class__.__name__}...")
         data_root = evaluator.activation_reader.data_root
         layer_names = get_result_layer_names(data_root)
         layer_names = evaluator.layer_sort_fn(layer_names)
@@ -61,6 +66,7 @@ class EvaluatorPipeline:
         self._safe_plot(evaluator.plot_perturbation_cka, cka_results)
 
     def _activation_patching_evaluation(self, evaluator: ActivationPatchingEvaluator):
+        print(f"Running activation patching evaluation for {evaluator.__class__.__name__}...")
         result = evaluator.compute_layer_patching_effects()
         self.results[evaluator.__class__.__name__] = result
         self._safe_plot(evaluator.plot_patching_distribution, result)

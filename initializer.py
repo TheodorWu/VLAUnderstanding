@@ -54,7 +54,8 @@ class Initializer:
 
         evaluator_pipeline.add_evaluator(AttributionPatchingEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn()))
         evaluator_pipeline.add_evaluator(ReservoirEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn()))
-        if self.config.get("activation_patching_evaluator", {}).get("enabled", False):
+        if self.config.get("evaluator", {}).get("activation_patching_evaluator", {}).get("enabled", False):
+            print("Adding ActivationPatchingEvaluator to the evaluation pipeline...")
             from eval.activation_patching_evaluator import ActivationPatchingEvaluator
             evaluator_pipeline.add_evaluator(ActivationPatchingEvaluator(self.config, layer_sort_fn=self.get_layer_sort_fn()))
         return evaluator_pipeline

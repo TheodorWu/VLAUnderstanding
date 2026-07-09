@@ -2,6 +2,7 @@ save_to_wandb: true
 n_samples: 10000
 activation_patching_evaluator:
   enabled: true
+  save_to_wandb: true
   activation_reader:
     batch_size: 32
     num_workers: 8

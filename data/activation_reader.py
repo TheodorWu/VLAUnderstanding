@@ -34,8 +34,8 @@ class ActivationReader:
         return metadata
 
     def _get_shard_dir(self, layer, data_type):
-        if data_type not in ["clean", "gradients", "corrupt", "patching_effect"]:
-            raise ValueError("data_type must be 'clean', 'gradients', 'corrupt', or 'patching_effect'")
+        if data_type not in ["clean", "gradients", "corrupt", "patched_loss", "clean_loss", "corrupted_loss"]:
+            raise ValueError("data_type must be 'clean', 'gradients', 'corrupt', or 'patched_loss', 'clean_loss', 'corrupted_loss'")
         return self.data_root / str(layer)
 
     def _iter_shard_paths(self, layer=None):
@@ -73,7 +73,9 @@ class ActivationReader:
                     "clean": self._tensor_from_bytes(sample["clean.pth"]) if "clean.pth" in sample else None,
                     "corrupt": self._tensor_from_bytes(sample["corrupt.pth"]) if "corrupt.pth" in sample else None,
                     "gradients": self._tensor_from_bytes(sample["gradients.pth"]) if "gradients.pth" in sample else None,
-                    "patching_effect": self._tensor_from_bytes(sample["patching_effect.pth"]) if "patching_effect.pth" in sample else None,
+                    "patched_loss": self._tensor_from_bytes(sample["patched_loss.pth"]) if "patched_loss.pth" in sample else None,
+                    "clean_loss": self._tensor_from_bytes(sample["clean_loss.pth"]) if "clean_loss.pth" in sample else None,
+                    "corrupted_loss": self._tensor_from_bytes(sample["corrupted_loss.pth"]) if "corrupted_loss.pth" in sample else None,
                 }
             except Exception as e:
                 print(f"Skipping bad sample '{sample.get('__key__', 'unknown')}': {e}")
@@ -109,11 +111,13 @@ class ActivationReader:
                 clean=stack_field(buf, "clean"),
                 corrupt=stack_field(buf, "corrupt"),
                 gradients=stack_field(buf, "gradients"),
-                patching_effect=stack_field(buf, "patching_effect"),
+                patched_loss=stack_field(buf, "patched_loss"),
+                clean_loss=stack_field(buf, "clean_loss"),
+                corrupted_loss=stack_field(buf, "corrupted_loss"),
             )
 
         def seq_len_of(sample):
-            for field in ("clean", "corrupt", "gradients", "patching_effect"):
+            for field in ("clean", "corrupt", "gradients", "patched_loss", "clean_loss", "corrupted_loss"):
                 v = sample.get(field)
                 if v is not None:
                     if v.ndim == 0:

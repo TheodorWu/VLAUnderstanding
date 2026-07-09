@@ -6,6 +6,7 @@ import wandb
 from eval.logger import Logger
 from data.activation_reader import ActivationReader
 from utils.display import layer_display_name
+from utils.general import pretty_print_config
 
 class PatchingResult:
     def __init__(self, perturbation_type, layer_names, scalar_scores, layer_samples):
@@ -19,36 +20,83 @@ class ActivationPatchingEvaluator:
         self.logger = Logger()
         self.config = config
         self.evaluator_config = config.get("evaluator", {}).get("activation_patching_evaluator", {})
+        print(f"ActivationPatchingEvaluator config: {self.evaluator_config}")
+        pretty_print_config(self.evaluator_config)
         self.activation_reader = ActivationReader(self.evaluator_config or config)
         self.layer_sort_fn = layer_sort_fn or (lambda x: x)
         self.save_path = Path(self.evaluator_config.get("save_path", None)) if self.evaluator_config.get("save_path", None) else None
 
-    def compute_layer_patching_effects(self) -> PatchingResult:
-        running_sum = {}
+    def compute_layer_patching_effects(self, denom_quantile: float = 0.1) -> PatchingResult:
+        # Pass 1: accumulate raw sums (for the aggregate/point-estimate ratio)
+        # and collect raw per-sample losses (for the per-sample ratio distribution).
+        clean_sum = {}
+        corrupted_sum = {}
+        patched_sum = {}
         sample_count = {}
-        layer_samples = {}
+
+        layer_clean = {}
+        layer_corrupted = {}
+        layer_patched = {}
 
         for batch in self.activation_reader.iter_data():
             layer = batch.layer
 
-            if batch.patching_effect is None:
-                print(f"Skipping layer '{layer}': no patching effect available")
+            if batch.patched_loss is None or batch.clean_loss is None or batch.corrupted_loss is None:
+                print(f"Skipping layer '{layer}': missing loss data")
                 continue
 
-            effect = np.asarray(batch.patching_effect)  # (batch,)
+            clean = np.asarray(batch.clean_loss)      # (batch,)
+            corrupted = np.asarray(batch.corrupted_loss)  # (batch,)
+            patched = np.asarray(batch.patched_loss)   # (batch,)
 
-            if layer not in running_sum:
-                running_sum[layer] = effect.sum()
-                sample_count[layer] = effect.shape[0]
-                layer_samples[layer] = []
-            else:
-                running_sum[layer] += effect.sum()
-                sample_count[layer] += effect.shape[0]
+            if layer not in clean_sum:
+                clean_sum[layer] = 0.0
+                corrupted_sum[layer] = 0.0
+                patched_sum[layer] = 0.0
+                sample_count[layer] = 0
+                layer_clean[layer] = []
+                layer_corrupted[layer] = []
+                layer_patched[layer] = []
 
-            layer_samples[layer].extend(effect.tolist())
+            clean_sum[layer] += clean.sum()
+            corrupted_sum[layer] += corrupted.sum()
+            patched_sum[layer] += patched.sum()
+            sample_count[layer] += clean.shape[0]
 
-        layer_names = self.layer_sort_fn(list(running_sum.keys()))
-        scores = np.array([running_sum[l] / sample_count[l] for l in layer_names])
+            layer_clean[layer].extend(clean.tolist())
+            layer_corrupted[layer].extend(corrupted.tolist())
+            layer_patched[layer].extend(patched.tolist())
+
+        layer_names = self.layer_sort_fn(list(clean_sum.keys()))
+
+        # Aggregate ratio: computed from summed losses, i.e. ratio(means), not mean(ratios).
+        # This is the stable, headline point-estimate per layer.
+        scores = np.array([
+            (patched_sum[l] - clean_sum[l]) / (corrupted_sum[l] - clean_sum[l])
+            for l in layer_names
+        ])
+
+        # Per-sample ratios: computed for distribution/variance inspection,
+        # with unstable (near-zero-denominator) samples masked out rather than
+        # blown up or silently clamped.
+        layer_samples = {}
+        for l in layer_names:
+            clean_arr = np.asarray(layer_clean[l])
+            corrupted_arr = np.asarray(layer_corrupted[l])
+            patched_arr = np.asarray(layer_patched[l])
+
+            denom = corrupted_arr - clean_arr
+            threshold = np.quantile(np.abs(denom), denom_quantile) if denom.size else 0.0
+            stable_mask = np.abs(denom) > threshold
+
+            ratio = np.full_like(denom, np.nan, dtype=np.float64)
+            ratio[stable_mask] = (patched_arr[stable_mask] - clean_arr[stable_mask]) / denom[stable_mask]
+
+            n_dropped = (~stable_mask).sum()
+            if n_dropped > 0:
+                print(f"Layer '{l}': dropped {n_dropped}/{denom.size} samples with unstable denominator")
+
+            layer_samples[l] = ratio.tolist()  # NaNs preserved; filter downstream as needed
 
         return PatchingResult(
             perturbation_type=self.activation_reader.metadata.get("perturbation_type"),
