@@ -5,7 +5,7 @@
 #SBATCH -t 4-0
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=theodor.wulff@manchester.ac.uk
-#SBATCH --array=0-1
+#SBATCH --array=0-4
 
 echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
 
@@ -21,21 +21,35 @@ echo "Running on node: $(hostname)"
 echo "Job ID: $SLURM_JOB_ID"
 
 
+# semantic_scale and synonym each run for noun and verb.
 PERTURBATIONS=(
-    # "directional"
+    "directional"
+    "semantic_scale"
     "semantic_scale"
     "synonym"
+    "synonym"
 )
-# TARGET_WORDS=(
-#     "noun"
-#     "verb"
-# )
-INDEX=${SLURM_ARRAY_TASK_ID}
-echo "Evaluation with perturbator=${PERTURBATIONS[$INDEX]} and target_word=verb"
+TARGET_WORDS=(
+    "noun"    # ignored for directional, but keep array lengths aligned
+    "noun"
+    "verb"
+    "noun"
+    "verb"
+)
 
-# Run the setup script
+INDEX=${SLURM_ARRAY_TASK_ID}
+PERTURBATOR=${PERTURBATIONS[$INDEX]}
+TARGET_WORD=${TARGET_WORDS[$INDEX]}
+
+echo "Evaluation with perturbator=${PERTURBATOR} and target_word=${TARGET_WORD}"
+
 source "$PWD/.venv/bin/activate"
-python main.py --config-name=activation_patching perturbator=${PERTURBATIONS[$INDEX]} perturbator.target_words="verb"
+
+if [ "$PERTURBATOR" == "directional" ]; then
+    python main.py --config-name=activation_patching perturbator=${PERTURBATOR}
+else
+    python main.py --config-name=activation_patching perturbator=${PERTURBATOR} perturbator.target_words="${TARGET_WORD}"
+fi
 
 deactivate
 

@@ -1,0 +1,48 @@
+#!/bin/bash --login
+#SBATCH -p gpuA
+#SBATCH -G 1
+#SBATCH -c 8
+#SBATCH -t 1-0
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=theodor.wulff@manchester.ac.uk
+#SBATCH --array=0-2
+
+echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK # reduce overloading GPU node
+export HF_HOME="$PWD/.hfcache"
+
+module purge
+module load libs/cuda
+
+# Print job information
+echo "Job started at: $(date)"
+echo "Running on node: $(hostname)"
+echo "Job ID: $SLURM_JOB_ID"
+
+
+ATP_RUN_NAMES=(
+    "Attribution-Patching-little-goshawk"
+    "Attribution-Patching-lime-starling"
+    # "Attribution-Patching-observant-whippet"
+    "Attribution-Patching-warping-hoatzin"
+    # "Attribution-Patching-ochre-cicada"
+)
+ACTIVATION_PATCHING_RUN_NAMES=(
+    "Attribution-Patching-purring-mackerel"
+    "Attribution-Patching-augmented-oyster"
+    # "TBD"
+    "Attribution-Patching-stereotyped-seriema"
+    # "TBD"
+)
+INDEX=${SLURM_ARRAY_TASK_ID}
+echo "Evaluation on with run_name=${ATP_RUN_NAMES[$INDEX]} and activation_patching_evaluator.activation_reader.run_name=${ACTIVATION_PATCHING_RUN_NAMES[$INDEX]}"
+
+# Run the setup script
+source "$PWD/.venv/bin/activate"
+python main.py --config-name=eval +activation_reader.run_name=${ATP_RUN_NAMES[$INDEX]} +evaluator.activation_patching_evaluator.activation_reader.run_name=${ACTIVATION_PATCHING_RUN_NAMES[$INDEX]}
+
+deactivate
+
+# Print completion message
+echo "Job finished at: $(date)"
