@@ -176,7 +176,6 @@ class PI05Wrapper(nn.Module):
         # NNsight wraps PI05Wrapper -> model (PI05Policy) -> model (PI05Pytorch), so paths that reach
         # paligemma_with_expert need the extra `model.` prefix before that branch.
         self.tracing_layers = [f"model.{name}" for name in all_layer_names if "gemma_expert" in name and "o_proj" in name]
-        self.logits_layer = "lm_head"
         if not self.tracing_layers:
             raise ValueError(
                 f"No tracing layers found matching 'gemma_expert'. "
