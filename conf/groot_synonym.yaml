@@ -1,0 +1,16 @@
+defaults:
+ - perturbator: synonym
+ - wandb: default
+ - activation_writer: default
+ - activation_reader: empty
+ - dataset: libero_groot
+ - model: groot
+ - method: full
+ - evaluator: default
+
+stage: prod
+seed: 42
+device: cuda
+mode: full
+hydra:
+  output_subdir: null
