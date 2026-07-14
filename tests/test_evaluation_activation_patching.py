@@ -3,6 +3,7 @@ import shutil
 from pathlib import Path
 import torch
 import wandb
+import numpy as np
 
 from data.activation_writer import ActivationDataBatch, ActivationWriter, SampleMetadata
 from eval.activation_patching_evaluator import ActivationPatchingEvaluator
@@ -33,16 +34,16 @@ class TestEvaluationActivationPatching(unittest.TestCase):
         }
         writer = ActivationWriter(writer_config)
         # Create dummy activation data for testing
-        patched_loss_tensor = [torch.randn(10),torch.randn(8)]
         for layer in ["layer_0", "layer_1"]:
             for i in range(10):
+                size = 10 if i % 2 == 0 else 8
                 writer.add_data(
                     ActivationDataBatch(
                         layer=layer,
-                        sample_ids=[f"sample_{j + i*10}" for j in range(patched_loss_tensor[i % 2].shape[0])],
-                        patched_loss=patched_loss_tensor[i % 2],
-                        clean_loss=torch.randn(patched_loss_tensor[i % 2].shape[0]),
-                        corrupted_loss=torch.randn(patched_loss_tensor[i % 2].shape[0])
+                        sample_ids=[f"sample_{j + i*10}" for j in range(size)],
+                        patched_loss=torch.randn(size),   # fresh draw each time
+                        clean_loss=torch.randn(size),
+                        corrupted_loss=torch.randn(size)
                     )
                 )
                 # writer.add_sample_metadata(SampleMetadata(
@@ -67,6 +68,9 @@ class TestEvaluationActivationPatching(unittest.TestCase):
             }
         )
         result = evaluator.compute_layer_patching_effects()
+        for l in result.layer_samples:
+            arr = np.array(result.layer_samples[l])
+            print(l, len(arr), arr.std(), np.isnan(arr).any(), np.isinf(arr).any())
         evaluator.plot_patching_distribution(result, invert=True)
         evaluator.plot_patching_heatmap(result, invert=True)
         atp_result = AttributionResult(

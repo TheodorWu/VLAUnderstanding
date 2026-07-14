@@ -107,7 +107,7 @@ class ActivationPatchingEvaluator:
 
     def plot_patching_heatmap(self, result: PatchingResult, invert=True):
         layer_names = result.layer_names
-        scores = result.scalar_scores.copy()
+        scores = self._filter_nan_inf(np.array(result.scalar_scores))
 
         if invert:
             scores = 1 - scores
@@ -132,8 +132,9 @@ class ActivationPatchingEvaluator:
 
     def plot_patching_distribution(self, result: PatchingResult, invert=True):
         fig, ax = plt.subplots(figsize=(12, 4))
+
         data = [
-            (1 - np.array(result.layer_samples[l])) if invert else np.array(result.layer_samples[l])
+            (1 - self._filter_nan_inf(np.array(result.layer_samples[l]))) if invert else self._filter_nan_inf(np.array(result.layer_samples[l]))
             for l in result.layer_names
         ]
         ax.violinplot(data, showmeans=True)
@@ -176,3 +177,7 @@ class ActivationPatchingEvaluator:
         if self.evaluator_config.get("show"):
             plt.show()
         plt.close(fig)
+
+    def _filter_nan_inf(self, arr):
+        arr = np.asarray(arr)
+        return arr[~np.isnan(arr) & ~np.isinf(arr)]
