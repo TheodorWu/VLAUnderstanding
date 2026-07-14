@@ -15,6 +15,11 @@ class PatchingResult:
         self.scalar_scores = scalar_scores
         self.layer_samples = layer_samples
 
+class PatchingComputationError(ValueError):
+    def __init__(self, message, partial_result):
+        super().__init__(message)
+        self.partial_result = partial_result
+
 class ActivationPatchingEvaluator:
     def __init__(self, config, layer_sort_fn=None):
         self.logger = Logger()
@@ -26,7 +31,7 @@ class ActivationPatchingEvaluator:
         self.layer_sort_fn = layer_sort_fn or (lambda x: x)
         self.save_path = Path(self.evaluator_config.get("save_path", None)) if self.evaluator_config.get("save_path", None) else None
 
-    def compute_layer_patching_effects(self, denom_quantile: float = 0.1) -> PatchingResult:
+    def compute_layer_patching_effects(self, denom_eps: float = 1e-6) -> PatchingResult:
         # Pass 1: accumulate raw sums (for the aggregate/point-estimate ratio)
         # and collect raw per-sample losses (for the per-sample ratio distribution).
         clean_sum = {}
@@ -80,14 +85,21 @@ class ActivationPatchingEvaluator:
         # with unstable (near-zero-denominator) samples masked out rather than
         # blown up or silently clamped.
         layer_samples = {}
+        layer_errors = []
         for l in layer_names:
             clean_arr = np.asarray(layer_clean[l])
             corrupted_arr = np.asarray(layer_corrupted[l])
             patched_arr = np.asarray(layer_patched[l])
 
             denom = corrupted_arr - clean_arr
-            threshold = np.quantile(np.abs(denom), denom_quantile) if denom.size else 0.0
-            stable_mask = np.abs(denom) > threshold
+            denom_eps = denom_eps * np.abs(clean_arr).mean() # scale eps relative to the mean clean loss for this layer
+            stable_mask = np.abs(denom) > denom_eps  # mask out samples with near-zero denominator
+
+            if denom.size and not stable_mask.any():
+                layer_errors.append(
+                    f"Layer '{l}': all {denom.size} samples have unstable denominator. (|corrupted - clean| <= {denom_eps}); cannot compute patching ratio."
+                )
+                continue
 
             ratio = np.full_like(denom, np.nan, dtype=np.float64)
             ratio[stable_mask] = (patched_arr[stable_mask] - clean_arr[stable_mask]) / denom[stable_mask]
@@ -97,6 +109,18 @@ class ActivationPatchingEvaluator:
                 print(f"Layer '{l}': dropped {n_dropped}/{denom.size} samples with unstable denominator")
 
             layer_samples[l] = ratio.tolist()  # NaNs preserved; filter downstream as needed
+
+        if layer_errors:
+            partial = PatchingResult(
+                perturbation_type=self.activation_reader.metadata.get("perturbation_type"),
+                layer_names=layer_names,
+                scalar_scores=scores,
+                layer_samples=layer_samples,
+            )
+            raise PatchingComputationError(
+                f"Patching computation failed for {len(layer_errors)} layer(s):\n" + "\n".join(layer_errors),
+                partial_result=partial,
+            )
 
         return PatchingResult(
             perturbation_type=self.activation_reader.metadata.get("perturbation_type"),

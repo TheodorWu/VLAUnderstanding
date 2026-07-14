@@ -1,5 +1,5 @@
 
-from eval.activation_patching_evaluator import ActivationPatchingEvaluator
+from eval.activation_patching_evaluator import ActivationPatchingEvaluator, PatchingComputationError
 from eval.attribution_patching_evaluator import AttributionPatchingEvaluator
 from eval.reservoir_evaluator import ReservoirEvaluator
 from utils.general import get_result_layer_names
@@ -67,7 +67,11 @@ class EvaluatorPipeline:
 
     def _activation_patching_evaluation(self, evaluator: ActivationPatchingEvaluator):
         print(f"Running activation patching evaluation for {evaluator.__class__.__name__}...")
-        result = evaluator.compute_layer_patching_effects()
+        try:
+            result = evaluator.compute_layer_patching_effects()
+        except PatchingComputationError as e:
+            print(e)
+            result = e.partial_result
         self.results[evaluator.__class__.__name__] = result
         self._safe_plot(evaluator.plot_patching_distribution, result)
         self._safe_plot(evaluator.plot_patching_heatmap, result)
