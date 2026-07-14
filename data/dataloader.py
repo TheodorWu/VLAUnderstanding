@@ -9,7 +9,7 @@ def get_dataloader(dataset_name, batch_size, shuffle=True, max_samples=None, **k
         raise ValueError(f"Dataset {dataset_name} not recognized.")
 
     if max_samples is not None:
-        indices = torch.randperm(len(dataset))[:max_samples]
+        indices = torch.randperm(len(dataset))[:max_samples].tolist()
         dataset = Subset(dataset, indices)
 
     dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)

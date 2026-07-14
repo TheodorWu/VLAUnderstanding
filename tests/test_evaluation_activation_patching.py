@@ -33,16 +33,16 @@ class TestEvaluationActivationPatching(unittest.TestCase):
         }
         writer = ActivationWriter(writer_config)
         # Create dummy activation data for testing
-        patching_effect_tensor = [torch.randn(10),torch.randn(8)]
+        patched_loss_tensor = [torch.randn(10),torch.randn(8)]
         for layer in ["layer_0", "layer_1"]:
             for i in range(10):
                 writer.add_data(
                     ActivationDataBatch(
                         layer=layer,
-                        sample_ids=[f"sample_{j + i*10}" for j in range(patching_effect_tensor[i % 2].shape[0])],
-                        patching_effect=patching_effect_tensor[i % 2],
-                        clean_loss=torch.randn(patching_effect_tensor[i % 2].shape[0]),
-                        corrupted_loss=torch.randn(patching_effect_tensor[i % 2].shape[0])
+                        sample_ids=[f"sample_{j + i*10}" for j in range(patched_loss_tensor[i % 2].shape[0])],
+                        patched_loss=patched_loss_tensor[i % 2],
+                        clean_loss=torch.randn(patched_loss_tensor[i % 2].shape[0]),
+                        corrupted_loss=torch.randn(patched_loss_tensor[i % 2].shape[0])
                     )
                 )
                 # writer.add_sample_metadata(SampleMetadata(

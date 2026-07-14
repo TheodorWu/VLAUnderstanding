@@ -34,7 +34,7 @@ class Initializer:
         seed_all(self.config.get("seed", 42))
         pretty_print_config(self.config)
         dataset = get_dataloader(**self.config.get("dataset", {}))
-        dataset_stats = dataset.dataset.meta.stats
+        dataset_stats = self.get_dataset_stats(dataset)
         self.model_initializer = ModelInitializer(self.config.get("model"), dataset_stats=dataset_stats, device=self.device)
         model = self.model_initializer.initialize()
 
@@ -68,3 +68,8 @@ class Initializer:
             return  PI05Wrapper.sort_layers
         else:
             return None
+
+    def get_dataset_stats(self, dataloader):
+        if isinstance(dataloader.dataset, torch.utils.data.Subset):
+            return dataloader.dataset.dataset.meta.stats # extra wrapper for Subset datasets
+        return dataloader.dataset.meta.stats

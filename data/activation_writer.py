@@ -117,7 +117,7 @@ class ActivationWriter():
             clean = activation_data_point.clean
             corrupt = activation_data_point.corrupt
             gradients = activation_data_point.gradients
-            patching_effect = activation_data_point.patching_effect
+            patched_loss = activation_data_point.patched_loss
             clean_loss = activation_data_point.clean_loss
             corrupted_loss = activation_data_point.corrupted_loss
 
@@ -128,8 +128,8 @@ class ActivationWriter():
                 sample["corrupt.pth"] = self._tensor_to_bytes(corrupt)
             if gradients is not None:
                 sample["gradients.pth"] = self._tensor_to_bytes(gradients)
-            if patching_effect is not None:
-                sample["patching_effect.pth"] = self._tensor_to_bytes(patching_effect)
+            if patched_loss is not None:
+                sample["patched_loss.pth"] = self._tensor_to_bytes(patched_loss)
             if clean_loss is not None:
                 sample["clean_loss.pth"] = self._tensor_to_bytes(clean_loss)
             if corrupted_loss is not None:
