@@ -23,6 +23,14 @@ class ActivationReader:
         self.sample_metadata = {}
         self.batch_size = self.config.get("batch_size", 32)
         self.num_workers = self.config.get("num_workers", 0)
+        self._confirm_num_workers()
+
+    def _confirm_num_workers(self):
+        if self.num_workers > 0:
+            shard_paths = [ str(p) for p in self._iter_shard_paths() ]
+            if len(shard_paths) < self.num_workers:
+                print(f"Warning: num_workers={self.num_workers} is greater than the number of shards ({len(shard_paths)}). Reducing num_workers to {len(shard_paths)}.")
+                self.num_workers = len(shard_paths)
 
     def _load_metadata(self):
         metadata = {}
