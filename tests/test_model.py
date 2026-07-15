@@ -31,8 +31,8 @@ class TestModels(unittest.TestCase):
         config = {
             "model": {
                 "type": "groot",
-                "model_id": None,
-                # "model_id": "lerobot/pi05_libero", # Use pretrained weights for this test to ensure forward pass works
+                # "model_id": None,
+                "model_id": "nvidia/gr00t17-lerobot-libero_10-640", # Use pretrained weights for this test to ensure forward pass works
                 "wrap_with_nnsight": False,
                 # "print_architecture": True
                 "fixed_time": 0.6

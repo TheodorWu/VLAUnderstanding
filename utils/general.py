@@ -50,12 +50,12 @@ def test_gpu_availability():
     print(f"Using torch {torch.__version__}", file=sys.stdout)
     print(f"Cuda available: {torch.cuda.is_available()}", file=sys.stdout)
     print('__CUDNN VERSION:', torch.backends.cudnn.version(), file=sys.stdout)
-    print('Available devices ', torch.cuda.device_count(), file=sys.stdout)
-    print('Current cuda device ', torch.cuda.current_device(), file=sys.stdout)
-    print(f"Device name: {torch.cuda.get_device_name(torch.cuda.current_device())}")
 
     if  torch.cuda.is_available():
         print("Using GPU", file=sys.stdout)
+        print('Available devices ', torch.cuda.device_count(), file=sys.stdout)
+        print('Current cuda device ', torch.cuda.current_device(), file=sys.stdout)
+        print(f"Device name: {torch.cuda.get_device_name(torch.cuda.current_device())}")
         device = torch.device("cuda")
         torch.backends.cuda.matmul.allow_tf32 = True
         torch.backends.cudnn.allow_tf32 = True

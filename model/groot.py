@@ -1,3 +1,6 @@
+import os
+import json
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -44,7 +47,9 @@ class GROOTWrapper(nn.Module):
             self.model = GrootPolicy(groot_config)  # constructs via GR00TN17(config) internally
         else:
             print(f"Loading GR00T N1.7 model from {model_id}")
-            self.model = GrootPolicy.from_pretrained(model_id, device_map=device)  # constructs via GR00TN17(config) internally
+            local_dir = self._fix_pretrained_config(model_id)
+            self.model = GrootPolicy.from_pretrained(local_dir,
+                                                     device_map=device)  # constructs via GR00TN17(config) internally
 
         self.model.to(device)
 
@@ -56,6 +61,22 @@ class GROOTWrapper(nn.Module):
 
         self._init_tracing_layers()
         self._freeze_non_tracing_parameters()
+
+    def _fix_pretrained_config(self, model_id):
+        from huggingface_hub import snapshot_download
+
+        local_dir = snapshot_download(repo_id=model_id)
+        config_path = os.path.join(local_dir, "config.json")
+        with open(config_path) as f:
+            cfg = json.load(f)
+
+        print("Before:", cfg.get("base_model_path"))
+        cfg["base_model_path"] = "nvidia/GR00T-N1.7-3B"
+        with open(config_path, "w") as f:
+            json.dump(cfg, f, indent=2)
+        print("After:", cfg["base_model_path"])
+        return local_dir
+
 
     def _init_tracing_layers(self):
         all_layer_names = [name for name, _ in self.model.named_modules() if "attn" in name]

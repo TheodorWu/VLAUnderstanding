@@ -1,5 +1,5 @@
 type: "groot"
 # model_id: None # Use None to load the model without pretrained weights for testing purposes
-model_id: "nvidia/gr00t17-lerobot-libero_object-640"
+model_id: "nvidia/gr00t17-lerobot-libero_10-640"
 fixed_time: 0.6
 use_fixed_noise: false
