@@ -73,6 +73,7 @@ class EvaluatorPipeline:
             print(e)
             result = e.partial_result
         self.results[evaluator.__class__.__name__] = result
+        self._safe_plot(evaluator.log_layer_scores, result)
         self._safe_plot(evaluator.plot_patching_distribution, result)
         self._safe_plot(evaluator.plot_patching_heatmap, result)
 

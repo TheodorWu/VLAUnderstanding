@@ -71,6 +71,7 @@ class TestEvaluationActivationPatching(unittest.TestCase):
         for l in result.layer_samples:
             arr = np.array(result.layer_samples[l])
             print(l, len(arr), arr.std(), np.isnan(arr).any(), np.isinf(arr).any())
+        evaluator.log_layer_scores(result)
         evaluator.plot_patching_distribution(result, invert=True)
         evaluator.plot_patching_heatmap(result, invert=True)
         atp_result = AttributionResult(

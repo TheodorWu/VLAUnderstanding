@@ -75,11 +75,14 @@ class ActivationPatchingEvaluator:
         layer_names = self.layer_sort_fn(list(clean_sum.keys()))
 
         # Aggregate ratio: computed from summed losses, i.e. ratio(means), not mean(ratios).
-        # This is the stable, headline point-estimate per layer.
-        scores = np.array([
-            (patched_sum[l] - clean_sum[l]) / (corrupted_sum[l] - clean_sum[l])
-            for l in layer_names
-        ])
+        scores = []
+        for l in layer_names:
+            denom = corrupted_sum[l] - clean_sum[l]
+            if abs(denom) < denom_eps:
+                scores.append(np.nan)   # can't compute a meaningful ratio for this layer
+            else:
+                scores.append((patched_sum[l] - clean_sum[l]) / denom)
+        scores = np.array(scores)
 
         # Per-sample ratios: computed for distribution/variance inspection,
         # with unstable (near-zero-denominator) samples masked out rather than
@@ -92,7 +95,6 @@ class ActivationPatchingEvaluator:
             patched_arr = np.asarray(layer_patched[l])
 
             denom = corrupted_arr - clean_arr
-            denom_eps = denom_eps * np.abs(clean_arr).mean() # scale eps relative to the mean clean loss for this layer
             stable_mask = np.abs(denom) > denom_eps  # mask out samples with near-zero denominator
 
             if denom.size and not stable_mask.any():
@@ -129,6 +131,11 @@ class ActivationPatchingEvaluator:
             layer_samples=layer_samples,
         )
 
+    def log_layer_scores(self, result: PatchingResult):
+        if self.evaluator_config.get("log_to_wandb"):
+            for l, s in zip(result.layer_names, result.scalar_scores):
+                self.logger.log_metric(f"patching_score/{result.perturbation_type}/{layer_display_name(l)}", s, step=0)
+
     def plot_patching_heatmap(self, result: PatchingResult, invert=True):
         layer_names = result.layer_names
         scores = self._filter_nan_inf(np.array(result.scalar_scores))
@@ -142,7 +149,7 @@ class ActivationPatchingEvaluator:
         matrix = scores[np.newaxis, :]  # (1, n_layers)
 
         fig, ax = plt.subplots(figsize=(10, 2.5))
-        im = ax.imshow(matrix, aspect="auto", cmap="RdBu_r", vmin=0, vmax=1)
+        im = ax.imshow(matrix, aspect="auto", cmap="RdBu_r")
 
         ax.set_xticks(range(len(layer_names)))
         ax.set_xticklabels([layer_display_name(l) for l in layer_names], rotation=90, fontsize=7)
