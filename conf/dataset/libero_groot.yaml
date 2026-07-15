@@ -1,0 +1,5 @@
+dataset_name: libero
+batch_size: 2
+fps: 10
+chunk_size: 40
+max_samples: 10000

@@ -1,0 +1,2072 @@
+_groot_model:
+  type: GR00TN17
+  children:
+    backbone:
+      type: Qwen3Backbone
+      children:
+        model:
+          type: Qwen3VLForConditionalGeneration
+          children:
+            model:
+              type: Qwen3VLModel
+              children:
+                visual:
+                  type: Qwen3VLVisionModel
+                  children:
+                    patch_embed:
+                      type: Qwen3VLVisionPatchEmbed
+                      children:
+                        proj: Conv3d
+                    pos_embed: Embedding
+                    rotary_pos_emb: Qwen3VLVisionRotaryEmbedding
+                    blocks:
+                      type: ModuleList
+                      children:
+                        '0':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '1':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '2':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '3':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '4':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '5':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '6':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '7':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '8':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '9':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '10':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '11':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '12':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '13':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '14':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '15':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '16':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '17':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '18':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '19':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '20':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '21':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '22':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                        '23':
+                          type: Qwen3VLVisionBlock
+                          children:
+                            norm1: LayerNorm
+                            norm2: LayerNorm
+                            attn:
+                              type: Qwen3VLVisionAttention
+                              children:
+                                qkv: Linear
+                                proj: Linear
+                            mlp:
+                              type: Qwen3VLVisionMLP
+                              children:
+                                linear_fc1: Linear
+                                linear_fc2: Linear
+                                act_fn: GELUTanh
+                    merger:
+                      type: Qwen3VLVisionPatchMerger
+                      children:
+                        norm: LayerNorm
+                        linear_fc1: Linear
+                        act_fn: GELU
+                        linear_fc2: Linear
+                    deepstack_merger_list:
+                      type: ModuleList
+                      children:
+                        '0':
+                          type: Qwen3VLVisionPatchMerger
+                          children:
+                            norm: LayerNorm
+                            linear_fc1: Linear
+                            act_fn: GELU
+                            linear_fc2: Linear
+                        '1':
+                          type: Qwen3VLVisionPatchMerger
+                          children:
+                            norm: LayerNorm
+                            linear_fc1: Linear
+                            act_fn: GELU
+                            linear_fc2: Linear
+                        '2':
+                          type: Qwen3VLVisionPatchMerger
+                          children:
+                            norm: LayerNorm
+                            linear_fc1: Linear
+                            act_fn: GELU
+                            linear_fc2: Linear
+                language_model:
+                  type: Qwen3VLTextModel
+                  children:
+                    embed_tokens: Embedding
+                    layers:
+                      type: ModuleList
+                      children:
+                        '0':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '1':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '2':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '3':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '4':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '5':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '6':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '7':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '8':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '9':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '10':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '11':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '12':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '13':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '14':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                        '15':
+                          type: Qwen3VLTextDecoderLayer
+                          children:
+                            self_attn:
+                              type: Qwen3VLTextAttention
+                              children:
+                                q_proj: Linear
+                                k_proj: Linear
+                                v_proj: Linear
+                                o_proj: Linear
+                                q_norm: Qwen3VLTextRMSNorm
+                                k_norm: Qwen3VLTextRMSNorm
+                            mlp:
+                              type: Qwen3VLTextMLP
+                              children:
+                                gate_proj: Linear
+                                up_proj: Linear
+                                down_proj: Linear
+                                act_fn: SiLUActivation
+                            input_layernorm: Qwen3VLTextRMSNorm
+                            post_attention_layernorm: Qwen3VLTextRMSNorm
+                    norm: Qwen3VLTextRMSNorm
+                    rotary_emb: Qwen3VLTextRotaryEmbedding
+            lm_head: Linear
+    action_head:
+      type: GR00TN17ActionHead
+      children:
+        model:
+          type: AlternateVLDiT
+          children:
+            timestep_encoder:
+              type: TimestepEncoder
+              children:
+                time_proj: Timesteps
+                timestep_embedder:
+                  type: TimestepEmbedding
+                  children:
+                    linear_1: Linear
+                    act: SiLU
+                    linear_2: Linear
+            transformer_blocks:
+              type: ModuleList
+              children:
+                '0':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '1':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '2':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '3':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '4':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '5':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '6':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '7':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '8':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '9':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '10':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '11':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '12':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '13':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '14':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '15':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '16':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '17':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '18':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '19':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '20':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '21':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '22':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '23':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '24':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '25':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '26':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '27':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '28':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '29':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '30':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '31':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1:
+                      type: AdaLayerNorm
+                      children:
+                        silu: SiLU
+                        linear: Linear
+                        norm: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+            norm_out: LayerNorm
+            proj_out_1: Linear
+            proj_out_2: Linear
+        state_encoder:
+          type: CategorySpecificMLP
+          children:
+            layer1: CategorySpecificLinear
+            layer2: CategorySpecificLinear
+        action_encoder:
+          type: MultiEmbodimentActionEncoder
+          children:
+            W1: CategorySpecificLinear
+            W2: CategorySpecificLinear
+            W3: CategorySpecificLinear
+            pos_encoding: SinusoidalPositionalEncoding
+        action_decoder:
+          type: CategorySpecificMLP
+          children:
+            layer1: CategorySpecificLinear
+            layer2: CategorySpecificLinear
+        vlln: LayerNorm
+        vl_self_attention:
+          type: SelfAttentionTransformer
+          children:
+            transformer_blocks:
+              type: ModuleList
+              children:
+                '0':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '1':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '2':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+                '3':
+                  type: BasicTransformerBlock
+                  children:
+                    norm1: LayerNorm
+                    attn1:
+                      type: Attention
+                      children:
+                        to_q: Linear
+                        to_k: Linear
+                        to_v: Linear
+                        to_out:
+                          type: ModuleList
+                          children:
+                            '0': Linear
+                            '1': Dropout
+                    norm3: LayerNorm
+                    ff:
+                      type: FeedForward
+                      children:
+                        net:
+                          type: ModuleList
+                          children:
+                            '0':
+                              type: GELU
+                              children:
+                                proj: Linear
+                            '1': Dropout
+                            '2': Linear
+                            '3': Dropout
+                    final_dropout: Dropout
+        position_embedding: Embedding
