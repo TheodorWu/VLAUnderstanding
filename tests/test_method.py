@@ -8,6 +8,7 @@ class TestMethod(unittest.TestCase):
     def setUp(self):
         from data.dataloader import get_dataloader
         self.dataloader = get_dataloader("libero", batch_size=2, fps=10, chunk_size=50, single_batch=True)
+        self.groot_dataloader = get_dataloader("libero", batch_size=2, fps=10, chunk_size=40, single_batch=True)
 
     def test_attribution_patching(self):
 
@@ -24,7 +25,7 @@ class TestMethod(unittest.TestCase):
 
         dataset_stats = self.dataloader.dataset.meta.stats
         device = test_gpu_availability()
-        modelInitializer = ModelInitializer(config, dataset_stats=dataset_stats, device=device)
+        modelInitializer = ModelInitializer(config.get("model"), dataset_stats=dataset_stats, device=device)
         model = modelInitializer.initialize()
 
 
@@ -32,6 +33,35 @@ class TestMethod(unittest.TestCase):
         method = methodInitializer.initialize(
             model=model,
             dataset=self.dataloader,    # Replace with actual dataset
+            device=device
+        )
+        method.main(unit_test=True)  # Run in unit test mode to process only one batch and avoid early exit due to no perturbations
+        # self.assertEqual(model.config, config["model"])
+
+    def test_attribution_patching_groot(self):
+
+        config = {
+            "model": {
+                "type": "groot",
+                "model_id": "nvidia/gr00t17-lerobot-libero_10-640", # Use None to load the model without pretrained weights for testing purposes
+                "fixed_time": 0.6
+            },
+            "perturbator": {
+                "directional": True,
+                "target_words": "noun"
+            }
+        }
+
+        dataset_stats = self.groot_dataloader.dataset.meta.stats
+        device = test_gpu_availability()
+        modelInitializer = ModelInitializer(config.get("model"), dataset_stats=dataset_stats, device=device)
+        model = modelInitializer.initialize()
+
+
+        methodInitializer = MethodInitializer(config)
+        method = methodInitializer.initialize(
+            model=model,
+            dataset=self.groot_dataloader,    # Replace with actual dataset
             device=device
         )
         method.main(unit_test=True)  # Run in unit test mode to process only one batch and avoid early exit due to no perturbations
@@ -54,7 +84,7 @@ class TestMethod(unittest.TestCase):
 
         dataset_stats = self.dataloader.dataset.meta.stats
         device = test_gpu_availability()
-        modelInitializer = ModelInitializer(config, dataset_stats=dataset_stats, device=device)
+        modelInitializer = ModelInitializer(config.get("model"), dataset_stats=dataset_stats, device=device)
         model = modelInitializer.initialize()
 
         methodInitializer = MethodInitializer(config)
@@ -69,6 +99,6 @@ if __name__ == "__main__":
 
     t = TestMethod()
     t.setUp()
-    t.test_activation_patching()
+    t.test_attribution_patching_groot()
     t.tearDown()
     # unittest.main()

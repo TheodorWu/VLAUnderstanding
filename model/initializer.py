@@ -18,7 +18,7 @@ class ModelInitializer:
         return self._initialize_model()
 
     def _initialize_model(self):
-        model_config = self.config.get("model", {})
+        model_config = self.config
         model_type = model_config.get("type", "pi05")
         print(f"Model Type: {model_type}")
         if model_type == "pi05":

@@ -1,3 +1,4 @@
+import re
 import torch
 from data.activation_writer import ActivationDataBatch, ActivationWriter, SampleMetadata
 from eval.logger import Logger
@@ -132,7 +133,8 @@ class AttributionPatching():
 
         print("Writing sample metadata...")
         for i, sample_id in enumerate(sample_ids):
-            perturbed_tokens = clean_batch_processed[f"{OBS_LANGUAGE_TOKENS}"][i] != corrupted_batch_processed[f"{OBS_LANGUAGE_TOKENS}"][i]
+            token_key = f"{OBS_LANGUAGE_TOKENS}" if f"{OBS_LANGUAGE_TOKENS}" in clean_batch_processed else "input_ids"
+            perturbed_tokens = clean_batch_processed[token_key][i] != corrupted_batch_processed[token_key][i]
             perturbed_token_idxs = torch.where(perturbed_tokens)[0].tolist()
             self.writer.add_sample_metadata(SampleMetadata(
                 sample_id=sample_id,

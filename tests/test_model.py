@@ -15,10 +15,8 @@ class TestModels(unittest.TestCase):
 
     def test_groot_initialization(self):
         config = {
-            "model": {
                 "type": "groot",
                 "model_id": None # Use None to load the model without pretrained weights for testing purposes
-            }
         }
         dataset_stats = self.dataset_stats
         initializer = ModelInitializer(config, dataset_stats=dataset_stats, device=torch.device("cpu"))
@@ -29,34 +27,43 @@ class TestModels(unittest.TestCase):
         batch = next(iter(self.dataloader_groot))
 
         config = {
-            "model": {
                 "type": "groot",
                 # "model_id": None,
                 "model_id": "nvidia/gr00t17-lerobot-libero_10-640", # Use pretrained weights for this test to ensure forward pass works
                 "wrap_with_nnsight": False,
                 # "print_architecture": True
                 "fixed_time": 0.6
-            }
         }
         dataset_stats = self.dataset_stats
         device = test_gpu_availability()
         initializer = ModelInitializer(config, dataset_stats=dataset_stats, device=torch.device(device))
         model = initializer.initialize()
+        called_modules = []
+        def make_hook(name):
+            def hook(module, args, kwargs, output):
+                called_modules.append(name)
+            return hook
 
+        handles = []
+        for name, module in model.model._groot_model.action_head.named_modules():
+            handles.append(module.register_forward_hook(make_hook(name), with_kwargs=True))
+
+        print([n for n in called_modules if "vl_self_attention" in n])
         # Preprocess batch before passing to forward
-        processed_batch = model.preprocess_batch(batch)
-        output = model(processed_batch)
+        with torch.no_grad():
+            processed_batch = model.preprocess_batch(batch)
+            output = model(processed_batch)
         print(f"Output sample: {output}")
         print(f"Output shape: {output.shape}")
+        for h in handles:
+            h.remove()
 
         self.assertIsNotNone(output)
 
     def test_pi05_initialization(self):
         config = {
-            "model": {
-                "type": "pi05",
-                "model_id": None # Use None to load the model without pretrained weights for testing purposes
-            }
+            "type": "pi05",
+            "model_id": None # Use None to load the model without pretrained weights for testing purposes
         }
         dataset_stats = self.dataset_stats
         initializer = ModelInitializer(config, dataset_stats=dataset_stats)
@@ -67,12 +74,10 @@ class TestModels(unittest.TestCase):
         batch = next(iter(self.dataloader))
 
         config = {
-            "model": {
-                "type": "pi05",
-                "model_id": None,
-                # "model_id": "lerobot/pi05_libero", # Use pretrained weights for this test to ensure forward pass works
-                "wrap_with_nnsight": False
-            }
+            "type": "pi05",
+            "model_id": None,
+            # "model_id": "lerobot/pi05_libero", # Use pretrained weights for this test to ensure forward pass works
+            "wrap_with_nnsight": False
         }
         dataset_stats = self.dataset_stats
         device = test_gpu_availability()
@@ -91,12 +96,10 @@ class TestModels(unittest.TestCase):
         batch = next(iter(self.dataloader))
 
         config = {
-            "model": {
                 "type": "pi05",
                 # "model_id": None,
                 "model_id": "lerobot/pi05_libero_finetuned_v044", # Use pretrained weights for this test to ensure forward pass works
                 "wrap_with_nnsight": False
-            }
         }
         dataset_stats = self.dataset_stats
         device = test_gpu_availability()
@@ -115,12 +118,9 @@ class TestModels(unittest.TestCase):
         batch = next(iter(self.dataloader))
 
         config = {
-            "model": {
-                "type": "pi05",
-                # "model_id": "lerobot/pi05_libero", # Use pretrained weights for this test to ensure forward pass works
-                "model_id": None,
-                "wrap_with_nnsight": True
-            }
+            "type": "pi05",
+            "model_id": None,
+            "wrap_with_nnsight": True
         }
         device = test_gpu_availability()
         dataset_stats = self.dataset_stats

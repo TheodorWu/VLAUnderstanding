@@ -82,10 +82,12 @@ class GROOTWrapper(nn.Module):
         all_layer_names = [name for name, _ in self.model.named_modules() if "attn" in name]
         # NNsight wraps PI05Wrapper -> model (PI05Policy) -> model (PI05Pytorch), so paths that reach
         # paligemma_with_expert need the extra `model.` prefix before that branch.
-        self.tracing_layers = [f"model.{name}" for name in all_layer_names if "action_head" in name and "to_out" in name]
+        self.tracing_layers = [f"model.{name}" for name in all_layer_names if "action_head" in name and name.endswith("to_out.0") and "vl_self_attention" not in name]
+        print(f"Tracing layers found: {self.tracing_layers}")
+
         if not self.tracing_layers:
             raise ValueError(
-                f"No tracing layers found matching 'gemma_expert'. "
+                f"No tracing layers found matching 'action_head.*to_out.0'. "
                 f"Available attention layers: {all_layer_names[:5]}..."
             )
 
@@ -226,3 +228,6 @@ class GROOTWrapper(nn.Module):
                 "state_features": state_features,
             }
         )
+
+    def get_tracing_layers(self):
+        return self.tracing_layers
