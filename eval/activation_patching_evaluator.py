@@ -193,11 +193,12 @@ class ActivationPatchingEvaluator:
             ax.annotate(layer_display_name(l), (x[i], y[i]), fontsize=6)  # short layer label
 
         # lims = [min(x.min(), y.min()), max(x.max(), y.max())]
-        x_margin = (x.max() - x.min()) * 0.05
-        y_margin = (y.max() - y.min()) * 0.05
-        x_lims = [x.min() - x_margin, x.max() + x_margin]
-        y_lims = [y.min() - y_margin, y.max() + y_margin]
-        ax.plot(x_lims, y_lims, "k--", alpha=0.4, label="y = x (perfect approximation)")
+        lo = min(x.min(), y.min())
+        hi = max(x.max(), y.max())
+        margin = (hi - lo) * 0.05
+        lims = [lo - margin, hi + margin]
+
+        ax.plot(lims, lims, "k--", alpha=0.4, label="y = x (perfect approximation)")
         ax.set_xlabel("AtP score")
         ax.set_ylabel("Activation patching (causal importance)")
         ax.legend()
