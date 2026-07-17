@@ -134,8 +134,21 @@ class AttributionPatching():
         print("Writing sample metadata...")
         for i, sample_id in enumerate(sample_ids):
             token_key = f"{OBS_LANGUAGE_TOKENS}" if f"{OBS_LANGUAGE_TOKENS}" in clean_batch_processed else "input_ids"
-            perturbed_tokens = clean_batch_processed[token_key][i] != corrupted_batch_processed[token_key][i]
-            perturbed_token_idxs = torch.where(perturbed_tokens)[0].tolist()
+            clean_ids = clean_batch_processed[token_key][i].tolist()
+            corrupted_ids = corrupted_batch_processed[token_key][i].tolist()
+            if len(clean_ids) == len(corrupted_ids):
+                # fast path: same length, keep the original elementwise check
+                perturbed_tokens = clean_batch_processed[token_key][i] != corrupted_batch_processed[token_key][i]
+                perturbed_token_idxs = torch.where(perturbed_tokens)[0].tolist()
+            else:
+                # length mismatch: find first point of divergence from the front
+                # Naive implementation for now, can be improved later if needed
+                min_len = min(len(clean_ids), len(corrupted_ids))
+                match = clean_ids[:min_len] == corrupted_ids[:min_len]
+                first_diff = torch.where(~match)[0]
+                start_idx = first_diff[0].item() if len(first_diff) > 0 else min_len
+
+                perturbed_token_idxs = [start_idx]  # single representative index into clean sequence
             self.writer.add_sample_metadata(SampleMetadata(
                 sample_id=sample_id,
                 instruction=clean_batch["task"][i],

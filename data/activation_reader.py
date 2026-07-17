@@ -27,10 +27,11 @@ class ActivationReader:
 
     def _confirm_num_workers(self):
         if self.num_workers > 0:
-            shard_paths = [ str(p) for p in self._iter_shard_paths() ]
-            if len(shard_paths) < self.num_workers:
-                print(f"Warning: num_workers={self.num_workers} is greater than the number of shards ({len(shard_paths)}). Reducing num_workers to {len(shard_paths)}.")
-                self.num_workers = len(shard_paths)
+            possible_layers = [d for d in self.data_root.glob("*") if d.is_dir() and not d.name.startswith("sample_metadata")]
+            min_shards = min([ len(list([ s for s in self._iter_shard_paths(layer=layer)])) for layer in possible_layers ])
+            if len(min_shards) < self.num_workers:
+                print(f"Warning: num_workers={self.num_workers} is greater than the number of shards ({len(min_shards)}). Reducing num_workers to {len(min_shards)}.")
+                self.num_workers = len(min_shards)
 
     def _load_metadata(self):
         metadata = {}

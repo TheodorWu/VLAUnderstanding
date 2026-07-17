@@ -5,7 +5,7 @@
 #SBATCH -t 0-6
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=theodor.wulff@manchester.ac.uk
-#SBATCH --array=0-4
+#SBATCH --array=0-0
 
 echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
 
