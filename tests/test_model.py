@@ -151,12 +151,31 @@ class TestModels(unittest.TestCase):
         batch = next(iter(dataloader))
         processed_batch = preprocessor(batch)
 
+    def test_groot_preprocessor(self):
+        config = {
+                "type": "groot",
+                "model_id": None,
+                # "model_id": "lerobot/pi05_libero", # Use pretrained weights for this test to ensure forward pass works
+                "wrap_with_nnsight": False,
+                # "print_architecture": True
+                "fixed_time": 0.6
+        }
+        dataset_stats = self.dataset_stats
+        device = test_gpu_availability()
+        initializer = ModelInitializer(config, dataset_stats=dataset_stats, device=torch.device(device))
+        model = initializer.initialize()
+        preprocessor, postprocessor = model.preprocessor, model.postprocessor
+        batch = next(iter(self.dataloader_groot))
+        processed_batch = preprocessor(batch)
+
+
 
 if __name__ == "__main__":
     t = TestModels()
     t.setUp()
     # t.test_groot_initialization()
-    t.test_groot_call()
+    # t.test_groot_call()
+    t.test_groot_preprocessor()
     # t.test_pi05_call()
     # t.test_pi05_call_with_nnsight()
     # t.test_pi05_preprocessor()
