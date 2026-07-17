@@ -112,6 +112,9 @@ class GROOTWrapper(nn.Module):
         """
         return self.preprocessor(batch)
 
+    def select_action(self, processed_batch):
+        return self.model.select_action(processed_batch)  # TODO: untested
+
     def forward(self, batch, loss_reduction="mean"):
         """Forward pass through the model.
 
