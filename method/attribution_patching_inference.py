@@ -2,6 +2,7 @@
 from tqdm import tqdm
 
 from method.attribution_patching import AttributionPatching
+from eval.logger import Logger
 
 
 class AttributionPatchingInference(AttributionPatching):
@@ -11,6 +12,7 @@ class AttributionPatchingInference(AttributionPatching):
         self.env = env
         self.env.env.horizon = self.max_steps_per_episode
         self.num_episodes = config.get("method", {}).get("num_episodes", 1)
+        self.logger = Logger()
 
     def __exit__(self, exc_type, exc_value, traceback):
         self.env.close()
@@ -45,6 +47,9 @@ class AttributionPatchingInference(AttributionPatching):
             obs, reward, done, info = self.env.step(action)
 
             if done or self.env.env.done:
+                self.logger.log_metric("episode_length", step_count + 1, step=episode_index)
+                self.logger.log_metric("episode_reward", self.env.env.episode_reward, step=episode_index)
+                print(f"Episode {episode_index} finished after {step_count + 1} steps with reward {self.env.env.episode_reward}.")
                 break
 
         else:

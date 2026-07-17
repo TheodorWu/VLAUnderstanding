@@ -15,13 +15,16 @@ class Logger:
         return value
 
     def log_metric(self, name, value, step):
-        value = self._transform_to_numpy(value)
-        print(f"Step {step}: {name} = {value}")
-        if wandb.run is not None:
-            wandb.log({name: value}, step=step)
-        if not name in self.accumulated_metrics:
-            self.accumulated_metrics[name] = []
-        self.accumulated_metrics[name].append(value)
+        try:
+            value = self._transform_to_numpy(value)
+            print(f"Step {step}: {name} = {value}")
+            if wandb.run is not None:
+                wandb.log({name: value}, step=step)
+            if not name in self.accumulated_metrics:
+                self.accumulated_metrics[name] = []
+            self.accumulated_metrics[name].append(value)
+        except Exception as e:
+            print(f"Error logging metric {name} at step {step}: {e}")
 
     def __exit__(self, exc_type, exc, tb):
         print("Final accumulated metrics:")
