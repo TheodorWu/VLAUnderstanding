@@ -6,7 +6,7 @@ import wandb
 from eval.logger import Logger
 from data.activation_reader import ActivationReader
 from utils.display import layer_display_name
-from utils.general import pretty_print_config
+from utils.general import pretty_print_config, to_numpy_safe
 
 class PatchingResult:
     def __init__(self, perturbation_type, layer_names, scalar_scores, layer_samples):
@@ -50,9 +50,9 @@ class ActivationPatchingEvaluator:
                 print(f"Skipping layer '{layer}': missing loss data")
                 continue
 
-            clean = np.asarray(batch.clean_loss)      # (batch,)
-            corrupted = np.asarray(batch.corrupted_loss)  # (batch,)
-            patched = np.asarray(batch.patched_loss)   # (batch,)
+            clean = np.asarray(to_numpy_safe(batch.clean_loss))      # (batch,)
+            corrupted = np.asarray(to_numpy_safe(batch.corrupted_loss))  # (batch,)
+            patched = np.asarray(to_numpy_safe(batch.patched_loss))   # (batch,)
 
             if layer not in clean_sum:
                 clean_sum[layer] = 0.0

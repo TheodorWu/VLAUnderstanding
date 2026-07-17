@@ -74,6 +74,14 @@ def pad_to_length(arr, target_len: int):
     else:  # torch.Tensor
         return torch.nn.functional.pad(arr, (0, pad_width))
 
+def to_numpy_safe(x):
+    """Convert a tensor to something numpy-compatible, handling bfloat16."""
+    if torch.is_tensor(x):
+        if x.dtype == torch.bfloat16:
+            x = x.float()  # cast to float32
+        return x.detach().cpu().numpy()
+    return x  # already a plain python scalar / numpy value
+
 ### decorators ###
 def printable_params(cls):
     def print_trainable_parameters(self):

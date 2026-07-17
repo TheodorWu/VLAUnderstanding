@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import wandb
 
-from utils.general import pad_to_length, add_batch_dim
+from utils.general import pad_to_length, add_batch_dim, to_numpy_safe
 from utils.display import layer_display_name
 
 @dataclass
@@ -93,7 +93,7 @@ class AttributionPatchingEvaluator():
             batch = add_batch_dim(batch)
             layer = batch.layer
             if batch.gradients is None:
-                print(f"Skipping layer '{batch.layer}': no gradients available")
+                print(f"Skipping batch for layer '{batch.layer}': no gradients available")
                 continue
             residual_attr = einops.reduce(
                 batch.gradients * (batch.clean - batch.corrupt),
@@ -139,6 +139,16 @@ class AttributionPatchingEvaluator():
 
         layer_names = list(running_sum.keys())
         layer_names = self.layer_sort_fn(layer_names)
+
+        # make sure no values are in bfloat16, convert to float32 for consistency
+        for l in layer_names:
+            if l in running_sum:
+                running_sum[l] = to_numpy_safe(running_sum[l])
+            if l in token_count:
+                token_count[l] = to_numpy_safe(token_count[l])
+            if l in sample_count:
+                sample_count[l] = to_numpy_safe(sample_count[l])
+
         scores = np.array([running_sum[l] / token_count[l] for l in layer_names])  # (n_layers,)
         matrix = np.array([running_token_attr[l] / sample_count[l] for l in layer_names])  # (n_layers, seq)
         norm_matrix = np.array([running_token_norm[l] / sample_count[l] for l in layer_names])  # (n_layers, seq)
