@@ -141,12 +141,11 @@ class AttributionPatching():
                 perturbed_tokens = clean_batch_processed[token_key][i] != corrupted_batch_processed[token_key][i]
                 perturbed_token_idxs = torch.where(perturbed_tokens)[0].tolist()
             else:
-                # length mismatch: find first point of divergence from the front
-                # Naive implementation for now, can be improved later if needed
                 min_len = min(len(clean_ids), len(corrupted_ids))
-                match = clean_ids[:min_len] == corrupted_ids[:min_len]
-                first_diff = torch.where(~match)[0]
-                start_idx = first_diff[0].item() if len(first_diff) > 0 else min_len
+                start_idx = next(
+                    (i for i in range(min_len) if clean_ids[i] != corrupted_ids[i]),
+                    min_len
+                )
 
                 perturbed_token_idxs = [start_idx]  # single representative index into clean sequence
             self.writer.add_sample_metadata(SampleMetadata(

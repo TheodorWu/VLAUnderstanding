@@ -67,14 +67,18 @@ class GROOTWrapper(nn.Module):
 
         local_dir = snapshot_download(repo_id=model_id)
         config_path = os.path.join(local_dir, "config.json")
-        with open(config_path) as f:
-            cfg = json.load(f)
-
-        print("Before:", cfg.get("base_model_path"))
-        cfg["base_model_path"] = "nvidia/GR00T-N1.7-3B"
-        with open(config_path, "w") as f:
-            json.dump(cfg, f, indent=2)
-        print("After:", cfg["base_model_path"])
+        try:
+            with open(config_path) as f:
+                cfg = json.load(f)
+            print("Before:", cfg.get("base_model_path"))
+            if cfg.get("base_model_path") != "nvidia/GR00T-N1.7-3B":
+                print(f"Warning: base_model_path in config.json is '{cfg.get('base_model_path')}', expected 'nvidia/GR00T-N1.7-3B'. Fixing it.")
+                cfg["base_model_path"] = "nvidia/GR00T-N1.7-3B"
+                with open(config_path, "w") as f:
+                    json.dump(cfg, f, indent=2)
+                print("After:", cfg["base_model_path"])
+        except Exception as e:
+            print(f"Warning: error occurred while fixing pretrained config: {e}")
         return local_dir
 
 

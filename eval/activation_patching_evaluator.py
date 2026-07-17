@@ -31,7 +31,7 @@ class ActivationPatchingEvaluator:
         self.layer_sort_fn = layer_sort_fn or (lambda x: x)
         self.save_path = Path(self.evaluator_config.get("save_path", None)) if self.evaluator_config.get("save_path", None) else None
 
-    def compute_layer_patching_effects(self, denom_eps: float = 1e-6) -> PatchingResult:
+    def compute_layer_patching_effects(self, denom_eps: float = 1e-3) -> PatchingResult:
         # Pass 1: accumulate raw sums (for the aggregate/point-estimate ratio)
         # and collect raw per-sample losses (for the per-sample ratio distribution).
         clean_sum = {}
@@ -78,7 +78,8 @@ class ActivationPatchingEvaluator:
         scores = []
         for l in layer_names:
             denom = corrupted_sum[l] - clean_sum[l]
-            if abs(denom) < denom_eps:
+            scaled_denom_eps = denom_eps *  np.median(np.abs(denom))  # scale the epsilon by the median magnitude of the denominator
+            if abs(denom) < scaled_denom_eps:
                 scores.append(np.nan)   # can't compute a meaningful ratio for this layer
             else:
                 scores.append((patched_sum[l] - clean_sum[l]) / denom)
@@ -95,11 +96,12 @@ class ActivationPatchingEvaluator:
             patched_arr = np.asarray(layer_patched[l])
 
             denom = corrupted_arr - clean_arr
-            stable_mask = np.abs(denom) > denom_eps  # mask out samples with near-zero denominator
+            scaled_denom_eps = denom_eps * np.median(np.abs(denom))
+            stable_mask = np.abs(denom) > scaled_denom_eps  # mask out samples with near-zero denominator
 
             if denom.size and not stable_mask.any():
                 layer_errors.append(
-                    f"Layer '{l}': all {denom.size} samples have unstable denominator. (|corrupted - clean| <= {denom_eps}); cannot compute patching ratio."
+                    f"Layer '{l}': all {denom.size} samples have unstable denominator. (|corrupted - clean| <= {scaled_denom_eps}); cannot compute patching ratio."
                 )
                 continue
 
@@ -132,9 +134,8 @@ class ActivationPatchingEvaluator:
         )
 
     def log_layer_scores(self, result: PatchingResult):
-        if self.evaluator_config.get("log_to_wandb"):
-            for l, s in zip(result.layer_names, result.scalar_scores):
-                self.logger.log_metric(f"patching_score/{result.perturbation_type}/{layer_display_name(l)}", s, step=0)
+        for l, s in zip(result.layer_names, result.scalar_scores):
+            self.logger.log_metric(f"patching_score/{result.perturbation_type}/{layer_display_name(l)}", s, step=0)
 
     def plot_patching_heatmap(self, result: PatchingResult, invert=True):
         layer_names = result.layer_names
