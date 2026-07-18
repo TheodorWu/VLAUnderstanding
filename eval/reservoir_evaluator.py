@@ -9,7 +9,7 @@ import wandb
 
 from eval.logger import Logger
 from data.activation_reader import ActivationReader
-from utils.general import add_batch_dim
+from utils.general import add_batch_dim, to_numpy_safe
 from utils.display import layer_display_name
 
 
@@ -218,7 +218,7 @@ class ReservoirEvaluator:
             pooled = tensor[:, 0, :]
         else:
             raise ValueError(f"Unknown pooling mode: {mode}")
-        return pooled.detach().cpu().numpy() if isinstance(pooled, torch.Tensor) else pooled
+        return to_numpy_safe(pooled) if isinstance(pooled, torch.Tensor) else pooled
 
     @staticmethod
     def _linear_cka(X: np.ndarray, Y: np.ndarray) -> float:
