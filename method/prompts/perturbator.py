@@ -1,3 +1,4 @@
+from method.prompts.ood_object_perturbations import OODObjectPerturbator
 from method.prompts.semantic_perturbations import SemanticScaler, SynonymReplacer
 import re
 
@@ -31,6 +32,7 @@ class PromptPerturbator:
         self.config = config
         self.semantic_scaler = SemanticScaler()
         self.synonym_replacer = SynonymReplacer()
+        self.ood_object_perturbator = OODObjectPerturbator()
 
         self.blocklist = set(self.config.get("blocklist", []))
         self._init_target_words()
@@ -79,6 +81,13 @@ class PromptPerturbator:
         perturbed_prompt = ""
         return PerturbedPromptOutput(original_prompt, perturbed_prompt)
 
+    def ood_object_perturbation(self, prompt, target_word):
+        original_prompt, text = self._handle_str_or_output(prompt)
+
+        random_object = self.ood_object_perturbator()
+        perturbed_prompt = text.replace(target_word, random_object)
+        return PerturbedPromptOutput(original_prompt, perturbed_prompt)
+
     def synonym_perturbation(self, prompt, target_word):
         original_prompt, text = self._handle_str_or_output(prompt)
 
@@ -100,12 +109,14 @@ class PromptPerturbator:
         if self.config.get("empty"):
             prompt = self.empty_perturbation(prompt)
 
-        if self.config.get("synonym") or self.config.get("semantic_scaling"):
+        if self.config.get("synonym") or self.config.get("semantic_scaling") or self.config.get("ood_object"):
             for target_word in self.target_words:
                 if self.config.get("synonym"):
                     prompt = self.synonym_perturbation(prompt, target_word=target_word)
                 if self.config.get("semantic_scaling"):
                     prompt = self.semantic_scaling_perturbation(prompt, target_word=target_word)
+                if self.config.get("ood_object"):
+                    prompt = self.ood_object_perturbation(prompt, target_word=target_word)
 
         return prompt
 
