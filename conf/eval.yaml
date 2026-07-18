@@ -1,5 +1,5 @@
 defaults: # Using mostly empty defaults to avoid unnecessary dependencies
- - perturbator: empty
+ - perturbator: none
  - wandb: default
  - activation_writer: default
  - activation_reader: default

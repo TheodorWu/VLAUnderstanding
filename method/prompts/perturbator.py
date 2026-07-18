@@ -103,19 +103,19 @@ class PromptPerturbator:
         return PerturbedPromptOutput(original_prompt, perturbed_prompt)
 
     def perturb_single_prompt(self, prompt: str):
-        if self.config.get("directional"):
+        if self.config.get("directional", False):
             prompt = self.directional_perturbation(prompt)
 
-        if self.config.get("empty"):
+        if self.config.get("empty", False):
             prompt = self.empty_perturbation(prompt)
 
-        if self.config.get("synonym") or self.config.get("semantic_scaling") or self.config.get("ood_object"):
+        if self.config.get("synonym", False) or self.config.get("semantic_scaling", False) or self.config.get("ood_object", False):
             for target_word in self.target_words:
-                if self.config.get("synonym"):
+                if self.config.get("synonym", False):
                     prompt = self.synonym_perturbation(prompt, target_word=target_word)
-                if self.config.get("semantic_scaling"):
+                if self.config.get("semantic_scaling", False):
                     prompt = self.semantic_scaling_perturbation(prompt, target_word=target_word)
-                if self.config.get("ood_object"):
+                if self.config.get("ood_object", False):
                     prompt = self.ood_object_perturbation(prompt, target_word=target_word)
 
         return prompt
