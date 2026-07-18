@@ -74,6 +74,11 @@ class PromptPerturbator:
         else:
             return prompt, prompt
 
+    def empty_perturbation(self, prompt):
+        original_prompt, _ = self._handle_str_or_output(prompt)
+        perturbed_prompt = ""
+        return PerturbedPromptOutput(original_prompt, perturbed_prompt)
+
     def synonym_perturbation(self, prompt, target_word):
         original_prompt, text = self._handle_str_or_output(prompt)
 
@@ -91,6 +96,9 @@ class PromptPerturbator:
     def perturb_single_prompt(self, prompt: str):
         if self.config.get("directional"):
             prompt = self.directional_perturbation(prompt)
+
+        if self.config.get("empty"):
+            prompt = self.empty_perturbation(prompt)
 
         if self.config.get("synonym") or self.config.get("semantic_scaling"):
             for target_word in self.target_words:
