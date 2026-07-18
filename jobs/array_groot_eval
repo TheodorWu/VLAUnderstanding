@@ -1,0 +1,65 @@
+#!/bin/bash --login
+#SBATCH -p multicore_small
+# #SBATCH -p gpuA
+# #SBATCH -G 1
+#SBATCH -c 8
+#SBATCH -t 1-0
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=theodor.wulff@manchester.ac.uk
+#SBATCH --array=0-4
+
+echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
+
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK # reduce overloading GPU node
+export HF_HOME="$PWD/.hfcache"
+
+module purge
+module load libs/cuda
+
+# Print job information
+echo "Job started at: $(date)"
+echo "Running on node: $(hostname)"
+echo "Job ID: $SLURM_JOB_ID"
+
+
+# semantic_scale and synonym each run for noun and verb.
+PERTURBATIONS=(
+    "directional"
+    "semantic_scale"
+    "semantic_scale"
+    "synonym"
+    "synonym"
+)
+TARGET_WORDS=(
+    "noun"    # ignored for directional, but keep array lengths aligned
+    "noun"
+    "verb"
+    "noun"
+    "verb"
+)
+RUN_NAMES=(
+    "Attribution-Patching-certain-aardwolf"
+    "Attribution-Patching-bizarre-owl"
+    "Attribution-Patching-reasonable-inchworm"
+    "Attribution-Patching-unique-numbat"
+    "Attribution-Patching-pastoral-bug"
+)
+INDEX=${SLURM_ARRAY_TASK_ID}
+PERTURBATOR=${PERTURBATIONS[$INDEX]}
+TARGET_WORD=${TARGET_WORDS[$INDEX]}
+RUN_NAME=${RUN_NAMES[$INDEX]}
+
+echo "Running Gr00t attribution patching with perturbator=${PERTURBATOR} and target_word=${TARGET_WORD}"
+
+source "$PWD/.venv/bin/activate"
+
+if [ "$PERTURBATOR" == "directional" ]; then
+    python main.py --config-name=groot_${PERTURBATOR} mode="evaluate" +activation_reader.run_name=${RUN_NAME}
+else
+    python main.py --config-name=groot_${PERTURBATOR} perturbator.target_words="${TARGET_WORD}" mode="evaluate" +activation_reader.run_name=${RUN_NAME}
+fi
+
+deactivate
+
+# Print completion message
+echo "Job finished at: $(date)"

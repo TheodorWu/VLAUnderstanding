@@ -6,7 +6,7 @@ defaults:
  - dataset: libero_groot
  - model: groot
  - method: full
- - evaluator: default
+ - evaluator: groot
 
 stage: prod
 seed: 42

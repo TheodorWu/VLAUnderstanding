@@ -13,11 +13,13 @@ from data.activation_writer import ActivationDataBatch, ActivationDataPoint
 class ActivationReader:
     def __init__(self, config):
         self.config = config.get("activation_reader", config.get("activation_writer", {}))
+        print(f"ActivationReader config: {self.config}")
         self.output_dir = self.config.get("output_dir", "results")
         self.run_name = self.config.get("run_name") or (wandb.run.name if wandb.run else "test_run")
 
         project_root = Path(__file__).parent.parent
         self.data_root = Path(f"{project_root}/{self.output_dir}/{self.run_name}/data")
+        print(f"ActivationReader initialized with data_root: {self.data_root}")
         self.metadata_path = self.data_root / "metadata.json"
         self.metadata = self._load_metadata()
         self.sample_metadata = {}
@@ -28,9 +30,10 @@ class ActivationReader:
     def _confirm_num_workers(self):
         if self.num_workers > 0:
             possible_layers = [d for d in self.data_root.glob("*") if d.is_dir() and not d.name.startswith("sample_metadata")]
+            print(possible_layers)
             min_shards = min([ len(list([ s for s in self._iter_shard_paths(layer=layer)])) for layer in possible_layers ])
             if min_shards < self.num_workers:
-                print(f"Warning: num_workers={self.num_workers} is greater than the number of shards ({len(min_shards)}). Reducing num_workers to {len(min_shards)}.")
+                print(f"Warning: num_workers={self.num_workers} is greater than the number of shards ({min_shards}). Reducing num_workers to {min_shards}.")
                 self.num_workers = min_shards
 
     def _load_metadata(self):

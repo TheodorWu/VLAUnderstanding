@@ -148,6 +148,12 @@ class AttributionPatchingEvaluator():
                 token_count[l] = to_numpy_safe(token_count[l])
             if l in sample_count:
                 sample_count[l] = to_numpy_safe(sample_count[l])
+            if l in running_token_attr:
+                running_token_attr[l] = to_numpy_safe(running_token_attr[l])
+            if l in running_token_sq_attr:
+                running_token_sq_attr[l] = to_numpy_safe(running_token_sq_attr[l])
+            if l in running_token_norm:
+                running_token_norm[l] = to_numpy_safe(running_token_norm[l])
 
         scores = np.array([running_sum[l] / token_count[l] for l in layer_names])  # (n_layers,)
         matrix = np.array([running_token_attr[l] / sample_count[l] for l in layer_names])  # (n_layers, seq)
