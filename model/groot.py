@@ -1,5 +1,6 @@
 import os
 import json
+import re
 
 import torch
 import torch.nn as nn
@@ -235,3 +236,13 @@ class GROOTWrapper(nn.Module):
 
     def get_tracing_layers(self):
         return self.tracing_layers
+
+    @staticmethod
+    def sort_layers(layer_names: list[str]) -> list[str]:
+        def sort_key(name: str):
+            match = re.search(r'\d+', name)
+            if match is None:
+                return (1, 0, name)  # no number: push to the end, stable by name
+            return (0, int(match.group()), name)  # has number: sort by it, then by full name
+
+        return sorted(layer_names, key=sort_key)

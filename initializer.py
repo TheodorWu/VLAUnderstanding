@@ -66,6 +66,9 @@ class Initializer:
         if model_type == "pi05":
             from model.pi05 import PI05Wrapper
             return  PI05Wrapper.sort_layers
+        if model_type == "groot":
+            from model.groot import GROOTWrapper
+            return GROOTWrapper.sort_layers
         else:
             return None
 
