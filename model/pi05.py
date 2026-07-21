@@ -4,7 +4,7 @@ import re
 
 from lerobot.policies.pi05.modeling_pi05 import PI05Config, PI05Policy
 from lerobot.policies.pi05.processor_pi05 import make_pi05_pre_post_processors
-from lerobot.configs.policies import PolicyFeature, FeatureType
+from lerobot.configs.policies import PolicyFeature, FeatureType, PreTrainedConfig
 from lerobot.utils.constants import ACTION, OBS_LANGUAGE_ATTENTION_MASK, OBS_LANGUAGE_TOKENS
 
 from utils.general import printable_params, rprint_architecture
@@ -36,7 +36,9 @@ class PI05Wrapper(nn.Module):
             self.model.to(device)
         else:
             print(f"Loading PI05 model from {model_id}")
-            self.model = PI05Policy.from_pretrained(model_id, device_map=device)
+            pi_config = PreTrainedConfig.from_pretrained(model_id)
+            pi_config.compile_model = False  # Disable torch.compile for now due to issues with nnsight tracing
+            self.model = PI05Policy.from_pretrained(model_id, config=pi_config, device_map=device)
 
         self._patch_rmsnorm_layers()
 
