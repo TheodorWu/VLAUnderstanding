@@ -29,6 +29,8 @@ PERTURBATIONS=(
     "semantic_scale"
     "synonym"
     "synonym"
+    "ood_object"
+    "empty"
 )
 TARGET_WORDS=(
     "noun"    # ignored for directional, but keep array lengths aligned
@@ -36,14 +38,27 @@ TARGET_WORDS=(
     "verb"
     "noun"
     "verb"
+    "noun"
+    "verb"
 )
+# RUN_NAMES=(
+#     "Attribution-Patching-certain-aardwolf"
+#     "Attribution-Patching-bizarre-owl"
+#     "Attribution-Patching-reasonable-inchworm"
+#     "Attribution-Patching-unique-numbat"
+#     "Attribution-Patching-pastoral-bug"
+# )
+
 RUN_NAMES=(
-    "Attribution-Patching-certain-aardwolf"
-    "Attribution-Patching-bizarre-owl"
-    "Attribution-Patching-reasonable-inchworm"
-    "Attribution-Patching-unique-numbat"
-    "Attribution-Patching-pastoral-bug"
+  "Attribution-Patching-pretty-slug"
+  "Attribution-Patching-messy-rottweiler"
+  "Attribution-Patching-fresh-flamingo"
+  "Attribution-Patching-crafty-oriole"
+  "Attribution-Patching-handsome-zebu"
+  "Attribution-Patching-omniscient-kraken"
+  "Attribution-Patching-ruddy-partridge"
 )
+
 INDEX=${SLURM_ARRAY_TASK_ID}
 PERTURBATOR=${PERTURBATIONS[$INDEX]}
 TARGET_WORD=${TARGET_WORDS[$INDEX]}

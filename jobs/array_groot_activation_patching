@@ -5,7 +5,7 @@
 #SBATCH -t 4-0
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=theodor.wulff@manchester.ac.uk
-#SBATCH --array=5-6
+#SBATCH --array=0-6
 
 echo "Job is using $SLURM_GPUS GPU(s) with ID(s) $CUDA_VISIBLE_DEVICES and $SLURM_NTASKS CPU core(s)"
 
@@ -50,9 +50,9 @@ echo "Evaluation with perturbator=${PERTURBATOR} and target_word=${TARGET_WORD}"
 source "$PWD/.venv/bin/activate"
 
 if [ "$PERTURBATOR" == "directional" ]; then
-    python main.py --config-name=activation_patching perturbator=${PERTURBATOR}
+    python main.py --config-name=activation_patching perturbator=${PERTURBATOR} model=groot
 else
-    python main.py --config-name=activation_patching perturbator=${PERTURBATOR} perturbator.target_words="${TARGET_WORD}"
+    python main.py --config-name=activation_patching perturbator=${PERTURBATOR} perturbator.target_words="${TARGET_WORD}" model=groot
 fi
 
 deactivate

@@ -1,0 +1,16 @@
+name: activation_patching
+tracing_layers:
+- model._groot_model.action_head.model.transformer_blocks.0.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.1.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.2.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.3.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.5.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.6.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.7.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.8.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.11.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.12.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.13.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.29.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.30.attn1.to_out.0
+- model._groot_model.action_head.model.transformer_blocks.31.attn1.to_out.0
